@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -10,7 +10,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, NgSelectModule],
   templateUrl: './new-stockupdate-shortage-popup.component.html',
-  styleUrls: ['./new-stockupdate-shortage-popup.component.scss']
+  styleUrls: ['./new-stockupdate-shortage-popup.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class NewStockupdateShortagePopupComponent {
   public modalRefs!: BsModalRef;

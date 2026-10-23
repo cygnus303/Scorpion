@@ -336,12 +336,10 @@ export class NewStockupdatePopupComponent implements OnInit {
   }
 
   onDamageChange(event: any, row: any, index: number) {
-    const originalState = row.isDamage;
+    const originalState = !!row.isDamage;
     event.target.checked = originalState; // Force UI state to stay as is until confirmed
 
     if (!originalState) {
-      row.isDamage = true;
-      row.isSelected = true; // Auto select the row when checking damage
       this.openDepsPopup(row, index, 'D');
     } else {
       if (row.damageDepsData || (row.depsData && row.depsData.depsTyp === 'D')) {
@@ -497,6 +495,7 @@ export class NewStockupdatePopupComponent implements OnInit {
       this.listVSFUM[index].damageDepsData = depsData;
       this.listVSFUM[index].depsData = depsData;
       this.listVSFUM[index].isDamage = true;
+      this.listVSFUM[index].isSelected = true;
       this.listVSFUM[index].damageQry = depsData.affectedQty || 0;
       this.listVSFUM[index].damageWeight = depsData.affectedWeight || 0;
       this.listVSFUM[index].damageType = depsData.damageType || '';

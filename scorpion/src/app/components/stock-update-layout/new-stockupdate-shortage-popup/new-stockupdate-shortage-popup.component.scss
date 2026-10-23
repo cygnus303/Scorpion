@@ -1,68 +1,73 @@
 .shortage-modal-wrapper {
+  max-width: 1050px !important;
+  width: 95% !important;
+  --bs-modal-width: 1050px !important;
+
   .modal-content {
-    border-radius: 8px;
-    overflow: visible !important;
-    border: none;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    border: none !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
   }
 }
 
 .shortage-body {
-  overflow: visible !important;
-  min-height: 230px;
+  overflow-x: auto !important;
+  overflow-y: auto !important;
+  max-width: 100% !important;
+  width: 100% !important;
 }
 
 .shortage-tbl {
-  overflow: visible !important;
+  width: 100% !important;
+  margin-bottom: 0 !important;
+  border-collapse: collapse !important;
+  border: 1px solid #cbd5e1 !important;
 
-  th {
-    background-color: #f8fafc;
-    color: #475569;
-    font-size: 12px;
+  thead th {
+    background-color: #eff1f8 !important;
+    color: #1a237e !important;
+    font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    padding: 12px 10px;
-    border-bottom: 2px solid #e2e8f0;
+    padding: 9px 8px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-bottom: 2px solid #94a3b8 !important;
+    vertical-align: middle;
   }
 
-  td {
-    font-size: 13px;
-    padding: 10px;
+  tbody td {
+    font-size: 12px;
+    padding: 7px 8px !important;
     vertical-align: middle;
-    overflow: visible !important;
+    border: 1px solid #cbd5e1 !important;
   }
 
   tr:hover {
     background-color: #f8fafc;
   }
-}
 
-.ms-dropdown {
-  position: relative;
-  
-  .ms-panel {
-    display: none;
-    position: absolute;
-    top: 100%;
-    bottom: auto;
-    left: 0;
-    margin-top: 2px;
-    z-index: 99999;
-    min-width: 180px;
-    max-height: 200px;
-    overflow-y: auto;
-    background: #ffffff;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2) !important;
+  .form-control-sm {
+    height: 31px;
+    font-size: 12px;
+    border: 1px solid #cbd5e1;
     border-radius: 4px;
-    border: 1px solid #cbd5e1 !important;
   }
 
-  &.open .ms-panel {
-    display: block;
+  .ng-select.ng-select-sm,
+  .ng-select {
+    font-size: 12px;
+    .ng-select-container {
+      min-height: 31px !important;
+      height: 31px !important;
+      border: 1px solid #cbd5e1 !important;
+      border-radius: 4px;
+    }
   }
 }
 
 .hover-opacity:hover {
   opacity: 1 !important;
 }
+
