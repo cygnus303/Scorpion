@@ -17,6 +17,8 @@ export class ThcEditComponent {
   public modalRef!: BsModalRef;
   public selectedTHC: string = '';
   public thcData: any;
+  public isLoading: boolean = false;
+  public isSubmitting: boolean = false;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
 
@@ -36,25 +38,31 @@ export class ThcEditComponent {
   showPopup(data: any) {
     console.log("HCC Details Data:", data);
     this.selectedTHC = data.thcNo;
+    this.thcData = null;
     this.getTHCEditDetail(data);
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
   }
 
   getTHCEditDetail(data: any) {
+    this.isLoading = true;
+    this.thcData = null;
     const params = {
       thcNo: data.thcNo,
       vendorType: null
-    }
+    };
 
     this.PRSDRSApiService.getTHCEditDetail(params).subscribe({
       next: (response: any) => {
+        this.isLoading = false;
         if (response) {
           this.thcData = response.thcsumry;
         }
-      }, error: (err) => {
+      },
+      error: (err) => {
+        this.isLoading = false;
         console.error(err);
       }
-    })
+    });
   }
 
    get isAdvanceAmountInvalid(): boolean {
@@ -65,6 +73,7 @@ export class ThcEditComponent {
   }
 
   submitTHC() {
+    this.isSubmitting = true;
     const payload = {
       thcNo: this.selectedTHC || "",
       type: "T",
@@ -78,20 +87,23 @@ export class ThcEditComponent {
       oldAdvanceAmountPaidAt: "",
       oldBalanceAmountPaidAt: "",
       userName: this.docketService.baseUsername
-    }
+    };
 
     this.PRSDRSApiService.THCSubmit(payload).subscribe({
       next: (response: any) => {
+        this.isSubmitting = false;
         if (response.success) {
           this.sweetAlerService.success(`${response.message}`);
           this.dataEmitter.emit();
           this.modalRef.hide();
         }
-      }, error: (err: any) => {
+      },
+      error: (err: any) => {
+        this.isSubmitting = false;
         console.error(err);
         this.sweetAlerService.success(`${err.message}`);
       }
-    })
+    });
   }
 
 }
