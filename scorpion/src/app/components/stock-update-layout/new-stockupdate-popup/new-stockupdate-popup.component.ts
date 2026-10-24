@@ -1,4 +1,5 @@
-import { Component, TemplateRef, ViewChild, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, TemplateRef, ViewChild, OnInit, OnDestroy, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -14,6 +15,7 @@ import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angula
 import { SharedModule } from 'app/shared/shared/shared.module';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
 import { VendorChargeHelperService } from 'app/shared/services/vendor-charge.service';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-new-stockupdate-popup',
@@ -23,7 +25,7 @@ import { VendorChargeHelperService } from 'app/shared/services/vendor-charge.ser
   styleUrl: './new-stockupdate-popup.component.scss',
   providers: [BsModalService]
 })
-export class NewStockupdatePopupComponent implements OnInit {
+export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
   public modalRef?: BsModalRef;
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
   @ViewChild('DrsUpdateDepsComponent') depsEntryComponent!: DrsUpdateDepsComponent;
@@ -31,15 +33,19 @@ export class NewStockupdatePopupComponent implements OnInit {
   @Output() dataEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   public isLoading: boolean = false;
+  public env = environment;
   public maxDate: Date = new Date();
   public dlyPrcList: any[] = [];
   public listVSFUM: any[] = [];
   public selectedDeliveryProcessAll: string | null = null;
   public unloaderUsers: any[] = [];
   public notUnloaderName: string = 'Enter at least 3 characters';
+  public userSubscription?: Subscription;
   public unloaderName: any = null;
   public unloadingSupervisor: any = null;
   public submitted: boolean = false;
+  public unloaderTouched: boolean = false;
+  public supervisorTouched: boolean = false;
   public rowVendorList: any[][] = [];
   public headerVendorList: any[] = [];
   public headerVendor: any = null;
@@ -65,7 +71,7 @@ export class NewStockupdatePopupComponent implements OnInit {
     public generalMasterService: GeneralMasterService,
     public vendorChargeHelper: VendorChargeHelperService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.getDeliveryProcesses();
@@ -89,17 +95,25 @@ export class NewStockupdatePopupComponent implements OnInit {
   stockUpdateUsers(event: any) {
     const searchText = event.term;
     if (!searchText || searchText.length < 3) {
+      if (this.userSubscription) {
+        this.userSubscription.unsubscribe();
+      }
       this.unloaderUsers = [];
       this.notUnloaderName = 'Enter at least 3 characters';
       return;
     }
+
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
+
     const baseLocation = this.docketService.Location || this.docketService.loginUserList?.LocationCode || 'BWH';
     const payload = {
       searchTerm: searchText,
       baseLocationCode: baseLocation,
     };
     this.notUnloaderName = 'Searching...';
-    this.stockUpdateService.stockUpdateUsers(payload).subscribe({
+    this.userSubscription = this.stockUpdateService.stockUpdateUsers(payload).subscribe({
       next: (response) => {
         if (response) {
           if (response.success && response.data) {
@@ -123,8 +137,17 @@ export class NewStockupdatePopupComponent implements OnInit {
   }
 
   resetUnloaderDropdown() {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
     this.unloaderUsers = [];
     this.notUnloaderName = 'Enter at least 3 characters';
+  }
+
+  ngOnDestroy(): void {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
   }
 
   showPopup(data?: any) {
@@ -149,6 +172,8 @@ export class NewStockupdatePopupComponent implements OnInit {
     this.unloaderName = null;
     this.unloadingSupervisor = null;
     this.submitted = false;
+    this.unloaderTouched = false;
+    this.supervisorTouched = false;
     this.unloaderUsers = [];
     this.notUnloaderName = 'Enter at least 3 characters';
     this.headerVendor = null;
@@ -414,7 +439,7 @@ export class NewStockupdatePopupComponent implements OnInit {
       invval: row.invval || 0,
       depstype: 'D'
     };
-    
+
     const thcNo = this.stockData.thcno || '';
     const thcDt = this.stockData.thcdt || '';
     this.depsEntryComponent.showPopup(popupData, thcNo, thcDt, '', 1, index);
@@ -436,7 +461,7 @@ export class NewStockupdatePopupComponent implements OnInit {
           try {
             Object.defineProperty(group, 'value', {
               get: () => group.getRawValue(),
-              set: (v) => {},
+              set: (v) => { },
               configurable: true
             });
           } catch (e) {
@@ -448,7 +473,7 @@ export class NewStockupdatePopupComponent implements OnInit {
         try {
           Object.defineProperty(this.depsEntryComponent.depsForm, 'value', {
             get: () => this.depsEntryComponent.depsForm.getRawValue(),
-            set: (v) => {},
+            set: (v) => { },
             configurable: true
           });
         } catch (e) {
@@ -474,7 +499,7 @@ export class NewStockupdatePopupComponent implements OnInit {
     if (cleanSelectedBoxes.length === 0 && validBoxIds.length > 0) {
       cleanSelectedBoxes = [...validBoxIds];
     }
-    const totalPkgsVal = +row.bkG_PKGSNO ;
+    const totalPkgsVal = +row.bkG_PKGSNO;
     const totalWtVal = +row.bkG_ACTUWT || 0;
     const affectedWeightVal = totalPkgsVal > 0 ? Number(((totalWtVal / totalPkgsVal) * shortageQtyVal).toFixed(2)) : (+row.shortWt || +row.shortageWeight || 0);
 
@@ -493,9 +518,9 @@ export class NewStockupdatePopupComponent implements OnInit {
       affectedPkgs: cleanSelectedBoxes.length,
       affectedWeight: affectedWeightVal,
       remarks: row.shortRemarks || row.shortageRemarks || '',
-      affectedInvVal: (+row.bkG_PKGSNO || +row.pkgsno) > 0 ? Number((( (row.invval || 0) / (+row.bkG_PKGSNO || +row.pkgsno || 0) ) * shortageQtyVal).toFixed(2)) : 0
+      affectedInvVal: (+row.bkG_PKGSNO || +row.pkgsno) > 0 ? Number((((row.invval || 0) / (+row.bkG_PKGSNO || +row.pkgsno || 0)) * shortageQtyVal).toFixed(2)) : 0
     };
-    
+
     const thcNo = this.stockData.thcno || '';
     const thcDt = this.stockData.thcdt || '';
     if (this.shortagePopupComponent) {
@@ -1093,12 +1118,33 @@ export class NewStockupdatePopupComponent implements OnInit {
     this.loadingChargeCtrl.markAsTouched();
   }
 
+  onMfViewPrint(mfNo: string){
+    const url = `${this.env.liveUrl}ViewPrint/ViewMF?MFNO=${mfNo}&src=angular`;
+    const popup = window.open('', 'popupWindow',
+      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+    );
+
+    if (popup) {
+      popup.location.href = url;
+    }
+  }
+
+  isUnloaderInvalid(): boolean {
+    return (this.submitted || this.unloaderTouched) && !this.unloaderName;
+  }
+
+  isSupervisorInvalid(): boolean {
+    return (this.submitted || this.supervisorTouched) && !this.unloadingSupervisor;
+  }
+
   submitStockUpdate() {
     this.submitted = true;
+    this.unloaderTouched = true;
+    this.supervisorTouched = true;
     if (!this.unloaderName || !this.unloadingSupervisor) {
       return;
     }
-    
+
     if (this.loadingChargeCtrl.invalid) {
       this.loadingChargeCtrl.markAsTouched();
       return;
@@ -1149,7 +1195,7 @@ export class NewStockupdatePopupComponent implements OnInit {
         docket: depsData.docket || '',
         affectedQty: +depsData.affectedQty || 0,
         affectedInvVal: +depsData.affectedInvVal || 0,
-        reason: depsData.reason  || '',
+        reason: depsData.reason || '',
         depsNo: depsData.depsNo || '',
         depsTyp: depsData.depsTyp || '',
         fileName: depsData.fileName || '',
@@ -1160,8 +1206,8 @@ export class NewStockupdatePopupComponent implements OnInit {
         remarks: depsData.remarks || '',
         docketsf: depsData.docketsf || '.',
         documentNo: depsData.documentNo || '',
-        pkgsDelivered: +depsData.pkgsDelivered  || 0,
-        severity: depsData.severity|| ''
+        pkgsDelivered: +depsData.pkgsDelivered || 0,
+        severity: depsData.severity || ''
       };
 
       const rowDelyDate = row.delyForm?.get('DELYDATE')?.value;

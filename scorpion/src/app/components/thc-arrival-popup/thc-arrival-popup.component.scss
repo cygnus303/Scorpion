@@ -170,11 +170,11 @@ app-date-time-picker ::ng-deep {
   }
 }
 
-/* ── Cancel Button (replaces harsh red button) ── */
+/* ── Cancel Button ── */
 .btn-cancel-custom {
-  background: #ffffff;
-  color: #475569;
-  border: 1px solid #cbd5e1;
+  background: #dc3545;
+  color: #ffffff;
+  border: 1px solid #dc3545;
   padding: 7px 22px;
   border-radius: 6px;
   font-size: 13px;
@@ -186,9 +186,9 @@ app-date-time-picker ::ng-deep {
   transition: all 0.18s ease;
 
   &:hover {
-    background: #f1f5f9;
-    color: #1e293b;
-    border-color: #94a3b8;
+    background: #bb2d3b;
+    border-color: #b02a37;
+    color: #ffffff;
   }
 }
 

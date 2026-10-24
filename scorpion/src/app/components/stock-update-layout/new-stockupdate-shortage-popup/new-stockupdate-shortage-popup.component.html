@@ -23,11 +23,12 @@
         <tr>
           <th class="text-center" style="width: 35px; white-space: nowrap;">#</th>
           <th style="width: 125px; white-space: nowrap;">Docket No / Date</th>
+          <th style="width: 125px; white-space: nowrap;">Box ID *</th>
           <th class="text-center" style="width: 110px; white-space: nowrap;">Invoice Value (₹)</th>
           <th style="width: 120px; white-space: nowrap;">DEPS Type <span class="text-danger">*</span></th>
           <th class="text-center" style="width: 80px; white-space: nowrap;">Affected Pkgs *</th>
           <th class="text-center" style="width: 95px; white-space: nowrap;">Affected Wt</th>
-          <th class="text-center" style="width: 120px; white-space: nowrap;">Affected Inv. Value (₹)</th>
+          <th class="text-center" style="width: 120px; white-space: nowrap;">Loss Value (₹)</th>
           <th style="min-width: 140px;">Remarks</th>
         </tr>
       </thead>
@@ -48,7 +49,7 @@
             </td>
 
             <!-- Box ID Checkbox Dropdown -->
-            <!-- <td style="min-width: 180px; position: relative;">
+            <td style="min-width: 180px; position: relative;">
               <div class="ms-dropdown" [class.open]="activeBoxDropdownIndex === i" (click)="$event.stopPropagation()">
                 <button type="button" class="form-select form-select-sm text-start"
                   (click)="toggleBoxDropdown(i, $event)">
@@ -62,7 +63,7 @@
                   </label>
                 </div>
               </div>
-            </td> -->
+            </td>
 
             <!-- Invoice Value -->
             <td class="text-end">
@@ -93,7 +94,7 @@
 
             <!-- Affected Inv. Value -->
             <td class="text-end">
-              <input class="form-control form-control-sm text-end w-100" type="text" [value]="'₹' + (row.value.affectedInvVal | number:'1.2-2')" readonly
+              <input class="form-control form-control-sm text-end w-100" type="text" [value]="'₹' + (row.value.affectedInvVal | number:'1.2-2')" 
                 style="background-color: #f1f5f9; color: #1a237e; font-weight: 600;" />
             </td>
 

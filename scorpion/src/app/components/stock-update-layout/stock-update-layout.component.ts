@@ -239,7 +239,7 @@ export class StockUpdateLayoutComponent {
   }
 
   openLoadingSheetNoView(ChallanNo:any){
-  const url = `${this.env.liveUrl}ViewPrint/ViewLS?ChallanNo=${ChallanNo}&src=angular`;
+  const url = `${this.env.liveUrl}ViewPrint/ViewUnLoadingsheet?UnLodingSheetNo=${ChallanNo}&src=angular`;
     const popup = window.open('', 'popupWindow',
       'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
     );

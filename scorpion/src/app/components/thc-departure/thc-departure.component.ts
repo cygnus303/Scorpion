@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DocketService } from 'app/shared/services/docket.service';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { environment } from 'environments/environment';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-thc-departure',
@@ -13,8 +14,9 @@ import { environment } from 'environments/environment';
   templateUrl: './thc-departure.component.html',
   styleUrl: './thc-departure.component.scss'
 })
-export class ThcDepartureComponent {
+export class ThcDepartureComponent implements OnInit, OnDestroy {
   public departureForm!: FormGroup;
+  public listSubscription?: Subscription;
   public departureDetail: any;
   public env = environment;
   public isSubmit: boolean = false;
@@ -86,13 +88,16 @@ export class ThcDepartureComponent {
   }
 
   getDepartureDetail() {
+    if (this.listSubscription) {
+      this.listSubscription.unsubscribe();
+    }
     const payload = {
       thcNo: this.departureForm.value.THCNO,
       baseLocationCode: this.docketService.loginUserList.LocationCode
-    }
-    this.isLoading = true;  
-  this.thcDepList.clear();
-    this.thcmasterService.getDepartureDetail(payload).subscribe({
+    };
+    this.isLoading = true;
+    this.thcDepList.clear();
+    this.listSubscription = this.thcmasterService.getDepartureDetail(payload).subscribe({
       next: (response: any) => {
         this.isLoading = false;
         this.departureDetail = response.thcDepModel;
@@ -103,18 +108,25 @@ export class ThcDepartureComponent {
           Vehno: this.departureDetail.vehno,
           ATA: this.departureDetail.ata,
           ETD: this.departureDetail.etd,
-        })
+        });
 
         this.thcDepList.clear();
-         if (response.thcDepList && response.thcDepList.length > 0) {
-        response.thcDepList.forEach((item: any) => {
-          this.thcDepList.push(this.createMFGroup(item));
-        });
-      } 
-      },error: () => {
-      this.isLoading = false;
+        if (response.thcDepList && response.thcDepList.length > 0) {
+          response.thcDepList.forEach((item: any) => {
+            this.thcDepList.push(this.createMFGroup(item));
+          });
+        }
+      },
+      error: () => {
+        this.isLoading = false;
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.listSubscription) {
+      this.listSubscription.unsubscribe();
     }
-    })
   }
 
 onsubmit() {

@@ -151,9 +151,9 @@
                             </div>
                         </td>
                         <td class="text-center">
-                            <span class="fw-bold cursor-pointer hcc-link"
+                            <span class="fw-bold cursor-pointer"
                                 [ngClass]="(data.mfNo) ? 'text-primary fw-bold' : 'text-muted'"
-                                (click)="openMFView(data.mfNo)">{{ data.mfNo || '—' }}</span>
+                                (click)="data.mfNo?openMFView(data.mfNo):null">{{ data.mfNo || '—' }}</span>
                         </td>
                         <td class="text-center">
                             <div class="d-flex gap-2 flex-column">

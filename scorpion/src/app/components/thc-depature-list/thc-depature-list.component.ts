@@ -282,7 +282,7 @@ export class ThcDepatureListComponent implements OnInit {
       }).then((result) => {
         if (result.isConfirmed && result.value) {
           const res = result.value;
-          
+
           // Get unique THC numbers from response
           const uniqueThcs = Array.from(new Set(res.map((r: any) => r.thcno))).filter(Boolean);
 
@@ -342,7 +342,7 @@ export class ThcDepatureListComponent implements OnInit {
   }
 
   confirmDepart(outRemarks: string = "") {
-    
+
     const payload = {
       thcList: this.thcToDepart.map(item => ({
         thcno: item.thcno,
