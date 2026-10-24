@@ -51,7 +51,11 @@ import { FormsModule } from '@angular/forms';
                        [bsConfig]="bsConfig"
                        placement="bottom"
                        container="body"
-                       readonly />
+                       readonly
+                       [readonly]="true"
+                       (keydown)="$event.preventDefault()"
+                       (keypress)="$event.preventDefault()"
+                       (paste)="$event.preventDefault()" />
               </div>
             </div>
             <div class="arrow-divider">
@@ -70,7 +74,11 @@ import { FormsModule } from '@angular/forms';
                        [bsConfig]="bsConfig"
                        placement="bottom"
                        container="body"
-                       readonly />
+                       readonly
+                       [readonly]="true"
+                       (keydown)="$event.preventDefault()"
+                       (keypress)="$event.preventDefault()"
+                       (paste)="$event.preventDefault()" />
               </div>
             </div>
           </div>
@@ -321,7 +329,9 @@ import { FormsModule } from '@angular/forms';
           font-weight: 500;
           color: #1e293b;
           background: var(--theme-primary-bg-light);
-          cursor: pointer;
+          cursor: pointer !important;
+          caret-color: transparent !important;
+          user-select: none !important;
           transition: all 0.2s;
 
           &:hover { border-color: var(--theme-primary-hover-border); }
@@ -330,6 +340,7 @@ import { FormsModule } from '@angular/forms';
             background: #fff;
             box-shadow: 0 0 0 3px var(--theme-primary-shadow-focus);
             outline: none;
+            caret-color: transparent !important;
           }
         }
       }

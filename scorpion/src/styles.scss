@@ -1837,6 +1837,21 @@ input:checked+.toggle-slider:before {
   }
 }
 
+/* ── Shortage Declaration (DEPS) Modal ── */
+.modal-dialog.shortage-modal-wrapper,
+.shortage-modal-wrapper {
+  max-width: 1050px !important;
+  width: 95% !important;
+  --bs-modal-width: 1050px !important;
+
+  .modal-content {
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    border: none !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+  }
+}
+
 .modal-header-left {
   display: flex;
   align-items: center;

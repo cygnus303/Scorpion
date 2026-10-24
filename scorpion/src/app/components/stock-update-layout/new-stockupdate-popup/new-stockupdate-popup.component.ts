@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, TemplateRef, ViewChild, OnInit, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -63,7 +63,8 @@ export class NewStockupdatePopupComponent implements OnInit {
     private sweetAlertService: SweetAlertService,
     private deliveryUpdateService: DeliveryUpdateService,
     public generalMasterService: GeneralMasterService,
-    public vendorChargeHelper: VendorChargeHelperService
+    public vendorChargeHelper: VendorChargeHelperService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -160,7 +161,12 @@ export class NewStockupdatePopupComponent implements OnInit {
     this.getVendorType();
 
     // Show popup immediately
-    this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
+    this.modalRef = this.modalService.show(this.Templatepod, {
+      class: 'modal-xl modal-dialog-centered',
+      backdrop: 'static',
+      keyboard: false,
+      ignoreBackdropClick: true
+    });
 
     // Call API in the background
     this.stockUpdateService.getStockUpdateDetails({ id: thcNo, baseLocationCode: baseLocation, BaseLocationCode: baseLocation }).subscribe({
@@ -185,8 +191,10 @@ export class NewStockupdatePopupComponent implements OnInit {
             if (item.pkgsno === undefined || item.pkgsno === null) {
               item.pkgsno = item.bkG_PKGSNO || 0;
             }
+            item._previousPkgsno = item.pkgsno;
             item.dp = item.dp || null;
             item.isDamage = item.isDamage || false;
+            item._previousIsDamage = item.isDamage;
             item.isSelected = false;
             item.frontFiles = [];
             item.frontFile = null;
@@ -336,7 +344,8 @@ export class NewStockupdatePopupComponent implements OnInit {
   }
 
   onDamageChange(event: any, row: any, index: number) {
-    const originalState = row.isDamage;
+    const originalState = !!row.isDamage;
+    row._previousIsDamage = originalState;
     event.target.checked = originalState; // Force UI state to stay as is until confirmed
 
     if (!originalState) {
@@ -348,6 +357,7 @@ export class NewStockupdatePopupComponent implements OnInit {
         const confirmClear = confirm('This docket already has DEPS details. Do you want to remove them?\n\n- Click "OK" to delete DEPS details.\n- Click "Cancel" to keep them and edit details.');
         if (confirmClear) {
           row.isDamage = false;
+          row._previousIsDamage = false;
           row.damageDepsData = null;
           if (row.depsData && row.depsData.depsTyp === 'D') {
             row.depsData = row.shortageDepsData || null;
@@ -363,6 +373,7 @@ export class NewStockupdatePopupComponent implements OnInit {
         }
       } else {
         row.isDamage = false;
+        row._previousIsDamage = false;
         row.damageDepsData = null;
         if (row.depsData && row.depsData.depsTyp === 'D') {
           row.depsData = row.shortageDepsData || null;
@@ -378,6 +389,9 @@ export class NewStockupdatePopupComponent implements OnInit {
   }
 
   openDepsPopup(row: any, index: number, depsType: 'D' | 'S' = 'D') {
+    if (row._previousIsDamage === undefined) {
+      row._previousIsDamage = !!row.isDamage;
+    }
     const existingDmg = row.damageDepsData || (row.depsData && row.depsData.depsTyp === 'D' ? row.depsData : null);
     const dmgPkgsVal = +row.pkgsno || 0;
     const dockno = row.dockNo || row.docketNo || '';
@@ -445,6 +459,9 @@ export class NewStockupdatePopupComponent implements OnInit {
   }
 
   openShortagePopup(row: any, index: number) {
+    if (row._previousPkgsno === undefined || row._previousPkgsno === null) {
+      row._previousPkgsno = row.bkG_PKGSNO || 0;
+    }
     const existingShrt = row.shortageDepsData || (row.depsData && row.depsData.depsTyp === 'S' ? row.depsData : null);
     const shortageQtyVal = +row.shortQty || +row.shortageQty || 0;
     const dockno = row.dockNo || '';
@@ -491,12 +508,14 @@ export class NewStockupdatePopupComponent implements OnInit {
     const index = event.rowIndex;
     const depsData = event.depsData;
     if (this.listVSFUM[index]) {
+      this.listVSFUM[index]._previousIsDamage = true;
       if (depsData && depsData.selectedBoxIds) {
         this.listVSFUM[index].damageSelectedBoxIds = depsData.selectedBoxIds;
       }
       this.listVSFUM[index].damageDepsData = depsData;
       this.listVSFUM[index].depsData = depsData;
       this.listVSFUM[index].isDamage = true;
+      this.listVSFUM[index].isSelected = true;
       this.listVSFUM[index].damageQry = depsData.affectedQty || 0;
       this.listVSFUM[index].damageWeight = depsData.affectedWeight || 0;
       this.listVSFUM[index].damageType = depsData.damageType || '';
@@ -507,6 +526,32 @@ export class NewStockupdatePopupComponent implements OnInit {
         this.listVSFUM[index].damageDepsData.selectedBoxIds = depsData.selectedBoxIds;
       }
     }
+  }
+
+  onDepsCancelled(event: any) {
+    const index = typeof event === 'object' ? event?.rowIndex : event;
+    if (index === undefined || index === null || index < 0) return;
+    const row = this.listVSFUM[index];
+    if (!row) return;
+
+    if (!row._previousIsDamage || (!row.damageDepsData && (!row.depsData || row.depsData.depsTyp !== 'D'))) {
+      row.isDamage = false;
+      row._previousIsDamage = false;
+      row.damageDepsData = null;
+      row.damageQry = 0;
+      row.damageWeight = 0;
+      row.damageType = '';
+      row.severity = '';
+      row.remarks = row.shortRemarks || '';
+      row.depsfile = '';
+      row.damageSelectedBoxIds = [];
+      if (row.depsData && row.depsData.depsTyp === 'D') {
+        row.depsData = row.shortageDepsData || null;
+      }
+    } else {
+      row.isDamage = true;
+    }
+    this.cdr.detectChanges();
   }
 
   onShortageDataReceived(event: any) {
@@ -536,7 +581,46 @@ export class NewStockupdatePopupComponent implements OnInit {
       this.listVSFUM[index].shortageReason = depsData.reason || '';
       this.listVSFUM[index].shortRemarks = depsData.remarks || '';
       this.listVSFUM[index].shortageRemarks = depsData.remarks || '';
+
+      this.listVSFUM[index]._previousPkgsno = this.listVSFUM[index].pkgsno;
+      this.listVSFUM[index]._lastShortageArrPkgs = +this.listVSFUM[index].pkgsno;
     }
+  }
+
+  onShortageCancelled(event: any) {
+    const index = typeof event === 'object' ? event?.rowIndex : event;
+    if (index === undefined || index === null || index < 0) return;
+    const row = this.listVSFUM[index];
+    if (!row) return;
+
+    if (row._previousPkgsno !== undefined && row._previousPkgsno !== null) {
+      row.pkgsno = row._previousPkgsno;
+    } else if (row.shortageDepsData && row.shortageDepsData.pkgsDelivered !== undefined) {
+      row.pkgsno = row.shortageDepsData.pkgsDelivered;
+    } else {
+      row.pkgsno = row.bkG_PKGSNO || 0;
+    }
+
+    this.onArrivedPkgsChange(row, index);
+
+    if (!row.shortageDepsData && (!row.depsData || row.depsData.depsTyp !== 'S')) {
+      row.shortQty = 0;
+      row.shortageQty = 0;
+      row.shortWt = 0;
+      row.shortageWeight = 0;
+      row.shortReason = '';
+      row.shortageReason = '';
+      row.shortRemarks = '';
+      row.shortageRemarks = '';
+      row.shortageSelectedBoxIds = [];
+      row._lastShortageArrPkgs = null;
+    } else {
+      const prevSavedShortage = +(row.shortageDepsData?.affectedQty || (row.depsData?.depsTyp === 'S' ? row.depsData?.affectedQty : 0));
+      row.shortQty = prevSavedShortage;
+      row.shortageQty = prevSavedShortage;
+      row._lastShortageArrPkgs = +row.pkgsno;
+    }
+    this.cdr.detectChanges();
   }
 
   toggleAll(event: any) {
@@ -685,6 +769,20 @@ export class NewStockupdatePopupComponent implements OnInit {
     return new Date().toISOString();
   }
 
+  onArrivedPkgsFocus(row: any) {
+    if (row && row.pkgsno !== undefined && row.pkgsno !== null && !isNaN(+row.pkgsno)) {
+      row._previousPkgsno = row.pkgsno;
+    }
+  }
+
+  onArrivedPkgsEnter(event: any, row: any, index: number) {
+    if (event?.target && typeof event.target.blur === 'function') {
+      event.target.blur();
+    } else {
+      this.checkAndOpenShortagePopup(row, index);
+    }
+  }
+
   onArrivedPkgsChange(row: any, index?: number) {
     const arrPkgs = +row.pkgsno || 0;
     const totalPkgs = +row.bkG_PKGSNO || 0;
@@ -706,6 +804,16 @@ export class NewStockupdatePopupComponent implements OnInit {
   }
 
   checkAndOpenShortagePopup(row: any, index: number) {
+    if (row.pkgsno === '' || row.pkgsno === null || row.pkgsno === undefined || isNaN(+row.pkgsno) || +row.pkgsno < 0) {
+      if (row._previousPkgsno !== undefined && row._previousPkgsno !== null) {
+        row.pkgsno = row._previousPkgsno;
+      } else {
+        row.pkgsno = row.bkG_PKGSNO || 0;
+      }
+      this.onArrivedPkgsChange(row, index);
+      return;
+    }
+
     const arrPkgs = +row.pkgsno || 0;
     const totalPkgs = +row.bkG_PKGSNO || 0;
     if (totalPkgs > 0 && arrPkgs >= 0 && arrPkgs < totalPkgs) {
@@ -716,6 +824,21 @@ export class NewStockupdatePopupComponent implements OnInit {
         row._lastShortageArrPkgs = arrPkgs;
         this.openShortagePopup(row, index);
       }
+    } else if (totalPkgs > 0 && arrPkgs >= totalPkgs) {
+      row.shortQty = 0;
+      row.shortageQty = 0;
+      row.shortWt = 0;
+      row.shortageWeight = 0;
+      row.shortReason = '';
+      row.shortageReason = '';
+      row.shortRemarks = '';
+      row.shortageRemarks = '';
+      row.shortageDepsData = null;
+      if (row.depsData && row.depsData.depsTyp === 'S') {
+        row.depsData = null;
+      }
+      row._lastShortageArrPkgs = null;
+      row._previousPkgsno = row.pkgsno;
     }
   }
 

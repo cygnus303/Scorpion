@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, TemplateRef, ViewChild, Input } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output, TemplateRef, ViewChild, Input } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormArray, FormControl } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PRSDRSApiService } from 'app/shared/services/prsdrs-api.service';
@@ -7,6 +7,7 @@ import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { environment } from 'environments/environment';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-drs-update-deps',
@@ -15,7 +16,7 @@ import { environment } from 'environments/environment';
   templateUrl: './drs-update-deps.component.html',
   styleUrls: ['./drs-update-deps.component.scss']
 })
-export class DrsUpdateDepsComponent {
+export class DrsUpdateDepsComponent implements OnDestroy {
   public modalRef!: BsModalRef;
   public drsNo: string = '';
   public depsNo: string = '';
@@ -24,7 +25,12 @@ export class DrsUpdateDepsComponent {
   public totalDeliveredDockets: number = 0;
   env = environment;
 
+  public isSaved: boolean = false;
+  private isCancelledEmitted: boolean = false;
+  private modalHiddenSub?: Subscription;
+
   @Output() dataEmitter = new EventEmitter<any>();
+  @Output() cancelEmitter = new EventEmitter<any>();
   @ViewChild('TemplateDeps', { static: true }) TemplateDeps!: TemplateRef<any>;
 
   public depsForm!: FormGroup;
@@ -113,12 +119,23 @@ export class DrsUpdateDepsComponent {
     this.vendorName = vendorName;
     this.totalDeliveredDockets = totalDeliveredDockets;
     this.rowDataIndex = index;
+    this.isSaved = false;
+    this.isCancelledEmitted = false;
 
     this.depsForm = new FormGroup({
       dockets: new FormArray([])
     });
 
-    this.modalRef = this.modalService.show(this.TemplateDeps, { class: 'modal-xxl modal-dialog-centered deps-entry-modal-wrapper', backdrop: 'static' });
+    this.modalRef = this.modalService.show(this.TemplateDeps, {
+      class: 'modal-xxl modal-dialog-centered deps-entry-modal-wrapper',
+      backdrop: true,
+      ignoreBackdropClick: false
+    });
+
+    this.modalHiddenSub?.unsubscribe();
+    this.modalHiddenSub = this.modalRef.onHidden?.subscribe(() => {
+      this.notifyCancel();
+    });
 
     // Ensure we populate any existing depsData if it was previously saved but not submitted yet
     const formData = data.depsData ? data.depsData : data;
@@ -299,10 +316,24 @@ export class DrsUpdateDepsComponent {
     row.get('fileBase64')?.setValue('');
   }
 
+  private notifyCancel() {
+    if (!this.isSaved && !this.isCancelledEmitted) {
+      this.isCancelledEmitted = true;
+      this.cancelEmitter.emit({
+        rowIndex: this.rowDataIndex
+      });
+    }
+  }
+
   closePopup() {
+    this.notifyCancel();
     if (this.modalRef) {
       this.modalRef.hide();
     }
+  }
+
+  ngOnDestroy() {
+    this.modalHiddenSub?.unsubscribe();
   }
 
   saveDepsForm() {
@@ -357,6 +388,7 @@ export class DrsUpdateDepsComponent {
       };
     });
 
+    this.isSaved = true;
     // Instead of calling API here, we emit it to the parent to save in its form state.
     this.dataEmitter.emit({
       rowIndex: this.rowDataIndex,
