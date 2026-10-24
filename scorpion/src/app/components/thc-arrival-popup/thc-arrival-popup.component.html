@@ -133,7 +133,7 @@
                                     <label class="form-label d-flex align-items-center gap-1 fw-bold" style="font-size: 11px;">
                                         Late Arrival Reason <span class="text-danger" *ngIf="isLarRequired">*</span>
                                     </label>
-                                    <ng-select class="noFoundTextColor clear-icon" [items]="Reasonlist" bindLabel="text"
+                                    <ng-select class="noFoundTextColor" [items]="Reasonlist" bindLabel="text"
                                         bindValue="value" appFocusNext placeholder="Late Arrival Reason (if delayed)"
                                         formControlName="LAR"
                                         [ngClass]="{ 'required2': isLarRequired, 'border-danger': arrivalForm.get('LAR')?.invalid && (arrivalForm.get('LAR')?.touched || arrivalForm.get('LAR')?.dirty) }"></ng-select>

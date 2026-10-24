@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Output, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-new-stockupdate-shortage-popup',
@@ -13,15 +14,19 @@ import { NgSelectModule } from '@ng-select/ng-select';
   styleUrls: ['./new-stockupdate-shortage-popup.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class NewStockupdateShortagePopupComponent {
+export class NewStockupdateShortagePopupComponent implements OnDestroy {
   public modalRefs!: BsModalRef;
   public thcNo: string = '';
   public dateStr: string = '';
   public popupDocketNo: string = '';
   public popupDocketDate: string = '';
   public rowDataIndex: number = -1;
+  public isSaved: boolean = false;
+  private isCancelledEmitted: boolean = false;
+  private modalHiddenSub?: Subscription;
 
   @Output() dataEmitter = new EventEmitter<any>();
+  @Output() cancelEmitter = new EventEmitter<any>();
   @ViewChild('TemplateShortage', { static: true }) TemplateShortage!: TemplateRef<any>;
 
   public shortageForm!: FormGroup;
@@ -44,6 +49,8 @@ export class NewStockupdateShortagePopupComponent {
     this.thcNo = thcNo;
     this.dateStr = dateStr;
     this.rowDataIndex = index;
+    this.isSaved = false;
+    this.isCancelledEmitted = false;
 
     this.popupDocketNo = data?.dockno || data?.dockNo || data?.docketNo || '';
     if (data?.booking_Date || data?.dockdt) {
@@ -58,7 +65,13 @@ export class NewStockupdateShortagePopupComponent {
 
     this.modalRefs = this.modalService.show(this.TemplateShortage, {
       class: 'modal-xl modal-dialog-centered shortage-modal-wrapper',
-      backdrop: 'static'
+      backdrop: true,
+      ignoreBackdropClick: false
+    });
+
+    this.modalHiddenSub?.unsubscribe();
+    this.modalHiddenSub = this.modalRefs.onHidden?.subscribe(() => {
+      this.notifyCancel();
     });
 
     const formData = data.depsData && data.depsData.depsTyp === 'S' ? { ...data.depsData, ...data, affectedPkgs: data.affectedPkgs !== undefined ? data.affectedPkgs : data.depsData.affectedQty } : data;
@@ -217,10 +230,24 @@ export class NewStockupdateShortagePopupComponent {
     row.get('affectedWeight')?.setValue(rawWt);
   }
 
+  private notifyCancel() {
+    if (!this.isSaved && !this.isCancelledEmitted) {
+      this.isCancelledEmitted = true;
+      this.cancelEmitter.emit({
+        rowIndex: this.rowDataIndex
+      });
+    }
+  }
+
   closePopup() {
+    this.notifyCancel();
     if (this.modalRefs) {
       this.modalRefs.hide();
     }
+  }
+
+  ngOnDestroy() {
+    this.modalHiddenSub?.unsubscribe();
   }
 
   saveShortageForm() {
@@ -235,7 +262,7 @@ export class NewStockupdateShortagePopupComponent {
     });
 
     if (activeRows.length === 0) {
-      this.sweetAlertService.warning('Please select Box IDs from the dropdown to declare affected packages.');
+      this.sweetAlertService.warning('Please enter valid shortage packages.');
       return;
     }
 
@@ -266,6 +293,7 @@ export class NewStockupdateShortagePopupComponent {
       };
     });
 
+    this.isSaved = true;
     this.dataEmitter.emit({
       rowIndex: this.rowDataIndex,
       depsData: depsData[0]
