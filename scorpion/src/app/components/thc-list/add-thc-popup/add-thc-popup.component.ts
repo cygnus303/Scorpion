@@ -1003,7 +1003,7 @@ export class AddThcPopupComponent {
             if (!response.data.contractExpire) {
               const contractAmt = Number(response.data.contractAmount) || 0;
               this.ThcForm.patchValue({
-                contractAmount: contractAmt,
+                contractAmount: 1000,
                 tDSOnAmount: contractAmt
               });
               this.calculateNetAmount();

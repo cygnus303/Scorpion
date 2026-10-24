@@ -190,9 +190,8 @@
                         </td>   
                           <td class="text-center cursor-pointer">
                             <a class="text-primary fw-medium"
-                               (click)="openDepsDetails(row)"
-                                style="text-decoration: dashed underline;">
-                                DEPS IDs
+                               (click)="row.deps === 'Y'?openDepsDetails(row):null">
+                                {{row.deps === 'Y'?'DEPS IDs':'-'}}
                             </a>
                         </td>
                         <td>
