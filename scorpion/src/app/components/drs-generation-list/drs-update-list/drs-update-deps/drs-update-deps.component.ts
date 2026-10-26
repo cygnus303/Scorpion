@@ -324,8 +324,20 @@ export class DrsUpdateDepsComponent implements OnDestroy {
     this.modalHiddenSub?.unsubscribe();
   }
 
+  hasInvalidDepsRows(): boolean {
+    return this.docketsArray.controls.some((c: any) => {
+      const v = c.value;
+      if (v.depstype) {
+        if (!v.selectedBoxIds || v.selectedBoxIds.length === 0) return true;
+        if (v.depstype === 'D' && !v.fileAttached && !v.fileName) return true;
+        if (v.depstype === 'D' && !v.damageType) return true;
+      }
+      return false;
+    });
+  }
+
   saveDepsForm() {
-    if (this.depsForm.invalid) {
+    if (this.depsForm.invalid || this.hasInvalidDepsRows()) {
       this.depsForm.markAllAsTouched();
       return;
     }
@@ -337,12 +349,6 @@ export class DrsUpdateDepsComponent implements OnDestroy {
 
     if (activeRows.length === 0) {
       this.sweetAlertService.warning('Please declare at least one DEPS record (Damage/Shortage) with affected packages.');
-      return;
-    }
-
-    const missingDamageFile = activeRows.find((c: any) => c.value.depstype === 'D' && !c.value.fileAttached);
-    if (missingDamageFile) {
-      this.sweetAlertService.warning(`File upload is required for Damage record on Docket ${missingDamageFile.value.dockno || ''}.`);
       return;
     }
 

@@ -257,8 +257,15 @@ export class NewStockupdateShortagePopupComponent implements OnDestroy {
     this.modalHiddenSub?.unsubscribe();
   }
 
+  hasInvalidRows(): boolean {
+    return this.docketsArray.controls.some((c: any) => {
+      const v = c.getRawValue();
+      return !v.selectedBoxIds || v.selectedBoxIds.length === 0;
+    });
+  }
+
   saveShortageForm() {
-    if (this.shortageForm.invalid) {
+    if (this.shortageForm.invalid || this.hasInvalidRows()) {
       this.shortageForm.markAllAsTouched();
       return;
     }

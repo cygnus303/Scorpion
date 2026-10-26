@@ -200,7 +200,7 @@ export class DepsEntryComponent {
       };
 
       if (prefilledItem.fileName) {
-        prefilledItem.fileUrl = `${this.env.liveUrl}Uploads/${prefilledItem.fileName}`;
+        prefilledItem.fileUrl = `${this.env.liveUrl}UploadedDocuments/UplaodDepsFile/${prefilledItem.fileName}`;
       }
 
       const affectedQty = Number(editItem.Lossvalue || editItem.affectedQty || 0);
@@ -394,8 +394,20 @@ export class DepsEntryComponent {
     }
   }
 
+  hasInvalidDepsRows(): boolean {
+    return this.docketsArray.controls.some((c: any) => {
+      const v = c.value;
+      if (v.depstype) {
+        if (!v.selectedBoxIds || v.selectedBoxIds.length === 0) return true;
+        if (v.depstype === 'D' && !v.fileAttached && !v.fileName) return true;
+        if (v.depstype === 'D' && !v.damageType) return true;
+      }
+      return false;
+    });
+  }
+
   saveDepsForm() {
-    if (this.depsForm.invalid) {
+    if (this.depsForm.invalid || this.hasInvalidDepsRows()) {
       this.depsForm.markAllAsTouched();
       return;
     }

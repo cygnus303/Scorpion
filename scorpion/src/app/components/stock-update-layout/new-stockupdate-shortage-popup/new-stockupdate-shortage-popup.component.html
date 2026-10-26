@@ -52,6 +52,7 @@
             <td style="min-width: 180px; position: relative;">
               <div class="ms-dropdown" [class.open]="activeBoxDropdownIndex === i" (click)="$event.stopPropagation()">
                 <button type="button" class="form-select form-select-sm text-start"
+                  [ngClass]="{ 'border-danger': !row.value.selectedBoxIds || row.value.selectedBoxIds.length === 0 }"
                   (click)="toggleBoxDropdown(i, $event)">
                   {{ getSelectedBoxesLabel(i) }}
                 </button>
@@ -63,6 +64,9 @@
                   </label>
                 </div>
               </div>
+              <span class="text-danger" style="font-size: 9px; font-weight: 500;"
+                *ngIf="!row.value.selectedBoxIds || row.value.selectedBoxIds.length === 0">
+                This field is required.</span>
             </td>
 
             <!-- Invoice Value -->
@@ -115,7 +119,7 @@
     <div class="d-flex gap-2">
       <button type="button" class="btn btn-sm btn-outline-secondary px-3 py-2" (click)="closePopup()"
         style="border-color: #1a237e; color: #1a237e; font-weight: 600;">Cancel</button>
-      <button type="button" class="btn btn-sm btn-success px-3 py-2 fw-bold" (click)="saveShortageForm()">
+      <button type="button" class="btn btn-sm btn-success px-3 py-2 fw-bold" [disabled]="hasInvalidRows()" (click)="saveShortageForm()">
         ✓ Submit
       </button>
     </div>
