@@ -220,7 +220,8 @@
             <div class="thcform-field" id="ftlTypeSelWrap">
               <label>FTL Type <span class="req">*</span></label>
               <ng-select class="noFoundTextColor required2 clear-icon" placeholder="FTL Type"
-                formControlName="vehicleType" [readonly]="ThcForm.value.vendorType === 'XX1'" appFocusNext required
+                formControlName="vehicleType" [readonly]="ThcForm.value.vendorType === 'XX1' || isBidVehicleTypeReadonly"
+                [clearable]="!isBidVehicleTypeReadonly && ThcForm.value.vendorType !== 'XX1'" appFocusNext required
                 notFoundText="No matches found" [items]="vehicleTypeList" bindLabel="type_Name" bindValue="typeCode"
                 (change)="onChangeVehicleType($event)" required
                 [ngClass]="{ 'border-danger': ThcForm.get('vehicleType')?.invalid  && ThcForm.get('vehicleType')?.touched }"></ng-select>

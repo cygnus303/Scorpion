@@ -64,6 +64,7 @@ export class AddThcPopupComponent {
   public selectedMfs: any[] = [];
   public isSubmitting: boolean = false;
   public isBidFitDateReadonly: boolean = false;
+  public isBidVehicleTypeReadonly: boolean = false;
   @ViewChild('TemplateTHC', { static: true }) TemplateTHC!: TemplateRef<any>;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
 
@@ -113,7 +114,7 @@ export class AddThcPopupComponent {
 
     this.ThcForm = this.fb.group({
       tHCDate: [this.formatDateTime(new Date())],
-      thcType: [{value: (this.selectedMfs && this.selectedMfs.length > 0) ? this.selectedMfs[0].lsType : '', disabled: true}],
+      thcType: [{ value: (this.selectedMfs && this.selectedMfs.length > 0) ? this.selectedMfs[0].lsType : '', disabled: true }],
       routeType: [initialRouteType, Validators.required],
       actualDeptDate: [this.formatDateTime(new Date())],
       scheduleDeptDate: [this.formatDateTime(new Date())],
@@ -162,11 +163,11 @@ export class AddThcPopupComponent {
       TDSPercent: [],
       PANNO: [],
       charges: new FormGroup({}),
-      flightCode: [null,initialRouteType === 'A' ? [Validators.required]:null],
-      airportCode: [null,initialRouteType === 'A' ? [Validators.required]:null],
-      airLine: [null,initialRouteType === 'A' ? [Validators.required]:null],
-      flightScheduleTime: [null,initialRouteType === 'A' ? [Validators.required]:null],
-      airWayBillNo: [null,initialRouteType === 'A' ? [Validators.required]:null],
+      flightCode: [null, initialRouteType === 'A' ? [Validators.required] : null],
+      airportCode: [null, initialRouteType === 'A' ? [Validators.required] : null],
+      airLine: [null, initialRouteType === 'A' ? [Validators.required] : null],
+      flightScheduleTime: [null, initialRouteType === 'A' ? [Validators.required] : null],
+      airWayBillNo: [null, initialRouteType === 'A' ? [Validators.required] : null],
       routeCode: [null, Validators.required],
     }, { validators: this.advanceNotGreaterThanNet.bind(this) });
 
@@ -247,7 +248,8 @@ export class AddThcPopupComponent {
       this.isBidRegDateReadonly = false;
       this.isBidInsDateReadonly = false;
       this.isBidFitDateReadonly = false;
-      
+      this.isBidVehicleTypeReadonly = false;
+
       // Reset contract amount to 0 when bid type changes
       this.ThcForm.get('contractAmount')?.setValue(0);
       this.ThcForm.get('vendorCode')?.setValue(null);
@@ -338,6 +340,7 @@ export class AddThcPopupComponent {
     this.isBidRegDateReadonly = false;
     this.isBidInsDateReadonly = false;
     this.isBidFitDateReadonly = false;
+    this.isBidVehicleTypeReadonly = false;
     this.ThcForm.patchValue({
       vendorCode: null,
       bidType: null,
@@ -1155,11 +1158,14 @@ export class AddThcPopupComponent {
       this.isBidRegDateReadonly = false;
       this.isBidInsDateReadonly = false;
       this.isBidFitDateReadonly = false;
+      this.isBidVehicleTypeReadonly = false;
       this.ThcForm.patchValue({
         vendorCode: null,
         driver1Name: null,
         mKTVehicleNo: null,
         driver1MobileNo: null,
+        vehicleType: null,
+        fTLType: null,
       });
       if (this.ThcForm.get('bidType')?.value === 'With') {
         this.getVehicleType('O')
@@ -1167,21 +1173,43 @@ export class AddThcPopupComponent {
       }
       return;
     }
+
     this.THCService.getDataFromBid(bidNo).subscribe({
       next: (response: any) => {
         this.isBidVendorReadonly = !!response?.vendorCode;
         this.isBidDriverReadonly = !!response?.driverName;
         this.isBidVehicleReadonly = !!response?.vehicleNo;
         this.isBidMobileReadonly = !!response?.driverMobileNo;
+        this.isBidVehicleTypeReadonly = !!response?.vehicleType;
 
         const payload: any = {
           vendorCode: response?.vendorCode || null,
           driver1Name: response?.driverName || null,
           mKTVehicleNo: response?.vehicleNo || null,
           driver1MobileNo: response?.driverMobileNo || null,
-          contractAmount :response?.proposal_TripCost || 0,
+          contractAmount: response?.proposal_TripCost || 0,
         };
-        this.getPANnumberData(response?.vendorCode)
+        this.getPANnumberData(response?.vendorCode);
+
+        this.THCService.getVehicleType('O').subscribe({
+          next: (res: any) => {
+            if (res && res.data) {
+              this.vehicleTypeList = res.data;
+              if (response?.vehicleType) {
+                const matched = res.data.find((x: any) => String(x.fleet_Type).trim() === String(response.vehicleType).trim())
+                  || res.data.find((x: any) => String(x.typeCode).trim() === String(response.vehicleType).trim());
+                if (matched) {
+                  this.ThcForm.patchValue({
+                    vehicleType: matched.typeCode,
+                    fTLType: matched.fleet_Type
+                  });
+                  this.getVehicleCapacity(matched.typeCode);
+                }
+              }
+            }
+          }
+        });
+
 
         if (this.ThcForm.get('bidType')?.value === 'With') {
           payload.vehicleNO = 'O';
