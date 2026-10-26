@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, Output, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, HostListener, OnDestroy, Output, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -36,6 +36,11 @@ export class NewStockupdateShortagePopupComponent implements OnDestroy {
     { value: 'S', label: '🟠 Shortage' }
   ];
 
+  @HostListener('document:click')
+  onDocumentClick() {
+    this.closeBoxDropdowns();
+  }
+
   constructor(
     private modalService: BsModalService,
     private sweetAlertService: SweetAlertService
@@ -51,6 +56,7 @@ export class NewStockupdateShortagePopupComponent implements OnDestroy {
     this.rowDataIndex = index;
     this.isSaved = false;
     this.isCancelledEmitted = false;
+    this.activeBoxDropdownIndex = null;
 
     this.popupDocketNo = data?.dockno || data?.dockNo || data?.docketNo || '';
     if (data?.booking_Date || data?.dockdt) {
@@ -64,7 +70,7 @@ export class NewStockupdateShortagePopupComponent implements OnDestroy {
     });
 
     this.modalRefs = this.modalService.show(this.TemplateShortage, {
-      class: 'modal-xl modal-dialog-centered shortage-modal-wrapper',
+      class: 'modal-xxl modal-dialog-centered shortage-modal-wrapper',
       backdrop: true,
       ignoreBackdropClick: false
     });
@@ -240,6 +246,7 @@ export class NewStockupdateShortagePopupComponent implements OnDestroy {
   }
 
   closePopup() {
+    this.closeBoxDropdowns();
     this.notifyCancel();
     if (this.modalRefs) {
       this.modalRefs.hide();
