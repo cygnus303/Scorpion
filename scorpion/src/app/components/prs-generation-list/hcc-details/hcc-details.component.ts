@@ -552,7 +552,7 @@ export class HCCDetailsComponent {
       maxlimitcalculation = rate;
     }
 
-    if (maxlimitcalculation > 5.0) {
+    if (this.isType !== 'E' && maxlimitcalculation > 5.0) {
       group.get('rateError')?.setValue('Rate Amount Is High, Please Check');
       group.get('chargeRate')?.setValue('0.00', { emitEvent: false });
       return false;
