@@ -236,6 +236,31 @@ export class NewStockupdateShortagePopupComponent implements OnDestroy {
     row.get('affectedWeight')?.setValue(rawWt);
   }
 
+  clearLossValueOnFocus(rowIndex: number) {
+    const row = this.docketsArray.at(rowIndex) as FormGroup;
+    const ctrl = row?.get('affectedInvVal');
+    if (ctrl) {
+      const val = ctrl.value;
+      if (val === 0 || val === '0' || val === '0.00' || Number(val) === 0) {
+        ctrl.setValue(null);
+      }
+    }
+  }
+
+  resetLossValueOnBlur(rowIndex: number) {
+    const row = this.docketsArray.at(rowIndex) as FormGroup;
+    const ctrl = row?.get('affectedInvVal');
+    if (ctrl) {
+      const val = ctrl.value;
+      if (val === '' || val === null || val === undefined || String(val).trim() === '') {
+        ctrl.setValue(0);
+      } else {
+        const num = Number(val);
+        ctrl.setValue(!isNaN(num) ? num : 0);
+      }
+    }
+  }
+
   private notifyCancel() {
     if (!this.isSaved && !this.isCancelledEmitted) {
       this.isCancelledEmitted = true;

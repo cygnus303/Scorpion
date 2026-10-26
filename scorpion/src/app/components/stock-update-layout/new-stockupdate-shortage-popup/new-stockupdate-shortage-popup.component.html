@@ -98,8 +98,12 @@
 
             <!-- Affected Inv. Value -->
             <td class="text-end">
-              <input class="form-control form-control-sm text-end w-100" type="text" [value]="'₹' + (row.value.affectedInvVal | number:'1.2-2')" 
-                style="background-color: #f1f5f9; color: #1a237e; font-weight: 600;" />
+              <input class="form-control form-control-sm text-end w-100" type="text"
+                formControlName="affectedInvVal"
+                (focus)="clearLossValueOnFocus(i)"
+                (blur)="resetLossValueOnBlur(i)"
+                onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46"
+                oninput="this.value = this.value.replace(/[^0-9.]/g,'').replace(/(\..*)\./g,'$1');" />
             </td>
 
             <!-- Remarks -->
