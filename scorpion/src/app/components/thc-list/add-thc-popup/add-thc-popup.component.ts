@@ -491,7 +491,9 @@ export class AddThcPopupComponent {
     });
     // this.getTDSDetailsFromVendor(event);
     this.getVehicleFromVendorList(event);
-    this.getContractDetail();
+    if(this.ThcForm.value.vendorType === 'XX1'){
+      this.getContractDetail();
+    }
     // if (this.ThcForm.value.vendorType === 'XX1') {
     //   // this.GetVehicleTypesForChallanFromRouteVendType()
     // } else {
@@ -594,7 +596,9 @@ export class AddThcPopupComponent {
             openKM: response.data.startKM
           });
           this.getVehicleCapacity(response.data.vehicle_Type);
-          this.getContractDetail();
+          if(this.ThcForm.value.vendorType ==='XX1'){
+            this.getContractDetail();
+          }
         }
       },
       error: (err) => {
@@ -779,7 +783,7 @@ export class AddThcPopupComponent {
         isOverLoad: false
       })
     }
-    if (this.ThcForm.value.vendorCode) {
+    if (this.ThcForm.value.vendorCode && this.ThcForm.value.vendorType ==='XX1') {
       this.getContractDetail();
     }
   }
