@@ -1003,7 +1003,7 @@ export class AddThcPopupComponent {
             if (!response.data.contractExpire) {
               const contractAmt = Number(response.data.contractAmount) || 0;
               this.ThcForm.patchValue({
-                contractAmount: 1000,
+                contractAmount: contractAmt,
                 tDSOnAmount: contractAmt
               });
               this.calculateNetAmount();
@@ -1188,6 +1188,7 @@ export class AddThcPopupComponent {
         }
 
         this.ThcForm.patchValue(payload);
+        this.calculateNetAmount();
 
         if (response?.vehicleNo) {
           this.getVehicleDetailFromBid(response?.vehicleNo);
