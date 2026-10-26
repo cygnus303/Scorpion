@@ -1840,15 +1840,25 @@ input:checked+.toggle-slider:before {
 /* ── Shortage Declaration (DEPS) Modal ── */
 .modal-dialog.shortage-modal-wrapper,
 .shortage-modal-wrapper {
-  max-width: 1050px !important;
+  max-width: 1300px !important;
   width: 95% !important;
-  --bs-modal-width: 1050px !important;
+  --bs-modal-width: 1300px !important;
 
   .modal-content {
     border-radius: 8px !important;
-    overflow: hidden !important;
+    overflow: visible !important;
     border: none !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .modal-header {
+    border-top-left-radius: 8px !important;
+    border-top-right-radius: 8px !important;
+  }
+
+  .modal-footer {
+    border-bottom-left-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
   }
 }
 
