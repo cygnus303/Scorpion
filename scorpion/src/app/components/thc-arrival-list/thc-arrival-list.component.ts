@@ -12,11 +12,13 @@ import { PRSDRSApiService } from 'app/shared/services/prsdrs-api.service';
 import { DocketService } from 'app/shared/services/docket.service';
 import { ExportService } from 'app/shared/services/export.service';
 import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
+import { MfViewComponent } from '../thc-list/mf-view/mf-view.component';
+import { HccViewComponent } from '../hcc-view/hcc-view.component';
 
 @Component({
   selector: 'app-thc-arrival-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, NgSelectModule, BsDatepickerModule, PaginationComponent, ThcArrivalPopupComponent, DateRangePickerComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, NgSelectModule, BsDatepickerModule, PaginationComponent,HccViewComponent, ThcArrivalPopupComponent, DateRangePickerComponent,MfViewComponent],
   providers: [BsModalService],
   templateUrl: './thc-arrival-list.component.html',
   styleUrl: './thc-arrival-list.component.scss'
@@ -30,6 +32,9 @@ export class ThcArrivalListComponent {
   public isdownload : boolean = false;
    private fetchSubject = new Subject<void>();
   @ViewChild('ThcArrivalPopupComponent') ThcArrivalPopupComponent!: ThcArrivalPopupComponent;
+  @ViewChild('MfViewComponent') MfViewComponent!: MfViewComponent;
+  @ViewChild('HccViewComponent') HccViewComponent!: HccViewComponent;
+  
 
   public arrivalData:any;
   statusList = [
@@ -227,6 +232,10 @@ export class ThcArrivalListComponent {
     }
   }
 
+   openMFPopup(thcNo: string) {
+    this.MfViewComponent.showPopup(thcNo);
+  }
+
     get isHQTR(): boolean {
     return this.docketService.loginUserList?.LocationCode === 'HQTR';
   }
@@ -264,5 +273,9 @@ export class ThcArrivalListComponent {
 
    openThcArrival(data: any) {
     this.ThcArrivalPopupComponent.showPopup(data);
+  }
+
+    openHccPopup(data: any, chargeType: string) {
+    this.HccViewComponent.showPopup(data, chargeType, 'M', 'T');
   }
 }

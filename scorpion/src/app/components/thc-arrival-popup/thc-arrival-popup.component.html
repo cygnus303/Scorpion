@@ -1,187 +1,211 @@
 <ng-template #Templatepod>
-    <!-- Header -->
-    <div class="modal-header">
-        <div class="modal-header-left">
-            <div class="modal-title">
-                <i class="fas fa-truck-moving me-2 text-info"></i>
-                THC Arrival Details
+    <div class="position-relative" style="border-radius: 12px; overflow: hidden;">
+        <!-- Loading Overlay (confined to popup only) -->
+        <div *ngIf="isloading" class="loading-overlay">
+            <div class="spinner-container">
+                <i class="fas fa-spinner fa-spin custom-spinner"></i>
+                <div class="mt-3 custom-text">Submitting...</div>
             </div>
-            <span class="modal-hcc-tag">Complete THC Arrival Details below</span>
-        </div>
-        <div class="modal-header-actions">
-            <button class="modal-close" (click)="modalRef.hide()" title="Close">✕</button>
-        </div>
-    </div>
-
-    <div style="background: #f8fafc;">
-        <!-- Loading State while fetching THC Arrival data -->
-        <div *ngIf="isFetchingData" class="modal-body" style="padding: 30px; text-align: center; min-height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <div class="mt-3 text-secondary fw-semibold" style="font-size: 13px;">Fetching THC Arrival Details...</div>
         </div>
 
-        <form [formGroup]="arrivalForm" *ngIf="!isFetchingData && arrivalDetail">
-            <div class="modal-body" style="padding: 15px; display: flex; flex-direction: column; gap: 15px;">
-                
-                <!-- THC Arrival Reference Card -->
-                <div class="detail-card">
-                    <div class="custom-card-head">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="fas fa-info-circle text-primary"></i>
-                            <span>THC Arrival Reference</span>
-                            <span class="custom-readonly-badge">READ-ONLY</span>
-                        </div>
-                    </div>
-                    <div class="detail-grid" style="grid-template-columns: repeat(4, 1fr);">
-                        <div class="detail-item">
-                            <div class="detail-label">THC NO.</div>
-                            <input type="text" class="form-control hcc-readonly-input" readonly
-                                [value]="THCData?.thcNo || '—'" />
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">VEHICLE #</div>
-                            <input type="text" class="form-control hcc-readonly-input" readonly
-                                [value]="arrivalDetail?.vehicle || '—'" />
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">ACTUAL WT.</div>
-                            <input type="text" class="form-control hcc-readonly-input" readonly
-                                [value]="arrivalDetail?.chrgwt ? (arrivalDetail?.chrgwt | number:'1.2-2') : '0.00'" />
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">DEPARTED FROM</div>
-                            <input type="text" class="form-control hcc-readonly-input" readonly
-                                [value]="arrivalDetail?.previousBranch ? (arrivalDetail?.previousBranch + (arrivalDetail?.atd ? ' @ ' + arrivalDetail?.atd : '')) : '—'" />
-                        </div>
-                        <div class="detail-item" style="grid-column: span 4; border-right: none; border-bottom: none;">
-                            <div class="detail-label">EXPECTED ARRIVAL</div>
-                            <input type="text" class="form-control hcc-readonly-input" readonly
-                                [value]="(arrivalDetail?.eta | date:'dd MMM yyyy h:mm:ss a') || '—'" />
-                        </div>
-                    </div>
+        <!-- Header -->
+        <div class="modal-header">
+            <div class="modal-header-left">
+                <div class="modal-title">
+                    <i class="fas fa-truck-moving me-2 text-info"></i>
+                    THC Arrival Details
                 </div>
+                <span class="modal-hcc-tag">Complete THC Arrival Details below</span>
+            </div>
+            <div class="modal-header-actions">
+                <button class="modal-close" (click)="modalRef.hide()" title="Close">✕</button>
+            </div>
+        </div>
 
-                <!-- Arrival Form Details Card -->
-                <div class="detail-card mb-0">
-                    <div class="custom-card-head">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="fas fa-clipboard-check text-primary"></i>
-                            <span>Arrival Details</span>
+        <div style="background: #f8fafc;">
+            <!-- Loading State while fetching THC Arrival data -->
+            <div *ngIf="isFetchingData" class="modal-body"
+                style="padding: 30px; text-align: center; min-height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <div class="mt-3 text-secondary fw-semibold" style="font-size: 13px;">Fetching THC Arrival Details...
+                </div>
+            </div>
+
+            <form [formGroup]="arrivalForm" *ngIf="!isFetchingData && arrivalDetail">
+                <div class="modal-body" style="padding: 15px; display: flex; flex-direction: column; gap: 15px;">
+
+                    <!-- THC Arrival Reference Card -->
+                    <div class="detail-card">
+                        <div class="custom-card-head">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="fas fa-info-circle text-primary"></i>
+                                <span>THC Arrival Reference</span>
+                                <span class="custom-readonly-badge">READ-ONLY</span>
+                            </div>
+                        </div>
+                        <div class="detail-grid" style="grid-template-columns: repeat(4, 1fr);">
+                            <div class="detail-item">
+                                <div class="detail-label">THC NO.</div>
+                                <input type="text" class="form-control hcc-readonly-input" readonly
+                                    [value]="THCData?.thcNo || '—'" />
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">VEHICLE #</div>
+                                <input type="text" class="form-control hcc-readonly-input" readonly
+                                    [value]="arrivalDetail?.vehicle || '—'" />
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">ACTUAL WT.</div>
+                                <input type="text" class="form-control hcc-readonly-input" readonly
+                                    [value]="arrivalDetail?.chrgwt ? (arrivalDetail?.chrgwt | number:'1.2-2') : '0.00'" />
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">DEPARTED FROM</div>
+                                <input type="text" class="form-control hcc-readonly-input" readonly
+                                    [value]="arrivalDetail?.previousBranch ? (arrivalDetail?.previousBranch + (arrivalDetail?.atd ? ' @ ' + arrivalDetail?.atd : '')) : '—'" />
+                            </div>
+                            <div class="detail-item"
+                                style="grid-column: span 4; border-right: none; border-bottom: none;">
+                                <div class="detail-label">EXPECTED ARRIVAL</div>
+                                <input type="text" class="form-control hcc-readonly-input" readonly
+                                    [value]="(arrivalDetail?.eta | date:'dd MMM yyyy h:mm:ss a') || '—'" />
+                            </div>
                         </div>
                     </div>
-                    <div class="p-3 bg-white">
-                        <!-- Row 1: Incoming Seal # & Status | Vehicle Arrival Date & Time | Unloader -->
-                        <div class="row mb-3">
-                            <div class="col-4">
-                                <div class="form-group-input">
-                                    <label class="form-label d-flex align-items-center gap-1 fw-bold" style="font-size: 11px;">
-                                        Incoming Seal # &amp; Status <span class="text-danger">*</span>
-                                    </label>
-                                    <div class="d-flex align-items-start gap-2">
-                                        <div class="flex-grow-1">
-                                            <input type="text" class="form-control required2"
-                                                placeholder="Incoming Seal" formControlName="ISN" appFocusNext
-                                                [ngClass]="{'border-danger': arrivalForm.get('ISN')?.invalid && arrivalForm.get('ISN')?.touched}">
-                                            <div class="text-danger small mt-1 text-start"
-                                                *ngIf="arrivalForm.get('ISN')?.invalid && arrivalForm.get('ISN')?.touched">
-                                                This field is required.
+
+                    <!-- Arrival Form Details Card -->
+                    <div class="detail-card mb-0">
+                        <div class="custom-card-head">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="fas fa-clipboard-check text-primary"></i>
+                                <span>Arrival Details</span>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-white">
+                            <!-- Row 1: Incoming Seal # & Status | Vehicle Arrival Date & Time | Unloader -->
+                            <div class="row mb-3">
+                                <div class="col-4">
+                                    <div class="form-group-input">
+                                        <label class="form-label d-flex align-items-center gap-1 fw-bold"
+                                            style="font-size: 11px;">
+                                            Incoming Seal # &amp; Status <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="d-flex align-items-start gap-2">
+                                            <div class="flex-grow-1">
+                                                <input type="text" class="form-control required2"
+                                                    placeholder="Incoming Seal" formControlName="ISN" appFocusNext
+                                                    maxlength="6"
+                                                    (keypress)="onlyNumberKey($event)"
+                                                    (input)="onSealInput($event)"
+                                                    [ngClass]="{'border-danger': arrivalForm.get('ISN')?.invalid && (arrivalForm.get('ISN')?.touched || arrivalForm.get('ISN')?.dirty)}">
+                                                <div class="text-danger small mt-1 text-start"
+                                                    *ngIf="arrivalForm.get('ISN')?.errors?.['required'] && (arrivalForm.get('ISN')?.touched || arrivalForm.get('ISN')?.dirty)">
+                                                    This field is required.
+                                                </div>
+                                                <div class="text-danger small mt-1 text-start"
+                                                    *ngIf="arrivalForm.get('ISN')?.errors?.['maxlength'] && (arrivalForm.get('ISN')?.touched || arrivalForm.get('ISN')?.dirty)">
+                                                    Maximum 6 digits allowed.
+                                                </div>
+                                                <div class="text-danger small mt-1 text-start"
+                                                    *ngIf="arrivalForm.get('ISN')?.errors?.['sealMismatch'] && (arrivalForm.get('ISN')?.touched || arrivalForm.get('ISN')?.dirty)">
+                                                    Seal number does not match.
+                                                </div>
+                                            </div>
+                                            <div style="width: 140px; flex-shrink: 0;">
+                                                <ng-select class="noFoundTextColor required2 clear-icon"
+                                                    [items]="Seallist" bindLabel="text" bindValue="value" appFocusNext
+                                                    placeholder="Select Status" formControlName="s2id_Status"
+                                                    [ngClass]="{ 'border-danger': arrivalForm.get('s2id_Status')?.invalid && arrivalForm.get('s2id_Status')?.touched}"></ng-select>
+                                                <div class="text-danger small mt-1 text-start"
+                                                    *ngIf="arrivalForm.get('s2id_Status')?.invalid && arrivalForm.get('s2id_Status')?.touched">
+                                                    This field is required.
+                                                </div>
                                             </div>
                                         </div>
-                                        <div style="width: 140px; flex-shrink: 0;">
-                                            <ng-select class="noFoundTextColor required2 clear-icon" [items]="Seallist"
-                                                bindLabel="text" bindValue="value" appFocusNext
-                                                placeholder="Select Status" formControlName="s2id_Status"
-                                                [ngClass]="{ 'border-danger': arrivalForm.get('s2id_Status')?.invalid && arrivalForm.get('s2id_Status')?.touched}"></ng-select>
-                                            <div class="text-danger small mt-1 text-start"
-                                                *ngIf="arrivalForm.get('s2id_Status')?.invalid && arrivalForm.get('s2id_Status')?.touched">
-                                                This field is required.
-                                            </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-4">
+                                    <div class="form-group-input">
+                                        <label class="form-label d-flex align-items-center gap-1 fw-bold"
+                                            style="font-size: 11px;">
+                                            Vehicle Arrival Date &amp; Time <span class="text-danger">*</span>
+                                        </label>
+                                        <app-date-time-picker controlName="AD"
+                                            [placeholder]="'Vehicle Arrival Date & Time'" [minDate]="minDate"
+                                            [maxDate]="maxDate">
+                                        </app-date-time-picker>
+                                    </div>
+                                </div>
+
+                                <div class="col-4">
+                                    <div class="form-group-input">
+                                        <label class="form-label d-flex align-items-center gap-1 fw-bold"
+                                            style="font-size: 11px;">
+                                            Unloader
+                                        </label>
+                                        <input class="form-control hcc-readonly-input" type="text"
+                                            placeholder="Unloader" formControlName="Unloder" readonly>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Row 2: Late Arrival Reason | Incoming Remarks -->
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="form-group-input">
+                                        <label class="form-label d-flex align-items-center gap-1 fw-bold"
+                                            style="font-size: 11px;">
+                                            Late Arrival Reason <span class="text-danger" *ngIf="isLarRequired">*</span>
+                                        </label>
+                                        <ng-select class="noFoundTextColor" [items]="Reasonlist" bindLabel="text"
+                                            bindValue="value" appFocusNext
+                                            placeholder="Late Arrival Reason (if delayed)" formControlName="LAR"
+                                            [ngClass]="{ 'required2': isLarRequired, 'border-danger': arrivalForm.get('LAR')?.invalid && (arrivalForm.get('LAR')?.touched || arrivalForm.get('LAR')?.dirty) }"></ng-select>
+                                        <div class="text-danger small mt-1 text-start"
+                                            *ngIf="arrivalForm.get('LAR')?.invalid && (arrivalForm.get('LAR')?.touched || arrivalForm.get('LAR')?.dirty)">
+                                            This field is required.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-8">
+                                    <div class="form-group-input">
+                                        <label class="form-label d-flex align-items-center gap-1 fw-bold"
+                                            style="font-size: 11px;">
+                                            Incoming Remarks <span class="text-danger">*</span>
+                                        </label>
+                                        <textarea class="form-control required2" rows="2" placeholder="Incoming Remarks"
+                                            formControlName="IR" appFocusNext
+                                            [ngClass]="{ 'border-danger': arrivalForm.get('IR')?.invalid && arrivalForm.get('IR')?.touched}"></textarea>
+                                        <div class="text-danger small mt-1 text-start"
+                                            *ngIf="arrivalForm.get('IR')?.invalid && arrivalForm.get('IR')?.touched">
+                                            This field is required.
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="col-4">
-                                <div class="form-group-input">
-                                    <label class="form-label d-flex align-items-center gap-1 fw-bold" style="font-size: 11px;">
-                                        Vehicle Arrival Date &amp; Time <span class="text-danger">*</span>
-                                    </label>
-                                    <app-date-time-picker controlName="AD"
-                                        [placeholder]="'Vehicle Arrival Date & Time'"
-                                        [minDate]="minDate" [maxDate]="maxDate">
-                                    </app-date-time-picker>
-                                </div>
-                            </div>
-
-                            <div class="col-4">
-                                <div class="form-group-input">
-                                    <label class="form-label d-flex align-items-center gap-1 fw-bold" style="font-size: 11px;">
-                                        Unloader
-                                    </label>
-                                    <input class="form-control hcc-readonly-input" type="text" placeholder="Unloader"
-                                        formControlName="Unloder" readonly>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Row 2: Late Arrival Reason | Incoming Remarks -->
-                        <div class="row">
-                            <div class="col-4">
-                                <div class="form-group-input">
-                                    <label class="form-label d-flex align-items-center gap-1 fw-bold" style="font-size: 11px;">
-                                        Late Arrival Reason <span class="text-danger" *ngIf="isLarRequired">*</span>
-                                    </label>
-                                    <ng-select class="noFoundTextColor" [items]="Reasonlist" bindLabel="text"
-                                        bindValue="value" appFocusNext placeholder="Late Arrival Reason (if delayed)"
-                                        formControlName="LAR"
-                                        [ngClass]="{ 'required2': isLarRequired, 'border-danger': arrivalForm.get('LAR')?.invalid && (arrivalForm.get('LAR')?.touched || arrivalForm.get('LAR')?.dirty) }"></ng-select>
-                                    <div class="text-danger small mt-1 text-start"
-                                        *ngIf="arrivalForm.get('LAR')?.invalid && (arrivalForm.get('LAR')?.touched || arrivalForm.get('LAR')?.dirty)">
-                                        This field is required.
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-8">
-                                <div class="form-group-input">
-                                    <label class="form-label d-flex align-items-center gap-1 fw-bold" style="font-size: 11px;">
-                                        Incoming Remarks <span class="text-danger">*</span>
-                                    </label>
-                                    <textarea class="form-control required2" rows="2"
-                                        placeholder="Incoming Remarks" formControlName="IR" appFocusNext
-                                        [ngClass]="{ 'border-danger': arrivalForm.get('IR')?.invalid && arrivalForm.get('IR')?.touched}"></textarea>
-                                    <div class="text-danger small mt-1 text-start"
-                                        *ngIf="arrivalForm.get('IR')?.invalid && arrivalForm.get('IR')?.touched">
-                                        This field is required.
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
-                </div>
+                </div> <!-- /modal-body -->
 
-                <div *ngIf="isloading" class="loading-overlay">
-                    <div class="spinner-container">
-                        <i class="fas fa-spinner fa-spin custom-spinner"></i>
-                        <div class="mt-3 custom-text">Submitting...</div>
+                <!-- Footer matching enterprise styling -->
+                <div class="modal-footer"
+                    style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 15px 20px;">
+                    <div class="modal-footer-btns w-100 d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-danger px-4 py-2 rounded" (click)="modalRef.hide()">✕
+                            Cancel</button>
+                        <button type="button" class="btn btn-primary px-4 py-2 rounded" (click)="onSubmit()"
+                            [disabled]="isloading">
+                            <span *ngIf="isloading" class="spinner-border spinner-border-sm me-2" role="status"
+                                aria-hidden="true"></span>
+                            <i class="fas fa-check me-2" *ngIf="!isloading"></i> Submit Arrival
+                        </button>
                     </div>
                 </div>
-            </div> <!-- /modal-body -->
-
-            <!-- Footer matching enterprise styling -->
-            <div class="modal-footer" style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 15px 20px;">
-                <div class="modal-footer-btns w-100 d-flex justify-content-end gap-2">
-                    <button type="button" class="btn btn-danger px-4 py-2 rounded" (click)="modalRef.hide()">✕ Cancel</button>
-                    <button type="button" class="btn btn-primary px-4 py-2 rounded"
-                        (click)="onSubmit()"
-                        [disabled]="isloading">
-                        <span *ngIf="isloading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                        <i class="fas fa-check me-2" *ngIf="!isloading"></i> Submit Arrival
-                    </button>
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </ng-template>
