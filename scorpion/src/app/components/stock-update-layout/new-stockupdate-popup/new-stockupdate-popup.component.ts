@@ -1300,21 +1300,22 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
       next: (res: any) => {
         this.isLoading = false;
         if (res) {
-          this.sweetAlertService.success(`<div style="text-align:left;font-size:15px;">
-    <h3 style="margin:0 0 10px;color:#28a745;">
-        ✅ Stock Update Successful
-    </h3>
+          const thcNo = this.stockData?.thcno || this.stockData?.thcNo || this.stockData?.THCNO || '';
+          const depsId = (res?.depsId || res?.DepsId || res?.deps_id || '')?.toString().trim();
+          const hasDepsId = !!depsId && 
+                            depsId.toLowerCase() !== 'null' && 
+                            depsId.toLowerCase() !== 'undefined' && 
+                            depsId !== '0' && 
+                            depsId.toLowerCase() !== 'n/a';
 
-    <div style="padding:10px;background:#f8f9fa;border-radius:8px;">
-        <p style="margin:5px 0;">
-            <strong>📦 THC No:</strong> ${this.stockData.thcno}
-        </p>
+          const successHtml = `
+            <div style="font-size: 15px; color: #475569; line-height: 1.7; margin-top: 4px;">
+              <div>Stock update completed successfully for THC: <strong style="color: #0b1a30; font-size: 16px;">${thcNo}</strong></div>
+              ${hasDepsId ? `<div style="margin-top: 8px; color: #b91c1c; font-weight: 600; font-size: 15px;">DEPS ID: <strong style="color: #b91c1c; font-size: 16px;">${depsId}</strong></div>` : ''}
+            </div>
+          `;
 
-        <p style="margin:5px 0;">
-            <strong>🆔 DEPS ID:</strong> ${res.depsId}
-        </p>
-    </div>
-</div>`);
+          this.sweetAlertService.success(successHtml);
           this.dataEmitter.emit();
           this.modalRef?.hide();
         }
