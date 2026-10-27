@@ -14,6 +14,7 @@ import { environment } from 'environments/environment';
 import { CommonDateService } from 'app/shared/services/common-date.service';
 import { CommonModule } from '@angular/common';
 import { CustomerService } from 'app/shared/services/customer.service';
+import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 
 @Component({
   selector: 'app-thc-arrival-popup',
@@ -35,6 +36,7 @@ export class ThcArrivalPopupComponent {
   public isFetchingData: boolean = false;
   public maxCloseKMValue: number = 900000;
   public isLarRequired: boolean = false;
+  public apiSealNo: string = '';
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
 
@@ -72,20 +74,35 @@ export class ThcArrivalPopupComponent {
     public THCService: THCMasterService,
     private modalService: BsModalService,
     private sweetAlertService: SweetAlertService,
-    public commonDateService: CommonDateService) { }
+    public commonDateService: CommonDateService,
+    private dynamicDataService:DynamicDataService) { }
+
+    ngOnInit(){
+          const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      this.docketService.Location = this.docketService.loginUserList.LocationCode;
+      // this.docketService.loginUserList.LocationCode = 'PIM'
+      this.docketService.BaseUserCode = this.docketService.loginUserList.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList.BaseUserName;
+    }
+    }
 
   showPopup(data: any) {
+    
     this.buildForm();
     this.dateAccess();
     this.THCData = data;
     console.log(this.THCData);
     this.refreshData();
+    this.sealvalidation(this.THCData.thcNo);
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
   }
 
   buildForm() {
+    this.apiSealNo = '';
     this.arrivalForm = new FormGroup({
-      ISN: new FormControl('', [Validators.required]),
+      ISN: new FormControl('', [Validators.required, Validators.maxLength(6)]),
       s2id_Status: new FormControl(null, [Validators.required]),
       AD: new FormControl(this.getCurrentDateTime()),
       CLOSEKM: new FormControl('0'),
@@ -146,6 +163,95 @@ export class ThcArrivalPopupComponent {
         console.error('Error fetching arrival details:', err);
       }
     })
+  }
+
+  sealvalidation(thcNo: any) {
+    let location = this.docketService.Location || this.docketService.loginUserList?.LocationCode || '';
+    if (!location) {
+      try {
+        const saved = localStorage.getItem("loginUserList");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          location = parsed?.LocationCode || '';
+          this.docketService.Location = location;
+          this.docketService.loginUserList = parsed;
+        }
+      } catch (e) {}
+    }
+
+    const payload = {
+      FilterJson: {
+        ReportId: '395',
+        DocNo: thcNo,
+        BRCD: location
+      }
+    };
+
+    this.dynamicDataService.getDynamicData(payload).subscribe({
+      next: (response: any) => {
+        const list = response?.Table1 || (Array.isArray(response) ? response : (response?.data?.Table1 || []));
+        if (list && list.length > 0) {
+          this.apiSealNo = (list[0]?.SealNo || '').toString().trim();
+        } else {
+          this.apiSealNo = '';
+        }
+        console.log('Report 395 apiSealNo:', this.apiSealNo);
+        this.applySealValidators();
+      },
+      error: (err: any) => {
+        console.error('Error in sealvalidation:', err);
+        this.apiSealNo = '';
+        this.applySealValidators();
+      }
+    });
+  }
+
+  applySealValidators() {
+    const isnControl = this.arrivalForm?.get('ISN');
+    if (!isnControl) return;
+
+    if (this.apiSealNo) {
+      isnControl.setValidators([
+        Validators.required,
+        Validators.maxLength(6),
+        this.customSealMatchValidator.bind(this)
+      ]);
+    } else {
+      isnControl.setValidators([
+        Validators.required,
+        Validators.maxLength(6)
+      ]);
+    }
+    isnControl.updateValueAndValidity();
+  }
+
+  customSealMatchValidator(control: any) {
+    if (!this.apiSealNo) return null;
+    const value = (control.value || '').toString().trim();
+    if (!value) return null;
+    if (value.toLowerCase() !== this.apiSealNo.toLowerCase()) {
+      return { sealMismatch: true };
+    }
+    return null;
+  }
+
+  onlyNumberKey(event: KeyboardEvent): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode >= 48 && charCode <= 57) {
+      return true;
+    }
+    event.preventDefault();
+    return false;
+  }
+
+  onSealInput(event: any): void {
+    const input = event.target as HTMLInputElement;
+    if (!input) return;
+    const cleanValue = (input.value || '').replace(/\D/g, '').slice(0, 6);
+    if (input.value !== cleanValue) {
+      input.value = cleanValue;
+      this.arrivalForm.get('ISN')?.setValue(cleanValue, { emitEvent: true });
+    }
   }
 
   validateLateArrivalReason() {
@@ -274,6 +380,18 @@ export class ThcArrivalPopupComponent {
   }
 
   onSubmit() {
+    if (this.apiSealNo) {
+      const enteredSeal = (this.arrivalForm.get('ISN')?.value || '').toString().trim();
+      if (enteredSeal.toLowerCase() !== this.apiSealNo.toLowerCase()) {
+        this.arrivalForm.get('ISN')?.setErrors({ sealMismatch: true });
+      }
+    } else {
+      const enteredSeal = (this.arrivalForm.get('ISN')?.value || '').toString().trim();
+      if (enteredSeal.length > 6) {
+        this.arrivalForm.get('ISN')?.setErrors({ maxlength: true });
+      }
+    }
+
     if (this.arrivalForm.invalid) {
       Object.keys(this.arrivalForm.controls).forEach(controlName => {
         const control = this.arrivalForm.get(controlName);
@@ -314,7 +432,7 @@ export class ThcArrivalPopupComponent {
         baseUserName: this.docketService.loginUserList.BaseUserName
       }
       this.stockUpdateService.THCArrival(payload).subscribe({
-        next: (response:any) => {
+        next: (response: any) => {
           if (response.success) {
             this.isloading = false;
             this.sweetAlertService.success(`THC arrived ${this.THCData?.thcNo} successfully.`);
