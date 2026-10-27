@@ -187,7 +187,7 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
 
     // Show popup immediately
     this.modalRef = this.modalService.show(this.Templatepod, {
-      class: 'modal-xl modal-dialog-centered',
+      class: 'modal-xl modal-dialog-centered new-stockupdate-modal-custom',
       backdrop: 'static',
       keyboard: false,
       ignoreBackdropClick: true

@@ -452,10 +452,13 @@
             </div>
             <div class="thcform-field" *ngIf="ThcType === 'A'">
               <label>Seal No <span class="req">*</span></label>
-              <input class="form-control" placeholder="Seal No" type="text" formControlName="sealNo" 
+              <input class="form-control required2" placeholder="Seal No" type="text" formControlName="sealNo" 
                 maxlength="6" minlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '');" appFocusNext
                 [ngClass]="{ 'border-danger': ThcForm.get('sealNo')?.invalid && ThcForm.get('sealNo')?.touched }">
-              <div class="text-danger text-start" *ngIf="ThcForm.get('sealNo')?.invalid && ThcForm.get('sealNo')?.touched">
+              <div class="text-danger text-start" *ngIf="ThcForm.get('sealNo')?.errors?.['required'] && ThcForm.get('sealNo')?.touched">
+                This field is required.
+              </div>
+              <div class="text-danger text-start" *ngIf="!ThcForm.get('sealNo')?.errors?.['required'] && ThcForm.get('sealNo')?.invalid && ThcForm.get('sealNo')?.touched">
                 Seal No should be 6 digits.
               </div>
             </div>
