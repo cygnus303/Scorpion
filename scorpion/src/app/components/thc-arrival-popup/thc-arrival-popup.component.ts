@@ -346,6 +346,39 @@ export class ThcArrivalPopupComponent {
   //   closeKMControl?.updateValueAndValidity();
   // }
 
+  formatDateTime(dateVal: any): string | null {
+    if (!dateVal) return null;
+    let d: Date;
+    if (typeof dateVal === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateVal)) {
+      const [y, m, day] = dateVal.split('-').map(Number);
+      d = new Date(y, m - 1, day);
+    } else {
+      d = new Date(dateVal);
+    }
+    if (isNaN(d.getTime())) return null;
+
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+
+    let hours = d.getHours();
+    let minutes = d.getMinutes();
+    let seconds = d.getSeconds();
+
+    if (hours === 0 && minutes === 0 && seconds === 0) {
+      const now = new Date();
+      hours = now.getHours();
+      minutes = now.getMinutes();
+      seconds = now.getSeconds();
+    }
+
+    const hStr = String(hours).padStart(2, '0');
+    const mStr = String(minutes).padStart(2, '0');
+    const sStr = String(seconds).padStart(2, '0');
+
+    return `${year}-${month}-${day}T${hStr}:${mStr}:${sStr}.000Z`;
+  }
+
   onSubmit() {
     if (this.apiSealNo) {
       const enteredSeal = (this.arrivalForm.get('ISN')?.value || '').toString().trim();
@@ -376,7 +409,7 @@ export class ThcArrivalPopupComponent {
         thcno: this.THCData?.thcNo,
         openkm: this.arrivalDetail?.openkm,
         closekm: this.arrivalForm.value.CLOSEKM?.toString() || '',
-        ad: new Date(this.arrivalForm.value.AD)?.toISOString(),
+        ad: this.formatDateTime(this.arrivalForm.value.AD),
         at: "",
         lar: this.arrivalForm.value.LAR,
         isn: this.arrivalForm.value.ISN,

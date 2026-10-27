@@ -157,7 +157,7 @@ export class AddThcPopupComponent {
       wtLoaded: [0],
       vehicleCapacityUti: [0],
       overLoadReason: [],
-      sealNo: [],
+      sealNo: [null, this.ThcType === 'A' ? [Validators.required, Validators.pattern(/^[0-9]{6}$/)] : []],
       TDSAcccode: [],
       vehicleNO: [null],
       TDSPercent: [],

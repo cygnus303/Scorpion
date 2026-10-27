@@ -121,35 +121,35 @@
                 <!-- TABLE -->
                 <div class="border rounded overflow-hidden">
                     <div class="table-responsive mt-0" style="max-height: 480px; overflow-y: auto;">
-                        <table class="table table-hover table-bordered mb-0 align-middle text-start">
+                        <table class="table table-hover table-bordered mb-0 align-middle text-start w-100">
                             <thead>
                                 <tr class="table-header-custom text-navy">
                                     <th class="text-center align-middle"
-                                        style="width: 50px; background-color: #eff1f8;">
+                                        style="width: 38px; background-color: #eff1f8;">
                                         <input type="checkbox" class="form-check-input d-block mx-auto"
                                             [checked]="isAllSelected()" (change)="toggleAll($event)">
                                     </th>
                                     <th class="align-middle fw-bold"
-                                        style="min-width: 140px; background-color: #eff1f8;">MF No.</th>
+                                        style="min-width: 115px; background-color: #eff1f8;">MF No.</th>
                                     <th class="align-middle fw-bold"
-                                        style="width: 100px; min-width: 95px; background-color: #eff1f8; white-space: nowrap;">
+                                        style="width: 85px; min-width: 80px; background-color: #eff1f8; white-space: nowrap;">
                                         CNote No.</th>
                                     <th class="align-middle fw-bold"
-                                        style="min-width: 120px; background-color: #eff1f8;">LR Date / EDD</th>
+                                        style="min-width: 95px; background-color: #eff1f8;">LR Date / EDD</th>
                                     <th class="align-middle fw-bold"
-                                        style="width: 105px; min-width: 100px; background-color: #eff1f8; white-space: nowrap;">
+                                        style="width: 85px; min-width: 80px; background-color: #eff1f8; white-space: nowrap;">
                                         Total Pkgs / Wt</th>
                                     <th class="align-middle fw-bold text-center"
-                                        style="width: 85px; min-width: 80px; background-color: #eff1f8; white-space: nowrap;">
+                                        style="width: 65px; min-width: 60px; background-color: #eff1f8; white-space: nowrap;">
                                         Service Type</th>
                                     <th class="align-middle fw-bold text-center"
-                                        style="width: 85px; min-width: 85px; background-color: #eff1f8; white-space: nowrap;">
+                                        style="width: 70px; min-width: 65px; background-color: #eff1f8; white-space: nowrap;">
                                         Arrived Pkgs *</th>
                                     <th class="align-middle fw-bold text-center"
-                                        style="width: 80px; min-width: 75px; background-color: #eff1f8; white-space: nowrap;">
+                                        style="width: 65px; min-width: 60px; background-color: #eff1f8; white-space: nowrap;">
                                         Arrived Wt</th>
                                     <th class="align-middle fw-bold text-center"
-                                        style="min-width: 150px; background-color: #eff1f8;">
+                                        style="min-width: 115px; background-color: #eff1f8;">
                                         Type
                                         <ng-select class="mt-1 clear-icon text-start fw-normal"
                                             [dropdownPosition]="'bottom'" appendTo="body"
@@ -159,7 +159,7 @@
                                             (change)="onHeaderHccVendorTypeChange($event)"></ng-select>
                                     </th>
                                     <th class="align-middle fw-bold text-center"
-                                        style="min-width: 180px; background-color: #eff1f8;">
+                                        style="min-width: 140px; background-color: #eff1f8;">
                                         Vendor
                                         <ng-select class="mt-1 clear-icon remove-white-space text-start fw-normal"
                                             [dropdownPosition]="'bottom'" appendTo="body" [items]="headerVendorList"
@@ -168,7 +168,7 @@
                                             (change)="onHeaderVendorChange($event)"></ng-select>
                                     </th>
                                     <th class="align-middle fw-bold text-center"
-                                        style="min-width: 150px; background-color: #eff1f8;">
+                                        style="min-width: 115px; background-color: #eff1f8;">
                                         Rate Type
                                         <ng-select class="mt-1 clear-icon text-start fw-normal"
                                             [dropdownPosition]="'bottom'" appendTo="body" bindLabel="codeDesc"
@@ -178,42 +178,42 @@
                                             (change)="onHeaderRateTypeChange($event)"></ng-select>
                                     </th>
                                     <th class="align-middle fw-bold" *ngIf="hasAnyEligibleForDeliveryProcess"
-                                        style="min-width: 200px; background-color: #eff1f8;">Delivery Process</th>
+                                        style="min-width: 140px; background-color: #eff1f8;">Delivery Process</th>
                                     <th class="align-middle fw-bold text-center"
-                                        style="width: 85px; background-color: #eff1f8;">Damage</th>
+                                        style="width: 75px; background-color: #eff1f8;">Damage</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <ng-container *ngFor="let row of listVSFUM; let i = index">
                                     <tr>
-                                        <td class="text-center table-cell-custom">
+                                        <td class="text-center table-cell-custom" style="width: 38px;">
                                             <input type="checkbox" class="form-check-input d-block mx-auto"
                                                 [(ngModel)]="row.isSelected">
                                         </td>
-                                        <td class="table-cell-custom cursor-pointer">
+                                        <td class="table-cell-custom cursor-pointer" style="min-width: 115px;">
                                             <span class="fw-bold text-navy" (click)="onMfViewPrint(row.tcno)">{{ row.tcno }}</span>
                                         </td>
-                                        <td class="table-cell-custom text-nowrap" style="width: 100px;">
+                                        <td class="table-cell-custom text-nowrap" style="width: 85px;">
                                             <span class="text-dark">{{ row.dockNo }}</span>
                                         </td>
-                                        <td class="table-cell-custom">
+                                        <td class="table-cell-custom" style="min-width: 95px;">
                                             <div class="text-dark fw-medium">{{ row.dockdt }}</div>
                                             <div class="text-muted" style="font-size: 11px;">EDD: {{ row.cdelydt }}
                                             </div>
                                         </td>
-                                        <td class="table-cell-custom text-nowrap" style="width: 105px;">
+                                        <td class="table-cell-custom text-nowrap" style="width: 85px;">
                                             <div class="text-dark fw-medium">{{ row.bkG_PKGSNO }} pkgs</div>
                                             <div class="text-muted" style="font-size: 11px;">{{ row.bkG_ACTUWT }} kg
                                             </div>
                                         </td>
-                                        <td class="table-cell-custom text-center text-nowrap" style="width: 85px;">
+                                        <td class="table-cell-custom text-center text-nowrap" style="width: 65px;">
                                             <span class="text-dark">{{ row.service_Class }}</span>
                                         </td>
-                                        <td class="text-center table-cell-custom" style="width: 85px;">
+                                        <td class="text-center table-cell-custom" style="width: 70px;">
                                             <input type="text"
                                                 class="form-control form-control-sm text-center fw-semibold mx-auto table-input-custom"
                                                 [ngClass]="{'border-danger text-danger': +row.pkgsno > +row.bkG_PKGSNO}"
-                                                style="width: 60px;" [(ngModel)]="row.pkgsno"
+                                                style="width: 55px;" [(ngModel)]="row.pkgsno"
                                                 (focus)="onArrivedPkgsFocus(row)"
                                                 (ngModelChange)="onArrivedPkgsChange(row, i)"
                                                 (blur)="checkAndOpenShortagePopup(row, i)"
@@ -230,19 +230,19 @@
                                                 ✏️ Edit Shortage details
                                             </div>
                                         </td>
-                                        <td class="text-center table-cell-custom" style="width: 80px;">
+                                        <td class="text-center table-cell-custom" style="width: 65px;">
                                             <input type="text"
                                                 class="form-control form-control-sm text-center input-readonly-custom mx-auto"
-                                                style="width: 60px; height: 32px;" [(ngModel)]="row.actuwt" readonly>
+                                                style="width: 55px; height: 32px;" [(ngModel)]="row.actuwt" readonly>
                                         </td>
-                                        <td style="width:150px; max-width: 150px;">
+                                        <td style="min-width: 115px;">
                                             <ng-select class="clear-icon text-start" [dropdownPosition]="'bottom'"
                                                 appendTo="body" [items]="generalMasterService.loadingData"
                                                 [(ngModel)]="row.luVendorTyp" bindLabel="codeDesc" bindValue="codeId"
                                                 placeholder="Type" (change)="onRowVendorTypeChange($event, i)">
                                             </ng-select>
                                         </td>
-                                        <td style="width:180px; max-width: 180px;">
+                                        <td style="min-width: 140px;">
                                             <ng-select class="noFoundTextColor clear-icon remove-white-space text-start"
                                                 [dropdownPosition]="'bottom'" appendTo="body" [ngClass]="{
                                                 'required2': row.isSelected && row.luVendorTyp && row.luVendorTyp !== 'XX9',
@@ -256,7 +256,7 @@
                                                 This field is required
                                             </div>
                                         </td>
-                                        <td style="width:150px; max-width: 150px;">
+                                        <td style="min-width: 115px;">
                                             <ng-select class="clear-icon text-start" [dropdownPosition]="'bottom'"
                                                 appendTo="body" [ngClass]="{
                                                 'required2': row.isSelected && row.luVendorTyp && row.luVendorTyp !== 'XX9',
@@ -292,7 +292,7 @@
                                                 <td class="table-cell-custom"></td>
                                             </ng-template>
                                         </ng-container>
-                                        <td class="text-center table-cell-custom">
+                                        <td class="text-center table-cell-custom" style="width: 75px;">
                                             <input type="checkbox" class="form-check-input d-block mx-auto"
                                                 [checked]="row.isDamage" (change)="onDamageChange($event, row, i)">
                                             <div *ngIf="row.damageDepsData || (row.depsData && row.depsData.depsTyp === 'D')"
@@ -404,7 +404,7 @@
                                             <input type="file" #backInput hidden accept="image/*,application/pdf"
                                                 (change)="onFileSelected($event, row, 'BACK')" />
                                         </td>
-                                        <td [attr.colspan]="hasAnyEligibleForDeliveryProcess ? 4 : 4"
+                                        <td [attr.colspan]="hasAnyEligibleForDeliveryProcess ? 8 : 7"
                                             class="p-2 text-start align-middle">
                                             <div class="row align-items-center" *ngIf="row.delyForm"
                                                 [formGroup]="row.delyForm">

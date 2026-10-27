@@ -1,13 +1,16 @@
-::ng-deep .modal-xl {
-    --bs-modal-width: 1400px !important;
-}
+::ng-deep .modal-dialog.new-stockupdate-modal-custom {
+    max-width: 1360px !important;
+    width: 92vw !important;
+    margin: 1.25rem auto !important;
 
-::ng-deep .modal-content {
-    background-color: #ffffff !important;
-    border: none !important;
-    border-radius: 10px !important;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25) !important;
-    overflow: hidden;
+    .modal-content {
+        width: 100% !important;
+        background-color: #ffffff !important;
+        border: none !important;
+        border-radius: 12px !important;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25) !important;
+        overflow: hidden;
+    }
 }
 
 ::ng-deep .modal-body {
@@ -76,18 +79,18 @@
     background-color: #eff1f8 !important;
     color: #2b3990 !important;
     font-weight: 700;
-    font-size: 0.825rem;
+    font-size: 0.8rem;
     border-bottom: 2px solid #d0d5dd !important;
 
     th {
-        padding: 0.55rem 0.5rem !important;
+        padding: 0.45rem 0.35rem !important;
     }
 }
 
 .table-cell-custom {
-    font-size: 0.825rem;
+    font-size: 0.8rem;
     color: #344054;
-    padding: 0.55rem 0.5rem !important;
+    padding: 0.45rem 0.35rem !important;
     vertical-align: middle;
     border-color: #e4e7ec !important;
 }
