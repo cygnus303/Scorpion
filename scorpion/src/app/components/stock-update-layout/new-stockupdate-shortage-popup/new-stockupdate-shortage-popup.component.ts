@@ -22,6 +22,7 @@ export class NewStockupdateShortagePopupComponent implements OnDestroy {
   public popupDocketDate: string = '';
   public rowDataIndex: number = -1;
   public isSaved: boolean = false;
+  public isSubmitted: boolean = false;
   private isCancelledEmitted: boolean = false;
   private modalHiddenSub?: Subscription;
 
@@ -55,6 +56,7 @@ export class NewStockupdateShortagePopupComponent implements OnDestroy {
     this.dateStr = dateStr;
     this.rowDataIndex = index;
     this.isSaved = false;
+    this.isSubmitted = false;
     this.isCancelledEmitted = false;
     this.activeBoxDropdownIndex = null;
 
@@ -118,35 +120,32 @@ export class NewStockupdateShortagePopupComponent implements OnDestroy {
   }
 
   createDocketFormGroup(item: any): FormGroup {
-    const boxIds: string[] = [];
-    let pkgsCount = +(item.affectedPkgs || item.shortQty || item.shortageQty || item.affectedQty || 0);
-    if (pkgsCount <= 0 && item.bkG_PKGSNO !== undefined && item.pkgsno !== undefined) {
-      pkgsCount = +(item.bkG_PKGSNO || 0) - +(item.pkgsno || 0);
-    }
-    if (pkgsCount <= 0) {
-      pkgsCount = +(item.bkG_PKGSNO || item.pkgsno || 0);
-    }
+    const dockno = item.dockno || item.dockNo || item.docket || this.popupDocketNo || '';
+    const totalDocketPkgs = +(item.bkG_PKGSNO || item.pkgsno || 0);
+    const totalWtVal = +(item.bkG_ACTUWT || item.actuwt || 0);
 
-    const dockno = item.dockno || item.dockNo || item.docket || this.popupDocketNo;
-    for (let k = 1; k <= pkgsCount; k++) {
+    // 1. ડૉકેટના કુલ પેકેજ મુજબ બધા Box IDs જનરેટ કરવા (દા.ત. 1 થી totalDocketPkgs)
+    const boxIds: string[] = [];
+    for (let k = 1; k <= totalDocketPkgs; k++) {
       boxIds.push(`${dockno}_${k.toString().padStart(3, '0')}`);
     }
 
-    let selectedBoxes = (item.selectedBoxIds || []).filter((id: string) => boxIds.includes(id));
-    if (selectedBoxes.length === 0 && boxIds.length > 0) {
-      selectedBoxes = [...boxIds];
-    }
+    // 2. શરૂઆતમાં કોઈ Box ID જાતે સિલેક્ટ નહીં થાય (User પોતે સિલેક્ટ કરશે)
+    const selectedBoxes: string[] = (item.selectedBoxIds && Array.isArray(item.selectedBoxIds))
+      ? item.selectedBoxIds.filter((id: string) => boxIds.includes(id))
+      : [];
     const affectedPkgsVal = selectedBoxes.length;
 
-    const totalPkgsVal = +(item.bkG_PKGSNO || item.deliveredPkgs || item.pkgsDelivered || (item.pkgsno && +item.pkgsno > pkgsCount ? +item.pkgsno : 0) || (item.pkgsno ? +item.pkgsno + +pkgsCount : 0) || pkgsCount || 1);
-    const totalWtVal = +(item.bkG_ACTUWT || item.actuwt || item.totWeight || item.totalWeight || 0);
+    // 3. Arrived Packages = કુલ પેકેજ - સિલેક્ટ કરેલા Shortage Boxes
+    const arrivedPkgsCount = Math.max(0, totalDocketPkgs - affectedPkgsVal);
 
+    // 4. Shortage Weight અને Invoice Value ની ગણતરી
     let affectedInvValCalc = 0.00;
-    let affectedWeightCalc = +(item.affectedWeight || item.shortWt || item.shortageWeight || 0);
-    if (totalPkgsVal > 0 && affectedPkgsVal > 0) {
-      affectedInvValCalc = Number((( (item.invval || 0) / totalPkgsVal ) * affectedPkgsVal).toFixed(2));
+    let affectedWeightCalc = 0.00;
+    if (totalDocketPkgs > 0 && affectedPkgsVal > 0) {
+      affectedInvValCalc = Number((((item.invval || 0) / totalDocketPkgs) * affectedPkgsVal).toFixed(2));
       if (totalWtVal > 0) {
-        affectedWeightCalc = Number(((totalWtVal / totalPkgsVal) * affectedPkgsVal).toFixed(2));
+        affectedWeightCalc = Number(((totalWtVal / totalDocketPkgs) * affectedPkgsVal).toFixed(2));
       }
     }
 
@@ -156,8 +155,8 @@ export class NewStockupdateShortagePopupComponent implements OnDestroy {
       dockdt: new FormControl(item.booking_Date || item.dockdt),
       orgncd: new FormControl(item.orgncd),
       destcd: new FormControl(item.destcd),
-      pkgsno: new FormControl(pkgsCount),
-      bkG_PKGSNO: new FormControl(totalPkgsVal),
+      pkgsno: new FormControl(arrivedPkgsCount),
+      bkG_PKGSNO: new FormControl(totalDocketPkgs),
       bkG_ACTUWT: new FormControl(totalWtVal),
       invval: new FormControl(item.invval || 0),
       depstype: new FormControl('S'),
@@ -199,8 +198,13 @@ export class NewStockupdateShortagePopupComponent implements OnDestroy {
       selectedBoxes.push(boxId);
     }
 
+    const totalPkgs = +row.get('bkG_PKGSNO')?.value || 0;
+    const affectedCount = selectedBoxes.length;
+    const newArrivedPkgs = Math.max(0, totalPkgs - affectedCount);
+
     row.get('selectedBoxIds')?.setValue(selectedBoxes);
-    row.get('affectedPkgs')?.setValue(selectedBoxes.length);
+    row.get('affectedPkgs')?.setValue(affectedCount);
+    row.get('pkgsno')?.setValue(newArrivedPkgs);
     this.onAffectedPkgsChange(rowIndex);
   }
 
@@ -290,6 +294,7 @@ export class NewStockupdateShortagePopupComponent implements OnDestroy {
   }
 
   saveShortageForm() {
+    this.isSubmitted = true;
     if (this.shortageForm.invalid || this.hasInvalidRows()) {
       this.shortageForm.markAllAsTouched();
       return;

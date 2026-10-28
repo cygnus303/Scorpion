@@ -52,7 +52,7 @@
             <td style="min-width: 180px; position: relative;">
               <div class="ms-dropdown" [class.open]="activeBoxDropdownIndex === i" (click)="$event.stopPropagation()">
                 <button type="button" class="form-select form-select-sm text-start"
-                  [ngClass]="{ 'border-danger': !row.value.selectedBoxIds || row.value.selectedBoxIds.length === 0 }"
+                  [ngClass]="{ 'border-danger': isSubmitted && (!row.value.selectedBoxIds || row.value.selectedBoxIds.length === 0) }"
                   (click)="toggleBoxDropdown(i, $event)">
                   {{ getSelectedBoxesLabel(i) }}
                 </button>
@@ -65,7 +65,7 @@
                 </div>
               </div>
               <span class="text-danger" style="font-size: 9px; font-weight: 500;"
-                *ngIf="!row.value.selectedBoxIds || row.value.selectedBoxIds.length === 0">
+                *ngIf="isSubmitted && (!row.value.selectedBoxIds || row.value.selectedBoxIds.length === 0)">
                 This field is required.</span>
             </td>
 
