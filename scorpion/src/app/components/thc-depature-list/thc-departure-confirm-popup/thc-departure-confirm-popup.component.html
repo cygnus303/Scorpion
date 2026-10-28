@@ -25,13 +25,11 @@
         <!-- Multiple THCs Tabs (if more than 1 THC selected) -->
         <div *ngIf="thcList.length > 1" class="d-flex align-items-center gap-2 mb-3 pb-2 border-bottom flex-wrap">
           <span class="text-muted small fw-bold me-1">Select THC:</span>
-          <button *ngFor="let thc of thcList; let idx = index"
-                  type="button"
-                  class="tab-btn"
-                  [class.active]="selectedThcIndex === idx"
-                  (click)="selectThcTab(idx)">
+          <button *ngFor="let thc of thcList; let idx = index" type="button" class="tab-btn"
+            [class.active]="selectedThcIndex === idx" (click)="selectThcTab(idx)">
             <span>{{ thc.thcno }}</span>
-            <span class="badge ms-1" [ngClass]="selectedThcIndex === idx ? 'bg-light text-dark' : 'bg-secondary text-white'">
+            <span class="badge ms-1"
+              [ngClass]="selectedThcIndex === idx ? 'bg-light text-dark' : 'bg-secondary text-white'">
               {{ getSelectedCountForThc(thc.thcno) }}/{{ getManifestCountForThc(thc.thcno) }} MFs
             </span>
           </button>
@@ -92,11 +90,8 @@
             <thead>
               <tr>
                 <th style="width: 38px; text-align: center;">
-                  <input type="checkbox"
-                         class="checkbox-custom"
-                         [checked]="isAllSelectedForCurrentThc()"
-                         [indeterminate]="isPartiallySelectedForCurrentThc()"
-                         (change)="toggleSelectAllCurrentThc($event)">
+                  <input type="checkbox" class="checkbox-custom" [checked]="isAllSelectedForCurrentThc()"
+                    [indeterminate]="isPartiallySelectedForCurrentThc()" (change)="toggleSelectAllCurrentThc($event)">
                 </th>
                 <th>MF No.</th>
                 <th style="text-align: center;">MF Date</th>
@@ -122,10 +117,8 @@
               <!-- Rows -->
               <tr *ngFor="let row of currentManifests; let i = index" [class.row-selected]="row.isChecked">
                 <td style="text-align: center;">
-                  <input type="checkbox"
-                         class="checkbox-custom"
-                         [(ngModel)]="row.isChecked"
-                         (change)="onManifestCheckChange()">
+                  <input type="checkbox" class="checkbox-custom" [(ngModel)]="row.isChecked"
+                    (change)="onManifestCheckChange()">
                 </td>
                 <td>
                   <a class="mf-link" (click)="openMFView(row.tcno)" title="View MF Details">
@@ -170,7 +163,8 @@
         </div>
 
         <!-- Info Notice Strip -->
-        <div class="alert alert-light border d-flex align-items-center p-2 px-3 mb-3" style="background: #f8fafc; border-color: #e2e8f0;">
+        <div class="alert alert-light border d-flex align-items-center p-2 px-3 mb-3"
+          style="background: #f8fafc; border-color: #e2e8f0;">
           <i class="ti ti-info-circle text-primary fs-5 me-2"></i>
           <span style="font-size: 12.5px; color: #475569;">
             Docket status will be updated for <strong class="text-dark">LS / MF</strong> at the departure location.
@@ -184,15 +178,10 @@
               <label class="form-label mb-1" style="font-size: 13px; font-weight: 600; color: #334155;">
                 Seal No. <span class="text-danger">*</span>
               </label>
-              <input type="text"
-                     class="form-control form-control-sm required2"
-                     [(ngModel)]="sealNo"
-                     (ngModelChange)="onSealNoChange($event)"
-                     placeholder="Seal No."
-                     maxlength="6"
-                     minlength="6"
-                     oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-                     [class.is-invalid]="sealNoTouched && (!sealNo.trim() || !isValidSealNo(sealNo))">
+              <input type="text" class="form-control form-control-sm required2" [(ngModel)]="sealNo"
+                (ngModelChange)="onSealNoChange($event)" (blur)="sealNoTouched = true" placeholder="Seal No." maxlength="6" minlength="6"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                [class.is-invalid]="sealNoTouched && (!sealNo.trim() || !isValidSealNo(sealNo))">
               <div class="invalid-feedback" *ngIf="sealNoTouched && !sealNo.trim()">
                 This field is required.
               </div>
@@ -206,11 +195,9 @@
               <label class="form-label mb-1" style="font-size: 13px; font-weight: 600; color: #334155;">
                 Outgoing Remarks <span class="text-danger">*</span>
               </label>
-              <input type="text"
-                     class="form-control form-control-sm required2"
-                     [(ngModel)]="outgoingRemarks"
-                     placeholder="Enter outgoing remarks"
-                     [class.is-invalid]="remarksTouched && !outgoingRemarks.trim()">
+              <input type="text" class="form-control form-control-sm required2" [(ngModel)]="outgoingRemarks"
+                (blur)="remarksTouched = true" placeholder="Enter outgoing remarks"
+                [class.is-invalid]="remarksTouched && !outgoingRemarks.trim()">
               <div class="invalid-feedback" *ngIf="remarksTouched && !outgoingRemarks.trim()">
                 Outgoing Remarks is required.
               </div>
@@ -219,7 +206,8 @@
         </div>
 
         <!-- Error Message Alert -->
-        <div *ngIf="errorMessage" class="alert alert-danger py-2 px-3 mt-2 d-flex align-items-center gap-2 mb-0" style="font-size: 13px;">
+        <div *ngIf="errorMessage" class="alert alert-danger py-2 px-3 mt-2 d-flex align-items-center gap-2 mb-0"
+          style="font-size: 13px;">
           <i class="ti ti-alert-triangle fs-5"></i>
           <span>{{ errorMessage }}</span>
         </div>
@@ -236,18 +224,15 @@
         </span>
       </div>
       <div class="d-flex align-items-center gap-2">
-        <button type="button"
-                class="btn btn-outline-secondary px-4 py-2 text-dark fw-medium"
-                (click)="closePopup()"
-                [disabled]="isSubmitting">
+        <button type="button" class="btn btn-outline-secondary px-4 py-2 text-dark fw-medium" (click)="closePopup()"
+          [disabled]="isSubmitting">
           Cancel
         </button>
-        <button type="button"
-                class="btn btn-danger px-4 py-2 fw-medium d-flex align-items-center"
-                style="background-color: #d32f2f; border: none;"
-                (click)="confirmDepart()"
-                [disabled]="isSubmitting || isLoading || getTotalSelectedCount() === 0">
-          <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        <button type="button" class="btn btn-danger px-4 py-2 fw-medium d-flex align-items-center"
+          style="background-color: #d32f2f; border: none;" (click)="confirmDepart()"
+          [disabled]="isSubmitting">
+          <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"
+            aria-hidden="true"></span>
           <i *ngIf="!isSubmitting" class="ti ti-send me-2"></i>
           <span>{{ isSubmitting ? 'Departing...' : 'Confirm depart' }}</span>
         </button>

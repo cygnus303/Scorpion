@@ -113,7 +113,7 @@
             <div class="col-md-7">
               <div class="input-group mb-1">
                 <input class="required2 form-control required" placeholder="EDD" type="text"
-                  value="1/1/0001 12:00:00 AM" formControlName="EDD" readonly required
+                  formControlName="EDD" readonly required
                   [ngClass]="{ 'border-danger': docketService.freightForm.get('EDD')?.invalid && docketService.freightForm.get('EDD')?.touched}">
                 <span class="input-group-text cursor-pointer">
                   <i class="fa fa-calendar"></i>

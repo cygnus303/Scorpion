@@ -352,7 +352,7 @@ export class DocketListComponent implements OnInit {
                 chargeWeightPerPkg: basicDetail.chargedPkgsNo,
               });
               this.docketService.freightForm.patchValue({
-                EDD: basicDetail.cdeldt === '0001-01-01T00:00:00' ? '01 JAN 0001' : basicDetail.cdeldt,
+                EDD: basicDetail.cdeldt === '0001-01-01T00:00:00' ? null : basicDetail.cdeldt,
                 gstRate: basicDetail.gstRateType,
                 discountType: this.docketService.completiondata?.wmdc?.discountType || null,
                 discount: this.docketService.completiondata?.wmdc?.discount,
@@ -429,8 +429,8 @@ export class DocketListComponent implements OnInit {
     row.patchValue({
       srNo: item.srNo,
       ewayBillNo: item.eWayBillNo,
-      ewayBillExpiry: item.eWayBillExpiredDate ? new Date(item.eWayBillExpiredDate) : '01 JAN 0001',
-      ewayinvoiceDate: item.eWayBillInvoiceDate ? new Date(item.eWayBillInvoiceDate) : '01 JAN 0001',
+      ewayBillExpiry: item.eWayBillExpiredDate ? new Date(item.eWayBillExpiredDate) : null,
+      ewayinvoiceDate: item.eWayBillInvoiceDate ? new Date(item.eWayBillInvoiceDate) : null,
       invoiceNo: item.invno,
       declaredvalue: item.declval,
       transportation_distance: item.transportation_distance

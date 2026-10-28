@@ -43,7 +43,7 @@ export class ThcDepartureConfirmPopupComponent {
     private modalService: BsModalService,
     private thcService: THCMasterService,
     public docketService: DocketService
-  ) {}
+  ) { }
 
   get currentThc(): any {
     return this.thcList[this.selectedThcIndex] || null;
@@ -100,6 +100,27 @@ export class ThcDepartureConfirmPopupComponent {
   isValidSealNo(val: string): boolean {
     if (!val) return false;
     return /^[0-9]{6}$/.test(val.trim());
+  }
+
+  isDepartDisabled(): boolean {
+    if (this.isSubmitting || this.isLoading) {
+      return true;
+    }
+    if (!this.outgoingRemarks || !this.outgoingRemarks.trim()) {
+      return true;
+    }
+    if (!this.sealNo || !this.isValidSealNo(this.sealNo)) {
+      return true;
+    }
+    if (this.thcList && this.thcList.length > 1) {
+      for (const thc of this.thcList) {
+        const seal = (this.sealNoByThc[thc.thcno] || (thc.thcno === this.currentThc?.thcno ? this.sealNo : '') || '').trim();
+        if (!this.isValidSealNo(seal)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   onSealNoChange(val: string) {
@@ -314,27 +335,34 @@ export class ThcDepartureConfirmPopupComponent {
       this.sealNoByThc[this.currentThc.thcno] = this.sealNo;
     }
 
-    if (!this.sealNo || !this.sealNo.trim() || !this.isValidSealNo(this.sealNo)) {
+    if (!this.sealNo || !this.sealNo.trim()) {
+      this.errorMessage = 'Please enter Seal No.';
+      return;
+    }
+
+    if (!this.isValidSealNo(this.sealNo)) {
+      this.errorMessage = 'Seal No should be 6 digits.';
       return;
     }
 
     for (const thc of this.thcList) {
       const seal = (this.sealNoByThc[thc.thcno] || this.sealNo || '').trim();
       if (!seal) {
-        if (this.thcList.length > 1) {
-          this.errorMessage = `Please enter Seal No. for THC: ${thc.thcno}`;
-        }
+        this.errorMessage = this.thcList.length > 1
+          ? `Please enter Seal No. for THC: ${thc.thcno}`
+          : 'Please enter Seal No.';
         return;
       }
       if (!this.isValidSealNo(seal)) {
-        if (this.thcList.length > 1) {
-          this.errorMessage = `Seal No. for THC: ${thc.thcno} must be 6 digits.`;
-        }
+        this.errorMessage = this.thcList.length > 1
+          ? `Seal No. for THC: ${thc.thcno} must be 6 digits.`
+          : 'Seal No should be 6 digits.';
         return;
       }
     }
 
     if (!this.outgoingRemarks || !this.outgoingRemarks.trim()) {
+      this.errorMessage = 'Please enter Outgoing Remarks.';
       return;
     }
 
@@ -350,11 +378,6 @@ export class ThcDepartureConfirmPopupComponent {
           tcno: m.tcno,
           isChecked: true
         }));
-
-      if (manifests.length === 0) {
-        this.errorMessage = `Please select at least one MF for THC: ${thc.thcno}`;
-        return;
-      }
 
       const sealVal = (this.sealNoByThc[thc.thcno] || this.sealNo || '').trim();
 
