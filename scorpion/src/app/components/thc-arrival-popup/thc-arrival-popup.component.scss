@@ -226,3 +226,13 @@ app-date-time-picker ::ng-deep {
   border-radius: 12px !important;
   backdrop-filter: blur(2px);
 }
+
+.freeze-dropdown {
+  pointer-events: none !important;
+  opacity: 0.85;
+  cursor: not-allowed;
+  ::ng-deep .ng-select-container {
+    background-color: #f1f5f9 !important;
+    cursor: not-allowed !important;
+  }
+}
