@@ -115,7 +115,10 @@
                                             </div>
                                             <div style="width: 140px; flex-shrink: 0;">
                                                 <ng-select class="noFoundTextColor required2 clear-icon"
-                                                    [items]="Seallist" bindLabel="text" bindValue="value" appFocusNext
+                                                    [items]="activeSeallist" bindLabel="text" bindValue="value" appFocusNext
+                                                    appendTo="body" [readonly]="isStatusFrozen"
+                                                    [class.freeze-dropdown]="isStatusFrozen"
+                                                    (open)="onStatusDropdownOpen()"
                                                     placeholder="Select Status" formControlName="s2id_Status"
                                                     [ngClass]="{ 'border-danger': arrivalForm.get('s2id_Status')?.invalid && arrivalForm.get('s2id_Status')?.touched}"></ng-select>
                                                 <div class="text-danger small mt-1 text-start"
@@ -155,19 +158,28 @@
                             <!-- Row 2: Late Arrival Reason | Incoming Remarks -->
                             <div class="row">
                                 <div class="col-4">
-                                    <div class="form-group-input">
+                                    <div class="form-group-input" *ngIf="isLarRequired">
                                         <label class="form-label d-flex align-items-center gap-1 fw-bold"
                                             style="font-size: 11px;">
-                                            Late Arrival Reason <span class="text-danger" *ngIf="isLarRequired">*</span>
+                                            Late Arrival Reason <span class="text-danger">*</span>
                                         </label>
                                         <ng-select class="noFoundTextColor" [items]="Reasonlist" bindLabel="text"
-                                            bindValue="value" appFocusNext
+                                            bindValue="value" appFocusNext appendTo="body"
                                             placeholder="Late Arrival Reason (if delayed)" formControlName="LAR"
                                             [ngClass]="{ 'required2': isLarRequired, 'border-danger': arrivalForm.get('LAR')?.invalid && (arrivalForm.get('LAR')?.touched || arrivalForm.get('LAR')?.dirty) }"></ng-select>
                                         <div class="text-danger small mt-1 text-start"
                                             *ngIf="arrivalForm.get('LAR')?.invalid && (arrivalForm.get('LAR')?.touched || arrivalForm.get('LAR')?.dirty)">
                                             This field is required.
                                         </div>
+                                    </div>
+
+                                    <div class="form-group-input" *ngIf="!isLarRequired">
+                                        <label class="form-label d-flex align-items-center gap-1 fw-bold"
+                                            style="font-size: 11px;">
+                                            Vehicle Arrival
+                                        </label>
+                                        <input class="form-control hcc-readonly-input" type="text"
+                                            value="On Time" readonly>
                                     </div>
                                 </div>
 
