@@ -488,23 +488,26 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
       row._previousPkgsno = row.bkG_PKGSNO || 0;
     }
     const existingShrt = row.shortageDepsData || (row.depsData && row.depsData.depsTyp === 'S' ? row.depsData : null);
-    const shortageQtyVal = +row.shortQty || +row.shortageQty || 0;
-    const dockno = row.dockNo || '';
-    const validBoxIds: string[] = [];
-    for (let k = 1; k <= shortageQtyVal; k++) {
-      validBoxIds.push(`${dockno}_${k.toString().padStart(3, '0')}`);
-    }
-    const rawSelectedBoxes = (existingShrt && existingShrt.selectedBoxIds) || row.shortageSelectedBoxIds || [];
-    let cleanSelectedBoxes = rawSelectedBoxes.filter((id: string) => validBoxIds.includes(id));
-    if (cleanSelectedBoxes.length === 0 && validBoxIds.length > 0) {
-      cleanSelectedBoxes = [...validBoxIds];
-    }
-    const totalPkgsVal = +row.bkG_PKGSNO;
+    const totalPkgsVal = +(row.bkG_PKGSNO || row.pkgsno || 0);
     const totalWtVal = +row.bkG_ACTUWT || 0;
-    const affectedWeightVal = totalPkgsVal > 0 ? Number(((totalWtVal / totalPkgsVal) * shortageQtyVal).toFixed(2)) : (+row.shortWt || +row.shortageWeight || 0);
+    const dockno = row.dockNo || row.docketNo || '';
+
+    // Generate ALL box IDs for this docket (1 to totalPkgsVal)
+    const allBoxIds: string[] = [];
+    for (let k = 1; k <= totalPkgsVal; k++) {
+      allBoxIds.push(`${dockno}_${k.toString().padStart(3, '0')}`);
+    }
+
+    // Only keep previously selected boxes if already saved, do not auto-select
+    const rawSelectedBoxes = (existingShrt && existingShrt.selectedBoxIds) || row.shortageSelectedBoxIds || [];
+    const cleanSelectedBoxes = rawSelectedBoxes.filter((id: string) => allBoxIds.includes(id));
+
+    const affectedWeightVal = totalPkgsVal > 0 ? Number(((totalWtVal / totalPkgsVal) * cleanSelectedBoxes.length).toFixed(2)) : 0;
+    const affectedInvVal = totalPkgsVal > 0 ? Number((((row.invval || 0) / totalPkgsVal) * cleanSelectedBoxes.length).toFixed(2)) : 0;
 
     const popupData = {
       ...row,
+      boxIds: allBoxIds,
       selectedBoxIds: cleanSelectedBoxes,
       depsData: existingShrt,
       dockno: dockno,
@@ -513,12 +516,14 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
       orgncd: row.orgncd,
       destcd: row.desT_CD || row.destcd,
       pkgsno: row.pkgsno,
+      bkG_PKGSNO: totalPkgsVal,
+      bkG_ACTUWT: totalWtVal,
       invval: row.invval || 0,
       depstype: 'S',
       affectedPkgs: cleanSelectedBoxes.length,
       affectedWeight: affectedWeightVal,
       remarks: row.shortRemarks || row.shortageRemarks || '',
-      affectedInvVal: (+row.bkG_PKGSNO || +row.pkgsno) > 0 ? Number((((row.invval || 0) / (+row.bkG_PKGSNO || +row.pkgsno || 0)) * shortageQtyVal).toFixed(2)) : 0
+      affectedInvVal: affectedInvVal
     };
 
     const thcNo = this.stockData.thcno || '';
@@ -592,12 +597,20 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
       if (this.listVSFUM[index].shortageDepsData && depsData && depsData.selectedBoxIds) {
         this.listVSFUM[index].shortageDepsData.selectedBoxIds = depsData.selectedBoxIds;
       }
-      const shortQty = +(depsData.affectedQty || 0);
+      const shortQty = +(depsData.affectedQty || (depsData.selectedBoxIds ? depsData.selectedBoxIds.length : 0));
       this.listVSFUM[index].shortQty = shortQty;
       this.listVSFUM[index].shortageQty = shortQty;
 
       const totalPkgs = +(this.listVSFUM[index].bkG_PKGSNO || 0);
       const totalWt = +(this.listVSFUM[index].bkG_ACTUWT || 0);
+
+      // Reduce Arrived Pkgs: Total Pkgs - shortQty
+      if (totalPkgs > 0) {
+        this.listVSFUM[index].pkgsno = Math.max(0, totalPkgs - shortQty);
+        const calculatedWt = (this.listVSFUM[index].pkgsno * totalWt) / totalPkgs;
+        this.listVSFUM[index].actuwt = Number.isInteger(calculatedWt) ? calculatedWt : Number(calculatedWt.toFixed(2));
+      }
+
       const shortWt = +(depsData.affectedWeight) || (totalPkgs > 0 ? Number(((totalWt * shortQty) / totalPkgs).toFixed(2)) : 0);
 
       this.listVSFUM[index].shortWt = shortWt;
@@ -609,6 +622,7 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
 
       this.listVSFUM[index]._previousPkgsno = this.listVSFUM[index].pkgsno;
       this.listVSFUM[index]._lastShortageArrPkgs = +this.listVSFUM[index].pkgsno;
+      this.cdr.detectChanges();
     }
   }
 
@@ -820,7 +834,7 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
       if (row.selectedBoxIds && Array.isArray(row.selectedBoxIds)) {
         const dockno = row.dockNo || row.docketNo || '';
         const validBoxIds: string[] = [];
-        for (let k = 1; k <= newShortageQty; k++) {
+        for (let k = 1; k <= totalPkgs; k++) {
           validBoxIds.push(`${dockno}_${k.toString().padStart(3, '0')}`);
         }
         row.selectedBoxIds = row.selectedBoxIds.filter((id: string) => validBoxIds.includes(id));
