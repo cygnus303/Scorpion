@@ -157,10 +157,9 @@ export class ThcDepartureConfirmPopupComponent {
         responses.forEach((res, idx) => {
           const thc = this.thcList[idx];
           const rawList = res?.thcDepList || [];
-          // Preselect all manifests by default for smooth UX
           const mappedList = rawList.map((m: any) => ({
             ...m,
-            isChecked: true,
+            isChecked: false,
             parentThc: thc
           }));
 
