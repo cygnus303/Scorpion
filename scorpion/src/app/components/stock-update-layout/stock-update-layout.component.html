@@ -208,7 +208,7 @@
                                 </button>
                                   <button 
                                     class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3"
-                                    (click)="openHHCDetails(row)">
+                                    (click)="openHHCDetails(row)" [disabled]="row.pendingHCC === 0">
                                     🏷 HCC
                                 </button>
                             </div>
