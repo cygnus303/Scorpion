@@ -93,12 +93,11 @@
                         <!-- Spacing alignment to match grid -->
                         <label class="form-label-custom">UnLoading Charge</label>
                         <input class="form-control hcc-readonly-input highlight-red-text" placeholder="UnLoading Charge"
-                            type="text" [formControl]="loadingChargeCtrl" readonly min="0.01" appFocusNext
-                            [ngClass]="{ 'border-danger': loadingChargeCtrl.hasError('min') && loadingChargeCtrl.touched}">
-                        <div *ngIf="loadingChargeCtrl.hasError('min') && loadingChargeCtrl.touched"
+                            type="text" [formControl]="loadingChargeCtrl" readonly appFocusNext>
+                        <!-- <div *ngIf="loadingChargeCtrl.hasError('min') && loadingChargeCtrl.touched"
                             class="text-danger text-start" style="font-size: 11px; margin-top: 4px;">
                             Please enter a value >= 0.01.
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -245,28 +244,28 @@
                                         <td style="min-width: 140px;">
                                             <ng-select class="noFoundTextColor clear-icon remove-white-space text-start"
                                                 [dropdownPosition]="'bottom'" appendTo="body" [ngClass]="{
-                                                'required2': row.isSelected && row.luVendorTyp && row.luVendorTyp !== 'XX9',
-                                                'border-danger': submitted && row.isSelected && row.luVendorTyp && row.luVendorTyp !== 'XX9' && !row.luVendorCode
+                                                'required2': row.luVendorTyp && row.luVendorTyp !== 'XX9',
+                                                'border-danger': submitted && row.luVendorTyp && row.luVendorTyp !== 'XX9' && !row.luVendorCode
                                             }" [(ngModel)]="row.luVendorCode" [items]="rowVendorList[i] || []"
                                                 bindLabel="text" bindValue="value" placeholder="Vendor"
                                                 (change)="onRowVendorCodeChange($event, i)">
                                             </ng-select>
                                             <div class="text-danger small mt-1 text-start"
-                                                *ngIf="submitted && row.isSelected && row.luVendorTyp && row.luVendorTyp !== 'XX9' && !row.luVendorCode">
+                                                *ngIf="submitted && row.luVendorTyp && row.luVendorTyp !== 'XX9' && !row.luVendorCode">
                                                 This field is required
                                             </div>
                                         </td>
                                         <td style="min-width: 115px;">
                                             <ng-select class="clear-icon text-start" [dropdownPosition]="'bottom'"
                                                 appendTo="body" [ngClass]="{
-                                                'required2': row.isSelected && row.luVendorTyp && row.luVendorTyp !== 'XX9',
-                                                'border-danger': submitted && row.isSelected && row.luVendorTyp && row.luVendorTyp !== 'XX9' && !row.rateType
+                                                'required2': row.luVendorTyp && row.luVendorTyp !== 'XX9',
+                                                'border-danger': submitted && row.luVendorTyp && row.luVendorTyp !== 'XX9' && !row.rateType
                                             }" [(ngModel)]="row.rateType" bindLabel="codeDesc" bindValue="codeId"
                                                 placeholder="Rate Type" [items]="generalMasterService.chargeTypeData"
                                                 (change)="onRowRateTypeChange(row)"
-                                                [readonly]="row.luVendorTyp === 'XX9' || row.luVendorTyp === 'XX5'"></ng-select>
+                                                [readonly]="row.luVendorTyp === 'XX5' || row.luVendorTyp === 'XX9'"></ng-select>
                                             <div class="text-danger small mt-1 text-start"
-                                                *ngIf="submitted && row.isSelected && row.luVendorTyp && row.luVendorTyp !== 'XX9' && !row.rateType">
+                                                *ngIf="submitted && row.luVendorTyp && row.luVendorTyp !== 'XX9' && !row.rateType">
                                                 This field is required
                                             </div>
                                             <input type="text" class="form-control form-control-sm mt-1"
