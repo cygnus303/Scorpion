@@ -78,6 +78,8 @@ export class HCCDetailsComponent {
       this.selectedHccType = 'Unloading';
     } else if (type === 'GD') {
       this.selectedHccType = 'Loading';
+    } else if (type === 'S') {
+      this.selectedHccType = 'Unloading';
     } else {
       if (this.isHccValid(data.loadingNoHCCCnt) || this.isHccValid(data.loadingNoHCCCnt)) {
         this.selectedHccType = 'Unloading';
@@ -214,8 +216,9 @@ export class HCCDetailsComponent {
 
   getHCCDetail(data: any) {
     const payload = {
-      hhcNo: data.drsNo || data.pdcno || data.mfNo,
-      chargesType: this.selectedHccType || 'Loading'
+      hhcNo: data.drsNo || data.pdcno || data.mfNo || data.thcNo,
+      chargesType: this.selectedHccType || 'Loading',
+      BRCD:this.docketService.loginUserList.LocationCode
     }
     this.isLoading = true;
     this.lrList.clear();
@@ -226,7 +229,7 @@ export class HCCDetailsComponent {
           this.hccForm.patchValue({
             hhcLocation: response.hhcLocation,
             hcNumber: response.hcNumber,
-            documentNo: this.selectedHccDetails?.pdcno||this.selectedHccDetails?.drsNo||this.selectedHccDetails?.mfNo,
+            documentNo: this.selectedHccDetails?.pdcno||this.selectedHccDetails?.drsNo||this.selectedHccDetails?.mfNo||this.selectedHccDetails?.thcNo,
             chargesType:this.selectedHccType ,
             chargedBy: response.chargedBy || null,
             vendorCode: response.vendorCode || null,

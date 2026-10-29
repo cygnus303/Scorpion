@@ -51,7 +51,8 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
   public headerVendor: any = null;
   public headerVendorTyp: any = null;
   public headerRateType: any = null;
-  public loadingChargeCtrl = new FormControl('0.00', [Validators.min(0.01)]);
+  // public loadingChargeCtrl = new FormControl('0.00', [Validators.min(0.01)]);
+  public loadingChargeCtrl = new FormControl('0.00');
 
   public stockData: any = {
     thcno: '',
@@ -1132,7 +1133,7 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
     this.loadingChargeCtrl.markAsTouched();
   }
 
-  onMfViewPrint(mfNo: string){
+  onMfViewPrint(mfNo: string) {
     const url = `${this.env.liveUrl}ViewPrint/ViewMF?MFNO=${mfNo}&src=angular`;
     const popup = window.open('', 'popupWindow',
       'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
@@ -1155,12 +1156,13 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
     this.submitted = true;
     this.unloaderTouched = true;
     this.supervisorTouched = true;
-    if (!this.unloaderName || !this.unloadingSupervisor) {
-      return;
-    }
 
-    if (this.loadingChargeCtrl.invalid) {
-      this.loadingChargeCtrl.markAsTouched();
+    // if (this.loadingChargeCtrl.invalid) {
+    //   this.loadingChargeCtrl.markAsTouched();
+    //   return;
+    // }
+
+    if (!this.unloaderName || !this.unloadingSupervisor) {
       return;
     }
 
@@ -1188,9 +1190,10 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const missingVendor = selectedRows.find(row => row.luVendorTyp && row.luVendorTyp !== 'XX9' && (!row.luVendorCode || !row.rateType));
+    const missingVendor = selectedRows.find(row =>
+      row.luVendorTyp && row.luVendorTyp !== 'XX9' && (!row.luVendorCode || !row.rateType)
+    );
     if (missingVendor) {
-      this.sweetAlertService.warning(`Please select Vendor and Rate Type for Docket No ${missingVendor.dockNo || missingVendor.tcno}`);
       return;
     }
 
@@ -1316,11 +1319,11 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
         if (res) {
           const thcNo = this.stockData?.thcno || this.stockData?.thcNo || this.stockData?.THCNO || '';
           const depsId = (res?.depsId || res?.DepsId || res?.deps_id || '')?.toString().trim();
-          const hasDepsId = !!depsId && 
-                            depsId.toLowerCase() !== 'null' && 
-                            depsId.toLowerCase() !== 'undefined' && 
-                            depsId !== '0' && 
-                            depsId.toLowerCase() !== 'n/a';
+          const hasDepsId = !!depsId &&
+            depsId.toLowerCase() !== 'null' &&
+            depsId.toLowerCase() !== 'undefined' &&
+            depsId !== '0' &&
+            depsId.toLowerCase() !== 'n/a';
 
           const successHtml = `
             <div style="font-size: 15px; color: #475569; line-height: 1.7; margin-top: 4px;">
