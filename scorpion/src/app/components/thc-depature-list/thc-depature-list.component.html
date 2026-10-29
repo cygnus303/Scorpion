@@ -103,7 +103,7 @@
                         <th style="text-align:center">THC Route</th>
                         <th style="text-align:center">Arrival Date</th>
                         <th style="text-align:center">Status</th>
-                        <th style="text-align:center">Action</th>
+                        <th style="text-align:center"  *ngIf="!isHQTR">Action</th>
                     </tr>
                 </thead>
                 <tbody *ngIf="isLoading">
@@ -146,7 +146,7 @@
                         <td class="text-center">
                             <span class="badge" [ngClass]="data.departureStatus === 'Departed' ? 'badge-departed' : 'badge-pending'">{{ data.departureStatus || 'Pending' }}</span>
                         </td>
-                        <td class="text-center" style="width: 140px;">
+                        <td class="text-center" style="width: 140px;"  *ngIf="!isHQTR">
                             <button *ngIf="data.departureStatus !== 'Departed'" class="action-btn btn-depart" (click)="openConfirmPopup(data.thcno)"><i class="ti ti-send"></i> Depart THC</button>
                             <button *ngIf="data.departureStatus === 'Departed'" class="action-btn btn-departed-done" disabled><i class="ti ti-check"></i> Departed</button>
                         </td>

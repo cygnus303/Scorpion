@@ -70,8 +70,49 @@
           </div>
         </div>
 
+           <!-- Departure Inputs: Seal No & Outgoing Remarks -->
+        <div class="row g-3 mb-2">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label mb-1" style="font-size: 13px; font-weight: 600; color: #334155;">
+                Seal No. <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-control form-control-sm required2" [(ngModel)]="sealNo"
+                (ngModelChange)="onSealNoChange($event)" (blur)="sealNoTouched = true" placeholder="Seal No." maxlength="6" minlength="6"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                [class.is-invalid]="sealNoTouched && (!sealNo.trim() || !isValidSealNo(sealNo))">
+              <div class="invalid-feedback" *ngIf="sealNoTouched && !sealNo.trim()">
+                This field is required.
+              </div>
+              <div class="invalid-feedback" *ngIf="sealNoTouched && sealNo.trim() && !isValidSealNo(sealNo)">
+                Seal No should be 6 digits.
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label mb-1" style="font-size: 13px; font-weight: 600; color: #334155;">
+                Outgoing Remarks <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-control form-control-sm required2" [(ngModel)]="outgoingRemarks"
+                (blur)="remarksTouched = true" placeholder="Enter outgoing remarks"
+                [class.is-invalid]="remarksTouched && !outgoingRemarks.trim()">
+              <div class="invalid-feedback" *ngIf="remarksTouched && !outgoingRemarks.trim()">
+                Outgoing Remarks is required.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error Message Alert -->
+        <div *ngIf="errorMessage" class="alert alert-danger py-2 px-3 mt-2 d-flex align-items-center gap-2 mb-0"
+          style="font-size: 13px;">
+          <i class="ti ti-alert-triangle fs-5"></i>
+          <span>{{ errorMessage }}</span>
+        </div>
+
         <!-- Manifest Table Header Info -->
-        <div class="d-flex justify-content-between align-items-center mb-2">
+        <div class="d-flex justify-content-between align-items-center mb-2 mt-4">
           <div class="fw-bold text-dark d-flex align-items-center gap-2" style="font-size: 13.5px;">
             <i class="ti ti-list-check text-danger"></i>
             <span>MFs available for THC Departure</span>
@@ -163,54 +204,15 @@
         </div>
 
         <!-- Info Notice Strip -->
-        <div class="alert alert-light border d-flex align-items-center p-2 px-3 mb-3"
+        <!-- <div class="alert alert-light border d-flex align-items-center p-2 px-3 mb-3"
           style="background: #f8fafc; border-color: #e2e8f0;">
           <i class="ti ti-info-circle text-primary fs-5 me-2"></i>
           <span style="font-size: 12.5px; color: #475569;">
             Docket status will be updated for <strong class="text-dark">LS / MF</strong> at the departure location.
           </span>
-        </div>
+        </div> -->
 
-        <!-- Departure Inputs: Seal No & Outgoing Remarks -->
-        <div class="row g-3 mb-2">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label class="form-label mb-1" style="font-size: 13px; font-weight: 600; color: #334155;">
-                Seal No. <span class="text-danger">*</span>
-              </label>
-              <input type="text" class="form-control form-control-sm required2" [(ngModel)]="sealNo"
-                (ngModelChange)="onSealNoChange($event)" (blur)="sealNoTouched = true" placeholder="Seal No." maxlength="6" minlength="6"
-                oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-                [class.is-invalid]="sealNoTouched && (!sealNo.trim() || !isValidSealNo(sealNo))">
-              <div class="invalid-feedback" *ngIf="sealNoTouched && !sealNo.trim()">
-                This field is required.
-              </div>
-              <div class="invalid-feedback" *ngIf="sealNoTouched && sealNo.trim() && !isValidSealNo(sealNo)">
-                Seal No should be 6 digits.
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label class="form-label mb-1" style="font-size: 13px; font-weight: 600; color: #334155;">
-                Outgoing Remarks <span class="text-danger">*</span>
-              </label>
-              <input type="text" class="form-control form-control-sm required2" [(ngModel)]="outgoingRemarks"
-                (blur)="remarksTouched = true" placeholder="Enter outgoing remarks"
-                [class.is-invalid]="remarksTouched && !outgoingRemarks.trim()">
-              <div class="invalid-feedback" *ngIf="remarksTouched && !outgoingRemarks.trim()">
-                Outgoing Remarks is required.
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Error Message Alert -->
-        <div *ngIf="errorMessage" class="alert alert-danger py-2 px-3 mt-2 d-flex align-items-center gap-2 mb-0"
-          style="font-size: 13px;">
-          <i class="ti ti-alert-triangle fs-5"></i>
-          <span>{{ errorMessage }}</span>
-        </div>
+     
 
       </div>
 
