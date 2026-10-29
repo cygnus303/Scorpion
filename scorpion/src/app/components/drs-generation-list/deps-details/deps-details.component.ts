@@ -58,7 +58,7 @@ export class DepsDetailsComponent {
         // Attach full URL for image files
         this.depsList = list.map((item:any) => ({
           ...item,
-          fileUrl: `${this.env.liveUrl}Uploads/${item.DepsImage}`
+          fileUrl: `${this.env.liveUrl}UploadedDocuments/UplaodDepsFile/${item.DepsImage}`
         }));
         this.totalExceptions = this.depsList.length;
       }, error: (err: any) => {

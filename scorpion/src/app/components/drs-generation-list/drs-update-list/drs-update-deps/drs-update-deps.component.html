@@ -40,7 +40,7 @@
           <th class="th-info" style="min-width:120px;">ADD</th>
           <th class="th-info" style="min-width:120px;">Org / Dest</th>
           <th class="th-info text-center" style="min-width:90px;">Del Pkgs</th>
-          <!-- <th class="th-info" style="min-width:165px;">Box ID</th> -->
+          <th class="th-info" style="min-width:165px;">Box ID <span class="text-danger">*</span></th>
           <th class="th-misc text-end" style="min-width:120px;">Invoice Value (₹)</th>
           <th class="th-deps" style="width:130px; max-width:130px;">DEPS Type <span class="text-danger">*</span></th>
           <th class="th-dmg" style="width:220px; max-width:220px;">Damage Type</th>
@@ -88,9 +88,10 @@
             </td>
 
             <!-- Box ID Checkbox Dropdown -->
-            <!-- <td style="min-width:165px; position: relative;">
+            <td style="min-width:165px; position: relative;">
               <div class="ms-dropdown" [class.open]="activeBoxDropdownIndex === i" (click)="$event.stopPropagation()">
                 <button type="button" class="form-select form-select-sm text-start"
+                  [ngClass]="{ 'border-danger': row.value.depstype && (!row.value.selectedBoxIds || row.value.selectedBoxIds.length === 0) }"
                   (click)="toggleBoxDropdown(i, $event)">
                   {{ getSelectedBoxesLabel(i) }}
                 </button>
@@ -102,7 +103,10 @@
                   </label>
                 </div>
               </div>
-            </td> -->
+              <span class="text-danger" style="font-size: 9px; font-weight: 500;"
+                *ngIf="row.value.depstype && (!row.value.selectedBoxIds || row.value.selectedBoxIds.length === 0)">
+                This field is required.</span>
+            </td>
 
             <!-- Invoice Value -->
             <td>
@@ -124,6 +128,9 @@
                 [readonly]="row.get('depstype')?.value !== 'D'" (change)="onDamageTypeChange(i , $event)"
                 placeholder="Select Damage" [clearable]="true" appendTo="body" [dropdownPosition]="'bottom'">
               </ng-select>
+              <span class="text-danger" style="font-size: 9px; font-weight: 500;"
+                *ngIf="row.value.depstype === 'D' && !row.value.damageType">
+                This field is required.</span>
             </td>
 
             <!-- Severity -->
@@ -164,23 +171,23 @@
                   <button class="btn btn-outline-primary" type="button" [disabled]="row.value.depstype !== 'D'"
                     (click)="fileInput.click()"
                     style="font-size: 11px !important; padding: 2px 8px; border-radius: 4px 0 0 4px;">
-                    {{ row.value.fileAttached ? 'Change' : 'Choose File' }}
+                    {{ (row.value.fileAttached || row.value.fileName) ? 'Change' : 'Choose File' }}
                   </button>
 
-                  <span *ngIf="!row.value.fileAttached" class="form-control bg-light text-muted text-truncate"
+                  <span *ngIf="!row.value.fileAttached && !row.value.fileName" class="form-control bg-light text-muted text-truncate"
                     style="font-size: 10px; line-height: 1.8; border-radius: 0 4px 4px 0;"
                     [title]="row.value.fileName || 'No file chosen'">
                     {{ row.value.fileName || 'No file chosen' }}
                   </span>
 
-                  <a *ngIf="row.value.fileAttached" [href]="row.value.fileUrl" target="_blank"
+                  <a *ngIf="row.value.fileAttached || row.value.fileName" [href]="row.value.fileUrl" target="_blank"
                     class="form-control bg-light text-primary text-truncate text-decoration-underline fw-semibold"
                     style="font-size: 10px; line-height: 1.8; cursor: pointer; border-radius: 0;"
                     [title]="'Click to view: ' + row.value.fileName">
                     {{ row.value.fileName }}
                   </a>
 
-                  <button *ngIf="row.value.fileAttached" class="btn btn-outline-danger" type="button"
+                  <button *ngIf="row.value.fileAttached || row.value.fileName" class="btn btn-outline-danger" type="button"
                     (click)="removeFile(i)"
                     style="font-size: 11px !important; padding: 2px 8px; border-radius: 0 4px 4px 0;">
                     ✕
@@ -191,10 +198,10 @@
                 </div>
 
                 <span class="text-danger" style="font-size: 9px; font-weight: 500;"
-                  *ngIf="row.value.depstype === 'D' && !row.value.fileAttached">*
-                  Required for Damage</span>
+                  *ngIf="row.value.depstype === 'D' && !row.value.fileAttached && !row.value.fileName">
+                  This field is required.</span>
                 <span class="text-success" style="font-size: 9px; font-weight: 600;"
-                  *ngIf="row.value.fileAttached">✔
+                  *ngIf="row.value.fileAttached || row.value.fileName">✔
                   File attached</span>
               </div>
             </td>
@@ -210,7 +217,7 @@
       damage or shortage exceptions.</span>
     <div class="d-flex gap-2">
       <button type="button" class="btn btn-sm btn-outline-secondary px-3 py-2" (click)="closePopup()">✕ Cancel</button>
-      <button type="button" class="btn btn-sm btn-primary px-3 py-2" (click)="saveDepsForm()">
+      <button type="button" class="btn btn-sm btn-primary px-3 py-2" [disabled]="hasInvalidDepsRows()" (click)="saveDepsForm()">
         💾 Save DEPS
       </button>
     </div>

@@ -220,7 +220,8 @@
             <div class="thcform-field" id="ftlTypeSelWrap">
               <label>FTL Type <span class="req">*</span></label>
               <ng-select class="noFoundTextColor required2 clear-icon" placeholder="FTL Type"
-                formControlName="vehicleType" [readonly]="ThcForm.value.vendorType === 'XX1'" appFocusNext required
+                formControlName="vehicleType" [readonly]="ThcForm.value.vendorType === 'XX1' || isBidVehicleTypeReadonly"
+                [clearable]="!isBidVehicleTypeReadonly && ThcForm.value.vendorType !== 'XX1'" appFocusNext required
                 notFoundText="No matches found" [items]="vehicleTypeList" bindLabel="type_Name" bindValue="typeCode"
                 (change)="onChangeVehicleType($event)" required
                 [ngClass]="{ 'border-danger': ThcForm.get('vehicleType')?.invalid  && ThcForm.get('vehicleType')?.touched }"></ng-select>
@@ -357,7 +358,7 @@
                 <input class="form-control required2" placeholder="Date Of Birth" type="text"
                   [class.disabled-input]="true" appFocusNext #dbv="bsDatepicker" bsDatepicker formControlName="d1_DOB"
                   [ngClass]="{ 'border-danger': ThcForm.get('d1_DOB')?.invalid  && ThcForm.get('d1_DOB')?.touched }"
-                  [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY',maxDate : today}"
+                  [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY', maxDate: maxDobDate}"
                   (bsValueChange)="onChangeLicenceNumber($event)">
                 <span class="input-group-text cursor-pointer" (click)="dbv.toggle();$event.stopPropagation()">
                   <i class="fa fa-calendar"></i>
@@ -451,10 +452,13 @@
             </div>
             <div class="thcform-field" *ngIf="ThcType === 'A'">
               <label>Seal No <span class="req">*</span></label>
-              <input class="form-control" placeholder="Seal No" type="text" formControlName="sealNo" 
+              <input class="form-control required2" placeholder="Seal No" type="text" formControlName="sealNo" 
                 maxlength="6" minlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '');" appFocusNext
                 [ngClass]="{ 'border-danger': ThcForm.get('sealNo')?.invalid && ThcForm.get('sealNo')?.touched }">
-              <div class="text-danger text-start" *ngIf="ThcForm.get('sealNo')?.invalid && ThcForm.get('sealNo')?.touched">
+              <div class="text-danger text-start" *ngIf="ThcForm.get('sealNo')?.errors?.['required'] && ThcForm.get('sealNo')?.touched">
+                This field is required.
+              </div>
+              <div class="text-danger text-start" *ngIf="!ThcForm.get('sealNo')?.errors?.['required'] && ThcForm.get('sealNo')?.invalid && ThcForm.get('sealNo')?.touched">
                 Seal No should be 6 digits.
               </div>
             </div>
@@ -501,8 +505,8 @@
                     <td>{{ item.tcbr }}</td>
                     <td>{{ item.toBH_CODE }}</td>
                     <td>{{ item.toT_DKT }}</td>
-                    <td>{{ item.toT_PKGS }}</td>
-                    <td>{{ item.toT_ACTUWT }}</td>
+                    <td>{{item.toT_LOAD_PKGS}}/{{ item.toT_PKGS }}</td>
+                    <td>{{item.toT_LOAD_ACTWT}}/{{ item.toT_ACTUWT }}</td>
                   </tr>
                 </ng-container>
                 <tr *ngIf="!selectedMfs || selectedMfs.length === 0">
@@ -549,7 +553,7 @@
                   Please enter a value.
                 </div>
                 <div *ngIf="ThcForm.hasError('advanceInvalid')">
-                  Advance amount cannot be greater than Net amount
+                  Advance amount cannot be greater than contract amount
                 </div>
               </div>
             </div>

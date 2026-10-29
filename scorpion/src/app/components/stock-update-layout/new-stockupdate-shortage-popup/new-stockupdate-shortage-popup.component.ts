@@ -1,26 +1,33 @@
-import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, EventEmitter, HostListener, OnDestroy, Output, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-new-stockupdate-shortage-popup',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, NgSelectModule],
   templateUrl: './new-stockupdate-shortage-popup.component.html',
-  styleUrls: ['./new-stockupdate-shortage-popup.component.scss']
+  styleUrls: ['./new-stockupdate-shortage-popup.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
-export class NewStockupdateShortagePopupComponent {
+export class NewStockupdateShortagePopupComponent implements OnDestroy {
   public modalRefs!: BsModalRef;
   public thcNo: string = '';
   public dateStr: string = '';
   public popupDocketNo: string = '';
   public popupDocketDate: string = '';
   public rowDataIndex: number = -1;
+  public isSaved: boolean = false;
+  public isSubmitted: boolean = false;
+  private isCancelledEmitted: boolean = false;
+  private modalHiddenSub?: Subscription;
 
   @Output() dataEmitter = new EventEmitter<any>();
+  @Output() cancelEmitter = new EventEmitter<any>();
   @ViewChild('TemplateShortage', { static: true }) TemplateShortage!: TemplateRef<any>;
 
   public shortageForm!: FormGroup;
@@ -29,6 +36,11 @@ export class NewStockupdateShortagePopupComponent {
   public depsTypeList = [
     { value: 'S', label: '🟠 Shortage' }
   ];
+
+  @HostListener('document:click')
+  onDocumentClick() {
+    this.closeBoxDropdowns();
+  }
 
   constructor(
     private modalService: BsModalService,
@@ -43,6 +55,10 @@ export class NewStockupdateShortagePopupComponent {
     this.thcNo = thcNo;
     this.dateStr = dateStr;
     this.rowDataIndex = index;
+    this.isSaved = false;
+    this.isSubmitted = false;
+    this.isCancelledEmitted = false;
+    this.activeBoxDropdownIndex = null;
 
     this.popupDocketNo = data?.dockno || data?.dockNo || data?.docketNo || '';
     if (data?.booking_Date || data?.dockdt) {
@@ -56,8 +72,14 @@ export class NewStockupdateShortagePopupComponent {
     });
 
     this.modalRefs = this.modalService.show(this.TemplateShortage, {
-      class: 'modal-xl modal-dialog-centered shortage-modal-wrapper',
-      backdrop: 'static'
+      class: 'modal-xxl modal-dialog-centered shortage-modal-wrapper',
+      backdrop: true,
+      ignoreBackdropClick: false
+    });
+
+    this.modalHiddenSub?.unsubscribe();
+    this.modalHiddenSub = this.modalRefs.onHidden?.subscribe(() => {
+      this.notifyCancel();
     });
 
     const formData = data.depsData && data.depsData.depsTyp === 'S' ? { ...data.depsData, ...data, affectedPkgs: data.affectedPkgs !== undefined ? data.affectedPkgs : data.depsData.affectedQty } : data;
@@ -98,35 +120,32 @@ export class NewStockupdateShortagePopupComponent {
   }
 
   createDocketFormGroup(item: any): FormGroup {
-    const boxIds: string[] = [];
-    let pkgsCount = +(item.affectedPkgs || item.shortQty || item.shortageQty || item.affectedQty || 0);
-    if (pkgsCount <= 0 && item.bkG_PKGSNO !== undefined && item.pkgsno !== undefined) {
-      pkgsCount = +(item.bkG_PKGSNO || 0) - +(item.pkgsno || 0);
-    }
-    if (pkgsCount <= 0) {
-      pkgsCount = +(item.bkG_PKGSNO || item.pkgsno || 0);
-    }
+    const dockno = item.dockno || item.dockNo || item.docket || this.popupDocketNo || '';
+    const totalDocketPkgs = +(item.bkG_PKGSNO || item.pkgsno || 0);
+    const totalWtVal = +(item.bkG_ACTUWT || item.actuwt || 0);
 
-    const dockno = item.dockno || item.dockNo || item.docket || this.popupDocketNo;
-    for (let k = 1; k <= pkgsCount; k++) {
+    // 1. ડૉકેટના કુલ પેકેજ મુજબ બધા Box IDs જનરેટ કરવા (દા.ત. 1 થી totalDocketPkgs)
+    const boxIds: string[] = [];
+    for (let k = 1; k <= totalDocketPkgs; k++) {
       boxIds.push(`${dockno}_${k.toString().padStart(3, '0')}`);
     }
 
-    let selectedBoxes = (item.selectedBoxIds || []).filter((id: string) => boxIds.includes(id));
-    if (selectedBoxes.length === 0 && boxIds.length > 0) {
-      selectedBoxes = [...boxIds];
-    }
+    // 2. શરૂઆતમાં કોઈ Box ID જાતે સિલેક્ટ નહીં થાય (User પોતે સિલેક્ટ કરશે)
+    const selectedBoxes: string[] = (item.selectedBoxIds && Array.isArray(item.selectedBoxIds))
+      ? item.selectedBoxIds.filter((id: string) => boxIds.includes(id))
+      : [];
     const affectedPkgsVal = selectedBoxes.length;
 
-    const totalPkgsVal = +(item.bkG_PKGSNO || item.deliveredPkgs || item.pkgsDelivered || (item.pkgsno && +item.pkgsno > pkgsCount ? +item.pkgsno : 0) || (item.pkgsno ? +item.pkgsno + +pkgsCount : 0) || pkgsCount || 1);
-    const totalWtVal = +(item.bkG_ACTUWT || item.actuwt || item.totWeight || item.totalWeight || 0);
+    // 3. Arrived Packages = કુલ પેકેજ - સિલેક્ટ કરેલા Shortage Boxes
+    const arrivedPkgsCount = Math.max(0, totalDocketPkgs - affectedPkgsVal);
 
+    // 4. Shortage Weight અને Invoice Value ની ગણતરી
     let affectedInvValCalc = 0.00;
-    let affectedWeightCalc = +(item.affectedWeight || item.shortWt || item.shortageWeight || 0);
-    if (totalPkgsVal > 0 && affectedPkgsVal > 0) {
-      affectedInvValCalc = Number((( (item.invval || 0) / totalPkgsVal ) * affectedPkgsVal).toFixed(2));
+    let affectedWeightCalc = 0.00;
+    if (totalDocketPkgs > 0 && affectedPkgsVal > 0) {
+      affectedInvValCalc = Number((((item.invval || 0) / totalDocketPkgs) * affectedPkgsVal).toFixed(2));
       if (totalWtVal > 0) {
-        affectedWeightCalc = Number(((totalWtVal / totalPkgsVal) * affectedPkgsVal).toFixed(2));
+        affectedWeightCalc = Number(((totalWtVal / totalDocketPkgs) * affectedPkgsVal).toFixed(2));
       }
     }
 
@@ -136,8 +155,8 @@ export class NewStockupdateShortagePopupComponent {
       dockdt: new FormControl(item.booking_Date || item.dockdt),
       orgncd: new FormControl(item.orgncd),
       destcd: new FormControl(item.destcd),
-      pkgsno: new FormControl(pkgsCount),
-      bkG_PKGSNO: new FormControl(totalPkgsVal),
+      pkgsno: new FormControl(arrivedPkgsCount),
+      bkG_PKGSNO: new FormControl(totalDocketPkgs),
       bkG_ACTUWT: new FormControl(totalWtVal),
       invval: new FormControl(item.invval || 0),
       depstype: new FormControl('S'),
@@ -179,8 +198,13 @@ export class NewStockupdateShortagePopupComponent {
       selectedBoxes.push(boxId);
     }
 
+    const totalPkgs = +row.get('bkG_PKGSNO')?.value || 0;
+    const affectedCount = selectedBoxes.length;
+    const newArrivedPkgs = Math.max(0, totalPkgs - affectedCount);
+
     row.get('selectedBoxIds')?.setValue(selectedBoxes);
-    row.get('affectedPkgs')?.setValue(selectedBoxes.length);
+    row.get('affectedPkgs')?.setValue(affectedCount);
+    row.get('pkgsno')?.setValue(newArrivedPkgs);
     this.onAffectedPkgsChange(rowIndex);
   }
 
@@ -216,14 +240,62 @@ export class NewStockupdateShortagePopupComponent {
     row.get('affectedWeight')?.setValue(rawWt);
   }
 
+  clearLossValueOnFocus(rowIndex: number) {
+    const row = this.docketsArray.at(rowIndex) as FormGroup;
+    const ctrl = row?.get('affectedInvVal');
+    if (ctrl) {
+      const val = ctrl.value;
+      if (val === 0 || val === '0' || val === '0.00' || Number(val) === 0) {
+        ctrl.setValue(null);
+      }
+    }
+  }
+
+  resetLossValueOnBlur(rowIndex: number) {
+    const row = this.docketsArray.at(rowIndex) as FormGroup;
+    const ctrl = row?.get('affectedInvVal');
+    if (ctrl) {
+      const val = ctrl.value;
+      if (val === '' || val === null || val === undefined || String(val).trim() === '') {
+        ctrl.setValue(0);
+      } else {
+        const num = Number(val);
+        ctrl.setValue(!isNaN(num) ? num : 0);
+      }
+    }
+  }
+
+  private notifyCancel() {
+    if (!this.isSaved && !this.isCancelledEmitted) {
+      this.isCancelledEmitted = true;
+      this.cancelEmitter.emit({
+        rowIndex: this.rowDataIndex
+      });
+    }
+  }
+
   closePopup() {
+    this.closeBoxDropdowns();
+    this.notifyCancel();
     if (this.modalRefs) {
       this.modalRefs.hide();
     }
   }
 
+  ngOnDestroy() {
+    this.modalHiddenSub?.unsubscribe();
+  }
+
+  hasInvalidRows(): boolean {
+    return this.docketsArray.controls.some((c: any) => {
+      const v = c.getRawValue();
+      return !v.selectedBoxIds || v.selectedBoxIds.length === 0;
+    });
+  }
+
   saveShortageForm() {
-    if (this.shortageForm.invalid) {
+    this.isSubmitted = true;
+    if (this.shortageForm.invalid || this.hasInvalidRows()) {
       this.shortageForm.markAllAsTouched();
       return;
     }
@@ -234,7 +306,7 @@ export class NewStockupdateShortagePopupComponent {
     });
 
     if (activeRows.length === 0) {
-      this.sweetAlertService.warning('Please select Box IDs from the dropdown to declare affected packages.');
+      this.sweetAlertService.warning('Please enter valid shortage packages.');
       return;
     }
 
@@ -265,6 +337,7 @@ export class NewStockupdateShortagePopupComponent {
       };
     });
 
+    this.isSaved = true;
     this.dataEmitter.emit({
       rowIndex: this.rowDataIndex,
       depsData: depsData[0]

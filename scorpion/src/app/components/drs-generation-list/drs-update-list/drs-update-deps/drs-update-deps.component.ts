@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, TemplateRef, ViewChild, Input } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output, TemplateRef, ViewChild, Input } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormArray, FormControl } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { PRSDRSApiService } from 'app/shared/services/prsdrs-api.service';
@@ -7,6 +7,7 @@ import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { environment } from 'environments/environment';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-drs-update-deps',
@@ -15,7 +16,7 @@ import { environment } from 'environments/environment';
   templateUrl: './drs-update-deps.component.html',
   styleUrls: ['./drs-update-deps.component.scss']
 })
-export class DrsUpdateDepsComponent {
+export class DrsUpdateDepsComponent implements OnDestroy {
   public modalRef!: BsModalRef;
   public drsNo: string = '';
   public depsNo: string = '';
@@ -24,7 +25,12 @@ export class DrsUpdateDepsComponent {
   public totalDeliveredDockets: number = 0;
   env = environment;
 
+  public isSaved: boolean = false;
+  private isCancelledEmitted: boolean = false;
+  private modalHiddenSub?: Subscription;
+
   @Output() dataEmitter = new EventEmitter<any>();
+  @Output() cancelEmitter = new EventEmitter<any>();
   @ViewChild('TemplateDeps', { static: true }) TemplateDeps!: TemplateRef<any>;
 
   public depsForm!: FormGroup;
@@ -65,19 +71,9 @@ export class DrsUpdateDepsComponent {
     }
 
     const totalPkgsVal = +(item.bkG_PKGSNO || item.totalPkgs || (item.pkgsno && +item.pkgsno > pkgsCount ? +item.pkgsno : 0) || pkgsCount || 1);
-    let initialAffectedPkgs = pkgsCount; // Default to pkgsCount
-    if (item.affectedPkgs !== undefined && item.affectedPkgs !== null) {
-      initialAffectedPkgs = +(item.affectedPkgs);
-    } else if (item.affectedQty !== undefined && item.affectedQty !== null) {
-      initialAffectedPkgs = +(item.affectedQty);
-    } else if (item.selectedBoxIds && item.selectedBoxIds.length > 0) {
-      initialAffectedPkgs = item.selectedBoxIds.length;
-    }
-
-    let initialAffectedInvVal = Number(item.invval || 0.00); // Default to invval
-    if (item.affectedInvVal !== undefined && item.affectedInvVal !== null && item.affectedInvVal !== 0) {
-      initialAffectedInvVal = Number(item.affectedInvVal);
-    } else if (totalPkgsVal > 0 && initialAffectedPkgs > 0) {
+    const initialAffectedPkgs = +(item.selectedBoxIds ? item.selectedBoxIds.length : (item.affectedPkgs || item.affectedQty || 0));
+    let initialAffectedInvVal = Number(item.affectedInvVal || 0.00);
+    if (!item.affectedInvVal && totalPkgsVal > 0 && initialAffectedPkgs > 0) {
       initialAffectedInvVal = Number((( (item.invval || 0) / totalPkgsVal ) * initialAffectedPkgs).toFixed(2));
     }
 
@@ -113,12 +109,23 @@ export class DrsUpdateDepsComponent {
     this.vendorName = vendorName;
     this.totalDeliveredDockets = totalDeliveredDockets;
     this.rowDataIndex = index;
+    this.isSaved = false;
+    this.isCancelledEmitted = false;
 
     this.depsForm = new FormGroup({
       dockets: new FormArray([])
     });
 
-    this.modalRef = this.modalService.show(this.TemplateDeps, { class: 'modal-xxl modal-dialog-centered deps-entry-modal-wrapper', backdrop: 'static' });
+    this.modalRef = this.modalService.show(this.TemplateDeps, {
+      class: 'modal-xxl modal-dialog-centered deps-entry-modal-wrapper',
+      backdrop: true,
+      ignoreBackdropClick: false
+    });
+
+    this.modalHiddenSub?.unsubscribe();
+    this.modalHiddenSub = this.modalRef.onHidden?.subscribe(() => {
+      this.notifyCancel();
+    });
 
     // Ensure we populate any existing depsData if it was previously saved but not submitted yet
     const formData = data.depsData ? data.depsData : data;
@@ -207,7 +214,6 @@ export class DrsUpdateDepsComponent {
     }
   }
 
-  /*
   toggleBoxDropdown(index: number, event: MouseEvent) {
     event.stopPropagation();
     if (this.activeBoxDropdownIndex === index) {
@@ -263,7 +269,6 @@ export class DrsUpdateDepsComponent {
       return `${selectedCount} boxes selected`;
     }
   }
-  */
 
   onFileSelected(index: number, event: Event) {
     const input = event.target as HTMLInputElement;
@@ -299,14 +304,40 @@ export class DrsUpdateDepsComponent {
     row.get('fileBase64')?.setValue('');
   }
 
+  private notifyCancel() {
+    if (!this.isSaved && !this.isCancelledEmitted) {
+      this.isCancelledEmitted = true;
+      this.cancelEmitter.emit({
+        rowIndex: this.rowDataIndex
+      });
+    }
+  }
+
   closePopup() {
+    this.notifyCancel();
     if (this.modalRef) {
       this.modalRef.hide();
     }
   }
 
+  ngOnDestroy() {
+    this.modalHiddenSub?.unsubscribe();
+  }
+
+  hasInvalidDepsRows(): boolean {
+    return this.docketsArray.controls.some((c: any) => {
+      const v = c.value;
+      if (v.depstype) {
+        if (!v.selectedBoxIds || v.selectedBoxIds.length === 0) return true;
+        if (v.depstype === 'D' && !v.fileAttached && !v.fileName) return true;
+        if (v.depstype === 'D' && !v.damageType) return true;
+      }
+      return false;
+    });
+  }
+
   saveDepsForm() {
-    if (this.depsForm.invalid) {
+    if (this.depsForm.invalid || this.hasInvalidDepsRows()) {
       this.depsForm.markAllAsTouched();
       return;
     }
@@ -318,12 +349,6 @@ export class DrsUpdateDepsComponent {
 
     if (activeRows.length === 0) {
       this.sweetAlertService.warning('Please declare at least one DEPS record (Damage/Shortage) with affected packages.');
-      return;
-    }
-
-    const missingDamageFile = activeRows.find((c: any) => c.value.depstype === 'D' && !c.value.fileAttached);
-    if (missingDamageFile) {
-      this.sweetAlertService.warning(`File upload is required for Damage record on Docket ${missingDamageFile.value.dockno || ''}.`);
       return;
     }
 
@@ -357,6 +382,7 @@ export class DrsUpdateDepsComponent {
       };
     });
 
+    this.isSaved = true;
     // Instead of calling API here, we emit it to the parent to save in its form state.
     this.dataEmitter.emit({
       rowIndex: this.rowDataIndex,

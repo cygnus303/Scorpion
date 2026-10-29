@@ -46,7 +46,21 @@
                                     <th class="text-center align-middle" style="width: 20%; font-size: 12px; color: #495057;">Balance Amount Paid At</th>
                                 </tr>
                             </thead>
-                            <tbody *ngIf="thcData">
+
+                            <!-- Loading State -->
+                            <tbody *ngIf="isLoading">
+                                <tr>
+                                    <td colspan="5" class="text-center py-4 bg-white">
+                                        <div class="spinner-border text-primary" role="status" style="width: 2.2rem; height: 2.2rem;">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                        <div class="text-muted mt-2 fw-medium" style="font-size: 13px;">Loading financial details...</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                            <!-- Data Row -->
+                            <tbody *ngIf="!isLoading && thcData">
                                 <tr>
                                     <td class="p-2 align-middle">
                                         <input type="text" class="form-control form-control-sm text-center" name="pcamt" [(ngModel)]="thcData.pcamt" oninput="this.value = this.value.replace(/[^0-9.]/g,'');">
@@ -63,10 +77,19 @@
                                         </div>
                                     </td>
                                     <td class="p-2 align-middle">
-                                        <input type="text" class="form-control form-control-sm text-center" name="fincmplbr" [(ngModel)]="thcData.fincmplbr">
+                                        <input type="text" class="form-control form-control-sm text-center" name="fincmplbr" [(ngModel)]="thcData.fincmplbr" readonly>
                                     </td>
                                     <td class="p-2 align-middle">
-                                        <input type="text" class="form-control form-control-sm text-center" name="balamtbrcd" [(ngModel)]="thcData.balamtbrcd">
+                                        <input type="text" class="form-control form-control-sm text-center" name="balamtbrcd" [(ngModel)]="thcData.balamtbrcd" readonly>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                            <!-- No Data State -->
+                            <tbody *ngIf="!isLoading && !thcData">
+                                <tr>
+                                    <td colspan="5" class="text-center py-4 text-muted bg-white" style="font-size: 13px;">
+                                        <i class="fas fa-exclamation-circle me-1 text-secondary"></i> No financial details found.
                                     </td>
                                 </tr>
                             </tbody>
@@ -80,7 +103,10 @@
         <!-- Footer -->
         <div class="d-flex justify-content-end p-3" style="background: #fafbfc; border-top: 1px solid #e3e7ee; gap: 10px;">
             <button type="button" class="btn btn-outline-danger fw-bold" style="font-size: 13px; padding: 6px 20px; margin-right: 8px;" (click)="modalRef.hide()">Cancel</button>
-            <button type="button" class="btn btn-success fw-bold text-white" style="font-size: 13px; padding: 6px 22px; background-color: #2e7d32; border-color: #2e7d32;" [disabled]="isAdvanceAmountInvalid" (click)="submitTHC()">Submit</button>        
+            <button type="button" class="btn btn-success fw-bold text-white" style="font-size: 13px; padding: 6px 22px; background-color: #2e7d32; border-color: #2e7d32;" [disabled]="isAdvanceAmountInvalid || isLoading || isSubmitting || !thcData" (click)="submitTHC()">
+                <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                Submit
+            </button>        
         </div>
     </form>
 </ng-template>

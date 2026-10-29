@@ -676,4 +676,4 @@
     </div>
 </div>
 
-<app-drs-update-deps #DrsUpdateDepsComponent (dataEmitter)="onDepsDataReceived($event)"></app-drs-update-deps>
+<app-drs-update-deps #DrsUpdateDepsComponent (dataEmitter)="onDepsDataReceived($event)" (cancelEmitter)="onDepsCancelled($event)"></app-drs-update-deps>

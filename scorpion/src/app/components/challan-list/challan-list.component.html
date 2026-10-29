@@ -719,7 +719,7 @@
                                             [class.disabled-input]="true" appFocusNext #dbv="bsDatepicker" bsDatepicker
                                             formControlName="d1_DOB"
                                             [ngClass]="{ 'border-danger': challanService.challanForm.get('d1_DOB')?.invalid  && challanService.challanForm.get('d1_DOB')?.touched }"
-                                            [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY',maxDate : today}"
+                                            [bsConfig]="{ containerClass: 'theme-dark-blue' , dateInputFormat: 'DD MMM YYYY', maxDate: maxDobDate}"
                                             (bsValueChange)="onChangeLicenceNumber($event)">
                                         <span class="input-group-text cursor-pointer"
                                             (click)="!isFieldReadonly() && dbv.toggle();$event.stopPropagation()">
@@ -1128,7 +1128,11 @@
                                             bindLabel="text" bindValue="value" placeholder="Vendor"
                                             [(ngModel)]="headerVendor" [ngModelOptions]="{standalone: true}"
                                             [dropdownPosition]="'bottom'" appendTo="body"
-                                            (change)="onHeaderVendorChange($event)"></ng-select>
+                                            (change)="onHeaderVendorChange($event)">
+                                            <ng-template ng-option-tmp let-item="item">
+                                                <div style="white-space: normal; word-break: break-word; line-height: 1.35;">{{ item.text }}</div>
+                                            </ng-template>
+                                        </ng-select>
                                     </th>
                                     <th class="p-3 fw-bolder" style="min-width: 150px;">
                                         Rate Type
@@ -1201,6 +1205,9 @@
                                                 }" [items]="rowVendorList[i] || []" formControlName="luVendorCode"
                                                 bindLabel="text" bindValue="value" placeholder="Vendor"
                                                 (change)="onRowVendorChange($event, i)">
+                                                <ng-template ng-option-tmp let-item="item">
+                                                    <div style="white-space: normal; word-break: break-word; line-height: 1.35;">{{ item.text }}</div>
+                                                </ng-template>
                                             </ng-select>
                                             <div class="text-danger small mt-1 text-start"
                                                 *ngIf="item.get('luVendorCode')?.hasError('required') && item.get('luVendorCode')?.touched">

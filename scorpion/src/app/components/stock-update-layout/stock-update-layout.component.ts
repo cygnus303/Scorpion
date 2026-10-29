@@ -15,11 +15,12 @@ import { DepsDetailsComponent } from '../drs-generation-list/deps-details/deps-d
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { HccViewComponent } from '../hcc-view/hcc-view.component';
 import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
+import { HCCDetailsComponent } from '../prs-generation-list/hcc-details/hcc-details.component';
 
 @Component({
   selector: 'app-stock-update-layout',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent,DepsDetailsComponent, StockupdatePopupComponent, NewStockupdatePopupComponent,HccViewComponent, DateRangePickerComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent,DepsDetailsComponent,HCCDetailsComponent, StockupdatePopupComponent, NewStockupdatePopupComponent,HccViewComponent, DateRangePickerComponent],
   templateUrl: './stock-update-layout.component.html',
   styleUrl: './stock-update-layout.component.scss',
   providers: [BsModalService],
@@ -30,6 +31,7 @@ export class StockUpdateLayoutComponent {
   public isCSVLoading: boolean = false;
   public listSubscription?: Subscription;
   private fetchSubject = new Subject<void>();
+    @ViewChild('HCCDetailsComponent') HCCDetailsComponent!: HCCDetailsComponent;
   @ViewChild('HccViewComponent') HccViewComponent!: HccViewComponent;
   @ViewChild('StockupdatePopupComponent') StockupdatePopupComponent!: StockupdatePopupComponent;
   @ViewChild('NewStockupdatePopupComponent') NewStockupdatePopupComponent!: NewStockupdatePopupComponent;
@@ -234,12 +236,16 @@ export class StockUpdateLayoutComponent {
     });
   }
 
+   openHHCDetails(data: any) {
+    this.HCCDetailsComponent.showPopup(data, 'M','S');
+  }
+
   openHccPopup(data: any, chargeType: string){
     this.HccViewComponent.showPopup(data, chargeType, 'M', 'T');
   }
 
   openLoadingSheetNoView(ChallanNo:any){
-  const url = `${this.env.liveUrl}ViewPrint/ViewLS?ChallanNo=${ChallanNo}&src=angular`;
+  const url = `${this.env.liveUrl}ViewPrint/ViewUnLoadingsheet?UnLodingSheetNo=${ChallanNo}&src=angular`;
     const popup = window.open('', 'popupWindow',
       'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
     );

@@ -1,0 +1,243 @@
+<ng-template #Templatepod>
+  <div class="modal-content border-0 shadow-lg" style="border-radius: 8px; overflow: hidden;">
+    <!-- ── Modal Header ── -->
+    <div class="modal-header-custom d-flex justify-content-between align-items-center">
+      <h5 class="modal-title-custom">
+        <i class="ti ti-truck-delivery fs-4"></i>
+        <span>Confirm THC Departure</span>
+      </h5>
+      <button type="button" class="btn-close btn-close-white" (click)="closePopup()" [disabled]="isSubmitting"></button>
+    </div>
+
+    <!-- ── Modal Body ── -->
+    <div class="modal-body p-4" style="background: #fdfdfd;">
+
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="text-center py-5">
+        <div class="spinner-border text-danger" role="status" style="width: 3rem; height: 3rem;">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <div class="mt-3 text-muted fw-bold fs-6">Loading Departure Details & Manifests...</div>
+      </div>
+
+      <div *ngIf="!isLoading">
+
+        <!-- Multiple THCs Tabs (if more than 1 THC selected) -->
+        <div *ngIf="thcList.length > 1" class="d-flex align-items-center gap-2 mb-3 pb-2 border-bottom flex-wrap">
+          <span class="text-muted small fw-bold me-1">Select THC:</span>
+          <button *ngFor="let thc of thcList; let idx = index" type="button" class="tab-btn"
+            [class.active]="selectedThcIndex === idx" (click)="selectThcTab(idx)">
+            <span>{{ thc.thcno }}</span>
+            <span class="badge ms-1"
+              [ngClass]="selectedThcIndex === idx ? 'bg-light text-dark' : 'bg-secondary text-white'">
+              {{ getSelectedCountForThc(thc.thcno) }}/{{ getManifestCountForThc(thc.thcno) }} MFs
+            </span>
+          </button>
+        </div>
+
+        <!-- THC Info Strip -->
+        <div class="thc-info-strip" *ngIf="currentThc">
+          <div class="row g-3">
+            <div class="col-md-3 col-6 thc-info-item">
+              <span class="thc-info-label">THC Number</span>
+              <span class="thc-info-val text-primary">{{ currentThc.thcno }}</span>
+            </div>
+            <div class="col-md-2 col-6 thc-info-item">
+              <span class="thc-info-label">THC Date</span>
+              <span class="thc-info-val">{{ (currentThcModel?.ATD || currentThc.thcdt) | date:'dd MMM yyyy' }}</span>
+            </div>
+            <div class="col-md-2 col-6 thc-info-item">
+              <span class="thc-info-label">Vehicle No</span>
+              <span class="thc-info-val">{{ currentThcModel?.vehno || currentThc.vehno || '—' }}</span>
+            </div>
+            <div class="col-md-3 col-6 thc-info-item">
+              <span class="thc-info-label">Route</span>
+              <span class="thc-info-val text-truncate" [title]="currentThcModel?.route || currentThc.routeName || ''">
+                {{ currentThcModel?.route || currentThc.routeName || '—' }}
+              </span>
+            </div>
+            <div class="col-md-2 col-12 thc-info-item text-md-end">
+              <span class="thc-info-label">Mode / Type</span>
+              <div class="d-flex align-items-center justify-content-md-end gap-1 mt-1">
+                <span class="mf-mode-badge" [ngClass]="getModeBadgeClass(currentThc.rut_cat)">
+                  {{ currentThc.rut_cat || '' }}
+                </span>
+                <span class="mf-type-badge" [ngClass]="getMfTypeClass(currentThc.serviceType)">
+                  {{ currentThc.serviceType || '' }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Manifest Table Header Info -->
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="fw-bold text-dark d-flex align-items-center gap-2" style="font-size: 13.5px;">
+            <i class="ti ti-list-check text-danger"></i>
+            <span>MFs available for THC Departure</span>
+            <span class="badge bg-secondary-subtle text-secondary border" style="font-size: 11px;">
+              {{ getSelectedCountForThc(currentThc?.thcno) }} of {{ currentManifests.length }} selected
+            </span>
+          </div>
+          <div class="small text-muted" *ngIf="currentManifests.length > 0">
+            Click on MF No to view details
+          </div>
+        </div>
+
+        <!-- Manifest Table -->
+        <div class="table-wrap-modal mb-3">
+          <table class="modal-table">
+            <thead>
+              <tr>
+                <th style="width: 38px; text-align: center;">
+                  <input type="checkbox" class="checkbox-custom" [checked]="isAllSelectedForCurrentThc()"
+                    [indeterminate]="isPartiallySelectedForCurrentThc()" (change)="toggleSelectAllCurrentThc($event)">
+                </th>
+                <th>MF No.</th>
+                <th style="text-align: center;">MF Date</th>
+                <th style="text-align: center;">MF Branch</th>
+                <th style="text-align: center;">Next Stop</th>
+                <th style="text-align: center;">Transport Mode</th>
+                <th style="text-align: center;">MF Type</th>
+                <th style="text-align: center;">Total C-Note</th>
+                <th style="text-align: center;">Pkgs / Wt.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Empty state -->
+              <tr *ngIf="!currentManifests || currentManifests.length === 0">
+                <td colspan="9" class="text-center py-4 text-muted">
+                  <div class="py-2">
+                    <i class="ti ti-folder-x fs-1 text-secondary opacity-50 d-block mb-1"></i>
+                    <span>No Manifests found for this THC.</span>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Rows -->
+              <tr *ngFor="let row of currentManifests; let i = index" [class.row-selected]="row.isChecked">
+                <td style="text-align: center;">
+                  <input type="checkbox" class="checkbox-custom" [(ngModel)]="row.isChecked"
+                    (change)="onManifestCheckChange()">
+                </td>
+                <td>
+                  <a class="mf-link" (click)="openMFView(row.tcno)" title="View MF Details">
+                    {{ row.tcno }}
+                  </a>
+                </td>
+                <td style="text-align: center;">
+                  {{ (row.mF_Date || row.tcdt) | date:'dd MMM yyyy' }}
+                </td>
+                <td style="text-align: center;" class="fw-bold">
+                  {{ row.tcbr || '—' }}
+                </td>
+                <td style="text-align: center;" class="fw-bold">
+                  {{ row.toBH_Code || '—' }}
+                </td>
+                <td style="text-align: center;">
+                  <span class="mf-mode-badge" [ngClass]="getModeBadgeClass(getTransportMode(row))">
+                    {{ getTransportMode(row) }}
+                  </span>
+                </td>
+                <td style="text-align: center;">
+                  <div class="d-flex flex-column align-items-center justify-content-center">
+                    <span class="mf-type-badge mb-1" [ngClass]="getMfTypeClass(getMfType(row))">
+                      {{ getMfType(row) }}
+                    </span>
+                    <span class="text-muted" style="font-size: 8.5px; font-weight: 500;">
+                      Service: {{ getBaseService(getMfType(row)) }}
+                    </span>
+                  </div>
+                </td>
+                <td style="text-align: center;" class="fw-bold">
+                  <span class="badge bg-light text-dark border px-2 py-1" style="font-size: 11px;">
+                    {{ row.tot_dkt || 0 }}
+                  </span>
+                </td>
+                <td style="text-align: center;" class="fw-bold">
+                  {{ formatPkgsWt(row) }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Info Notice Strip -->
+        <div class="alert alert-light border d-flex align-items-center p-2 px-3 mb-3"
+          style="background: #f8fafc; border-color: #e2e8f0;">
+          <i class="ti ti-info-circle text-primary fs-5 me-2"></i>
+          <span style="font-size: 12.5px; color: #475569;">
+            Docket status will be updated for <strong class="text-dark">LS / MF</strong> at the departure location.
+          </span>
+        </div>
+
+        <!-- Departure Inputs: Seal No & Outgoing Remarks -->
+        <div class="row g-3 mb-2">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label mb-1" style="font-size: 13px; font-weight: 600; color: #334155;">
+                Seal No. <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-control form-control-sm required2" [(ngModel)]="sealNo"
+                (ngModelChange)="onSealNoChange($event)" (blur)="sealNoTouched = true" placeholder="Seal No." maxlength="6" minlength="6"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                [class.is-invalid]="sealNoTouched && (!sealNo.trim() || !isValidSealNo(sealNo))">
+              <div class="invalid-feedback" *ngIf="sealNoTouched && !sealNo.trim()">
+                This field is required.
+              </div>
+              <div class="invalid-feedback" *ngIf="sealNoTouched && sealNo.trim() && !isValidSealNo(sealNo)">
+                Seal No should be 6 digits.
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label mb-1" style="font-size: 13px; font-weight: 600; color: #334155;">
+                Outgoing Remarks <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-control form-control-sm required2" [(ngModel)]="outgoingRemarks"
+                (blur)="remarksTouched = true" placeholder="Enter outgoing remarks"
+                [class.is-invalid]="remarksTouched && !outgoingRemarks.trim()">
+              <div class="invalid-feedback" *ngIf="remarksTouched && !outgoingRemarks.trim()">
+                Outgoing Remarks is required.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error Message Alert -->
+        <div *ngIf="errorMessage" class="alert alert-danger py-2 px-3 mt-2 d-flex align-items-center gap-2 mb-0"
+          style="font-size: 13px;">
+          <i class="ti ti-alert-triangle fs-5"></i>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ── Modal Footer ── -->
+    <div class="modal-footer px-4 py-3 bg-light border-top d-flex justify-content-between align-items-center">
+      <div>
+        <span class="text-muted small" *ngIf="!isLoading">
+          Total Selected: <strong class="text-dark">{{ getTotalSelectedCount() }}</strong> Manifest(s)
+        </span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <button type="button" class="btn btn-outline-secondary px-4 py-2 text-dark fw-medium" (click)="closePopup()"
+          [disabled]="isSubmitting">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-danger px-4 py-2 fw-medium d-flex align-items-center"
+          style="background-color: #d32f2f; border: none;" (click)="confirmDepart()"
+          [disabled]="isSubmitting">
+          <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"
+            aria-hidden="true"></span>
+          <i *ngIf="!isSubmitting" class="ti ti-send me-2"></i>
+          <span>{{ isSubmitting ? 'Departing...' : 'Confirm depart' }}</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</ng-template>

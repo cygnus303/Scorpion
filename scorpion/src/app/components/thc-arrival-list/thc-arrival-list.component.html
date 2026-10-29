@@ -150,10 +150,10 @@
                                 <span class="d-block rounded p-1 fw-bold mb-1">{{ data.totalDockets}}</span>
                             </div>
                         </td>
-                        <td class="text-center">
-                            <span class="fw-bold cursor-pointer hcc-link"
-                                [ngClass]="(data.mfNo) ? 'text-primary fw-bold' : 'text-muted'"
-                                (click)="openMFView(data.mfNo)">{{ data.mfNo || '—' }}</span>
+                        <td class="text-center" style="width: 80px;">
+                            <a *ngIf="data.mfNo" class="text-primary text-decoration-underline cursor-pointer fw-bold"
+                                (click)="openMFPopup(data.thcNo)" style="font-size: 13px;">View MF</a>
+                            <span *ngIf="!data.mfNo" class="text-muted">—</span>
                         </td>
                         <td class="text-center">
                             <div class="d-flex gap-2 flex-column">
@@ -192,11 +192,10 @@
                                 [ngClass]="(data.isEmpty > 0) ? 'empty-thc-yes' : 'empty-thc-no'"
                                 >{{data.isEmpty > 0 ? 'Yes' :'No'}}</span>
                         </td>
-                        <td class="text-center cursor-pointer">
-                            <span class="px-3 py-2 rounded fw-bold border"
-                                [ngClass]="isHccValid(data.loadingHCCNo) ? 'fw-bold text-success' : 'rounded fw-bold border bg-danger-subtle text-danger border-danger-subtle'"
-                                (click)="isHccValid(data.loadingHCCNo)? openHCCModal(data.loadingHCCNo, data.mfNo) : null">
-                              {{isHccValid(data.loadingHCCNo) ? data.loadingHCCNo : 'NO HCC'}}</span>
+                         <td class="text-center">
+                            <a  *ngIf="data.unLoadingHCNo ==='YES'"class="text-primary text-decoration-underline cursor-pointer fw-bold"
+                               (click)="openHccPopup(data,'L')" style="font-size: 13px;">View HCC</a>
+                            <span *ngIf="!(data.unLoadingHCNo ==='YES')" class="text-muted">—</span>
                         </td>
                         <!-- <td class="text-center">
                             <span class="px-4 py-2 cursor-pointer"
@@ -234,3 +233,6 @@
 </div>
 
 <app-thc-arrival-popup #ThcArrivalPopupComponent (dataEmitter)="onDataUpdate()"></app-thc-arrival-popup>
+<app-mf-view #MfViewComponent></app-mf-view>
+<app-hcc-view #HccViewComponent></app-hcc-view>
+

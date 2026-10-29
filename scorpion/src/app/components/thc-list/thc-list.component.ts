@@ -136,6 +136,20 @@ export class ThcListComponent {
     }
   }
 
+    THCPDCBillView(bill_Url: string) {
+    if (!bill_Url) {
+      return;
+    }
+    const url = `${this.env.liveUrl}${bill_Url}`;
+    const popup = window.open('', 'popupWindow',
+      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+    );
+
+    if (popup) {
+      popup.location.href = url;
+    }
+  }
+
   openTHC() {
     const saved = localStorage.getItem("loginUserList");
     if (saved) {

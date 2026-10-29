@@ -44,6 +44,7 @@ public isSubmitting: boolean = false;
 public isRedirect: boolean = false; 
 public minDate: Date | undefined;
 public maxDate: Date | undefined;
+
 public status: 'loading' | 'nodata' | 'data' = 'loading';
 
 public headerVendorList: any[] = [];
@@ -86,8 +87,13 @@ conditionList = [
     this.getStockUpdateDetails(data);
     this.getWarehouseData(this.docketService.loginUserList.LocationCode);
     this.generalMasterService.getDamageData();
-    this.dateAccess()
-    this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
+    this.dateAccess();
+    this.modalRef = this.modalService.show(this.Templatepod, {
+      class: 'modal-xl modal-dialog-centered',
+      backdrop: 'static',
+      keyboard: false,
+      ignoreBackdropClick: true
+    });
   }
 
   buildForm(){

@@ -91,3 +91,35 @@
     max-width: 67%;  /* Increase this value for more width */
     width: 90%;      /* This will control the actual width */
 }
+
+::ng-deep body > ng-dropdown-panel.ng-dropdown-panel,
+::ng-deep .ng-dropdown-panel {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
+  z-index: 99999 !important;
+
+  .ng-dropdown-panel-items {
+    max-height: 220px !important;
+
+    .ng-option {
+      white-space: normal !important;
+      word-break: break-word !important;
+      overflow-wrap: break-word !important;
+      text-overflow: unset !important;
+      overflow: visible !important;
+      line-height: 1.35 !important;
+      padding: 6px 8px !important;
+
+      .ng-option-label,
+      span,
+      div {
+        white-space: normal !important;
+        word-break: break-word !important;
+        overflow-wrap: break-word !important;
+        text-overflow: unset !important;
+        overflow: visible !important;
+        display: block !important;
+      }
+    }
+  }
+}
+

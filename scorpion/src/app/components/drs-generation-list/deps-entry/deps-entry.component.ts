@@ -65,18 +65,9 @@ export class DepsEntryComponent {
     }
 
     const totalPkgsVal = +(item.bkG_PKGSNO || item.totalPkgs || item.pkgsno || 1);
-    
-    let initialAffectedPkgs = item.pkgsno || 0; // Default to pkgsno
-    if (item.affectedPkgs !== undefined && item.affectedPkgs !== null) {
-      initialAffectedPkgs = +(item.affectedPkgs);
-    } else if (item.selectedBoxIds && item.selectedBoxIds.length > 0) {
-      initialAffectedPkgs = item.selectedBoxIds.length;
-    }
-
-    let initialAffectedInvVal = Number(item.invval || 0.00); // Default to invval
-    if (item.affectedInvVal !== undefined && item.affectedInvVal !== null) {
-      initialAffectedInvVal = Number(item.affectedInvVal);
-    } else if (totalPkgsVal > 0 && initialAffectedPkgs > 0) {
+    const initialAffectedPkgs = +(item.selectedBoxIds ? item.selectedBoxIds.length : (item.affectedPkgs || 0));
+    let initialAffectedInvVal = Number(item.affectedInvVal || 0.00);
+    if (!item.affectedInvVal && totalPkgsVal > 0 && initialAffectedPkgs > 0) {
       initialAffectedInvVal = Number((( (item.invval || 0) / totalPkgsVal ) * initialAffectedPkgs).toFixed(2));
     }
 
@@ -209,7 +200,7 @@ export class DepsEntryComponent {
       };
 
       if (prefilledItem.fileName) {
-        prefilledItem.fileUrl = `${this.env.liveUrl}Uploads/${prefilledItem.fileName}`;
+        prefilledItem.fileUrl = `${this.env.liveUrl}UploadedDocuments/UplaodDepsFile/${prefilledItem.fileName}`;
       }
 
       const affectedQty = Number(editItem.Lossvalue || editItem.affectedQty || 0);
@@ -307,9 +298,6 @@ export class DepsEntryComponent {
     }
   }
 
-
-
-  /*
   toggleBoxDropdown(index: number, event: MouseEvent) {
     event.stopPropagation();
     if (this.activeBoxDropdownIndex === index) {
@@ -365,7 +353,6 @@ export class DepsEntryComponent {
       return `${selectedCount} boxes selected`;
     }
   }
-  */
 
   onFileSelected(index: number, event: Event) {
     const input = event.target as HTMLInputElement;
@@ -407,8 +394,20 @@ export class DepsEntryComponent {
     }
   }
 
+  hasInvalidDepsRows(): boolean {
+    return this.docketsArray.controls.some((c: any) => {
+      const v = c.value;
+      if (v.depstype) {
+        if (!v.selectedBoxIds || v.selectedBoxIds.length === 0) return true;
+        if (v.depstype === 'D' && !v.fileAttached && !v.fileName) return true;
+        if (v.depstype === 'D' && !v.damageType) return true;
+      }
+      return false;
+    });
+  }
+
   saveDepsForm() {
-    if (this.depsForm.invalid) {
+    if (this.depsForm.invalid || this.hasInvalidDepsRows()) {
       this.depsForm.markAllAsTouched();
       return;
     }

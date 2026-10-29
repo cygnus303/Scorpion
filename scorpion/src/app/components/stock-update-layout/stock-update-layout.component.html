@@ -190,9 +190,8 @@
                         </td>   
                           <td class="text-center cursor-pointer">
                             <a class="text-primary fw-medium"
-                               (click)="openDepsDetails(row)"
-                                style="text-decoration: dashed underline;">
-                                DEPS IDs
+                               (click)="row.deps === 'Y'?openDepsDetails(row):null">
+                                {{row.deps === 'Y'?'DEPS IDs':'-'}}
                             </a>
                         </td>
                         <td>
@@ -206,6 +205,11 @@
                                     class="btn btn-sm bg-info-subtle border-info-subtle text-info-emphasis py-1 px-3"
                                     [disabled]="row.pendingCNote === 0">
                                     📦 Stock Update
+                                </button>
+                                  <button 
+                                    class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3"
+                                    (click)="openHHCDetails(row)">
+                                    🏷 HCC
                                 </button>
                             </div>
                         </td>
@@ -225,3 +229,4 @@
 <app-stockupdate-popup #StockupdatePopupComponent (dataEmitter)="onDataUpdate()"></app-stockupdate-popup>
 <app-new-stockupdate-popup #NewStockupdatePopupComponent (dataEmitter)="onDataUpdate()"></app-new-stockupdate-popup>
 <app-deps-details #DepsDetailsComponent ></app-deps-details>
+<app-hcc-details #HCCDetailsComponent (dataEmitter)="onDataUpdate()"></app-hcc-details>

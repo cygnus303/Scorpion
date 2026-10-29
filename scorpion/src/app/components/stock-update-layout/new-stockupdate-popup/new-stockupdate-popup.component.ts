@@ -1,4 +1,5 @@
-import { Component, TemplateRef, ViewChild, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, TemplateRef, ViewChild, OnInit, OnDestroy, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -14,6 +15,7 @@ import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angula
 import { SharedModule } from 'app/shared/shared/shared.module';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
 import { VendorChargeHelperService } from 'app/shared/services/vendor-charge.service';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-new-stockupdate-popup',
@@ -23,7 +25,7 @@ import { VendorChargeHelperService } from 'app/shared/services/vendor-charge.ser
   styleUrl: './new-stockupdate-popup.component.scss',
   providers: [BsModalService]
 })
-export class NewStockupdatePopupComponent implements OnInit {
+export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
   public modalRef?: BsModalRef;
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
   @ViewChild('DrsUpdateDepsComponent') depsEntryComponent!: DrsUpdateDepsComponent;
@@ -31,21 +33,26 @@ export class NewStockupdatePopupComponent implements OnInit {
   @Output() dataEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   public isLoading: boolean = false;
+  public env = environment;
   public maxDate: Date = new Date();
   public dlyPrcList: any[] = [];
   public listVSFUM: any[] = [];
   public selectedDeliveryProcessAll: string | null = null;
   public unloaderUsers: any[] = [];
   public notUnloaderName: string = 'Enter at least 3 characters';
+  public userSubscription?: Subscription;
   public unloaderName: any = null;
   public unloadingSupervisor: any = null;
   public submitted: boolean = false;
+  public unloaderTouched: boolean = false;
+  public supervisorTouched: boolean = false;
   public rowVendorList: any[][] = [];
   public headerVendorList: any[] = [];
   public headerVendor: any = null;
   public headerVendorTyp: any = null;
   public headerRateType: any = null;
-  public loadingChargeCtrl = new FormControl('0.00', [Validators.min(0.01)]);
+  // public loadingChargeCtrl = new FormControl('0.00', [Validators.min(0.01)]);
+  public loadingChargeCtrl = new FormControl('0.00');
 
   public stockData: any = {
     thcno: '',
@@ -63,8 +70,9 @@ export class NewStockupdatePopupComponent implements OnInit {
     private sweetAlertService: SweetAlertService,
     private deliveryUpdateService: DeliveryUpdateService,
     public generalMasterService: GeneralMasterService,
-    public vendorChargeHelper: VendorChargeHelperService
-  ) {}
+    public vendorChargeHelper: VendorChargeHelperService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit() {
     this.getDeliveryProcesses();
@@ -88,17 +96,25 @@ export class NewStockupdatePopupComponent implements OnInit {
   stockUpdateUsers(event: any) {
     const searchText = event.term;
     if (!searchText || searchText.length < 3) {
+      if (this.userSubscription) {
+        this.userSubscription.unsubscribe();
+      }
       this.unloaderUsers = [];
       this.notUnloaderName = 'Enter at least 3 characters';
       return;
     }
+
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
+
     const baseLocation = this.docketService.Location || this.docketService.loginUserList?.LocationCode || 'BWH';
     const payload = {
       searchTerm: searchText,
       baseLocationCode: baseLocation,
     };
     this.notUnloaderName = 'Searching...';
-    this.stockUpdateService.stockUpdateUsers(payload).subscribe({
+    this.userSubscription = this.stockUpdateService.stockUpdateUsers(payload).subscribe({
       next: (response) => {
         if (response) {
           if (response.success && response.data) {
@@ -122,8 +138,17 @@ export class NewStockupdatePopupComponent implements OnInit {
   }
 
   resetUnloaderDropdown() {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
     this.unloaderUsers = [];
     this.notUnloaderName = 'Enter at least 3 characters';
+  }
+
+  ngOnDestroy(): void {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
   }
 
   showPopup(data?: any) {
@@ -148,6 +173,8 @@ export class NewStockupdatePopupComponent implements OnInit {
     this.unloaderName = null;
     this.unloadingSupervisor = null;
     this.submitted = false;
+    this.unloaderTouched = false;
+    this.supervisorTouched = false;
     this.unloaderUsers = [];
     this.notUnloaderName = 'Enter at least 3 characters';
     this.headerVendor = null;
@@ -160,7 +187,12 @@ export class NewStockupdatePopupComponent implements OnInit {
     this.getVendorType();
 
     // Show popup immediately
-    this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
+    this.modalRef = this.modalService.show(this.Templatepod, {
+      class: 'modal-xl modal-dialog-centered new-stockupdate-modal-custom',
+      backdrop: 'static',
+      keyboard: false,
+      ignoreBackdropClick: true
+    });
 
     // Call API in the background
     this.stockUpdateService.getStockUpdateDetails({ id: thcNo, baseLocationCode: baseLocation, BaseLocationCode: baseLocation }).subscribe({
@@ -185,8 +217,10 @@ export class NewStockupdatePopupComponent implements OnInit {
             if (item.pkgsno === undefined || item.pkgsno === null) {
               item.pkgsno = item.bkG_PKGSNO || 0;
             }
+            item._previousPkgsno = item.pkgsno;
             item.dp = item.dp || null;
             item.isDamage = item.isDamage || false;
+            item._previousIsDamage = item.isDamage;
             item.isSelected = false;
             item.frontFiles = [];
             item.frontFile = null;
@@ -336,7 +370,8 @@ export class NewStockupdatePopupComponent implements OnInit {
   }
 
   onDamageChange(event: any, row: any, index: number) {
-    const originalState = row.isDamage;
+    const originalState = !!row.isDamage;
+    row._previousIsDamage = originalState;
     event.target.checked = originalState; // Force UI state to stay as is until confirmed
 
     if (!originalState) {
@@ -348,6 +383,7 @@ export class NewStockupdatePopupComponent implements OnInit {
         const confirmClear = confirm('This docket already has DEPS details. Do you want to remove them?\n\n- Click "OK" to delete DEPS details.\n- Click "Cancel" to keep them and edit details.');
         if (confirmClear) {
           row.isDamage = false;
+          row._previousIsDamage = false;
           row.damageDepsData = null;
           if (row.depsData && row.depsData.depsTyp === 'D') {
             row.depsData = row.shortageDepsData || null;
@@ -363,6 +399,7 @@ export class NewStockupdatePopupComponent implements OnInit {
         }
       } else {
         row.isDamage = false;
+        row._previousIsDamage = false;
         row.damageDepsData = null;
         if (row.depsData && row.depsData.depsTyp === 'D') {
           row.depsData = row.shortageDepsData || null;
@@ -378,6 +415,9 @@ export class NewStockupdatePopupComponent implements OnInit {
   }
 
   openDepsPopup(row: any, index: number, depsType: 'D' | 'S' = 'D') {
+    if (row._previousIsDamage === undefined) {
+      row._previousIsDamage = !!row.isDamage;
+    }
     const existingDmg = row.damageDepsData || (row.depsData && row.depsData.depsTyp === 'D' ? row.depsData : null);
     const dmgPkgsVal = +row.pkgsno || 0;
     const dockno = row.dockNo || row.docketNo || '';
@@ -400,7 +440,7 @@ export class NewStockupdatePopupComponent implements OnInit {
       invval: row.invval || 0,
       depstype: 'D'
     };
-    
+
     const thcNo = this.stockData.thcno || '';
     const thcDt = this.stockData.thcdt || '';
     this.depsEntryComponent.showPopup(popupData, thcNo, thcDt, '', 1, index);
@@ -422,7 +462,7 @@ export class NewStockupdatePopupComponent implements OnInit {
           try {
             Object.defineProperty(group, 'value', {
               get: () => group.getRawValue(),
-              set: (v) => {},
+              set: (v) => { },
               configurable: true
             });
           } catch (e) {
@@ -434,7 +474,7 @@ export class NewStockupdatePopupComponent implements OnInit {
         try {
           Object.defineProperty(this.depsEntryComponent.depsForm, 'value', {
             get: () => this.depsEntryComponent.depsForm.getRawValue(),
-            set: (v) => {},
+            set: (v) => { },
             configurable: true
           });
         } catch (e) {
@@ -445,24 +485,30 @@ export class NewStockupdatePopupComponent implements OnInit {
   }
 
   openShortagePopup(row: any, index: number) {
+    if (row._previousPkgsno === undefined || row._previousPkgsno === null) {
+      row._previousPkgsno = row.bkG_PKGSNO || 0;
+    }
     const existingShrt = row.shortageDepsData || (row.depsData && row.depsData.depsTyp === 'S' ? row.depsData : null);
-    const shortageQtyVal = +row.shortQty || +row.shortageQty || 0;
-    const dockno = row.dockNo || '';
-    const validBoxIds: string[] = [];
-    for (let k = 1; k <= shortageQtyVal; k++) {
-      validBoxIds.push(`${dockno}_${k.toString().padStart(3, '0')}`);
-    }
-    const rawSelectedBoxes = (existingShrt && existingShrt.selectedBoxIds) || row.shortageSelectedBoxIds || [];
-    let cleanSelectedBoxes = rawSelectedBoxes.filter((id: string) => validBoxIds.includes(id));
-    if (cleanSelectedBoxes.length === 0 && validBoxIds.length > 0) {
-      cleanSelectedBoxes = [...validBoxIds];
-    }
-    const totalPkgsVal = +row.bkG_PKGSNO ;
+    const totalPkgsVal = +(row.bkG_PKGSNO || row.pkgsno || 0);
     const totalWtVal = +row.bkG_ACTUWT || 0;
-    const affectedWeightVal = totalPkgsVal > 0 ? Number(((totalWtVal / totalPkgsVal) * shortageQtyVal).toFixed(2)) : (+row.shortWt || +row.shortageWeight || 0);
+    const dockno = row.dockNo || row.docketNo || '';
+
+    // Generate ALL box IDs for this docket (1 to totalPkgsVal)
+    const allBoxIds: string[] = [];
+    for (let k = 1; k <= totalPkgsVal; k++) {
+      allBoxIds.push(`${dockno}_${k.toString().padStart(3, '0')}`);
+    }
+
+    // Only keep previously selected boxes if already saved, do not auto-select
+    const rawSelectedBoxes = (existingShrt && existingShrt.selectedBoxIds) || row.shortageSelectedBoxIds || [];
+    const cleanSelectedBoxes = rawSelectedBoxes.filter((id: string) => allBoxIds.includes(id));
+
+    const affectedWeightVal = totalPkgsVal > 0 ? Number(((totalWtVal / totalPkgsVal) * cleanSelectedBoxes.length).toFixed(2)) : 0;
+    const affectedInvVal = totalPkgsVal > 0 ? Number((((row.invval || 0) / totalPkgsVal) * cleanSelectedBoxes.length).toFixed(2)) : 0;
 
     const popupData = {
       ...row,
+      boxIds: allBoxIds,
       selectedBoxIds: cleanSelectedBoxes,
       depsData: existingShrt,
       dockno: dockno,
@@ -471,14 +517,16 @@ export class NewStockupdatePopupComponent implements OnInit {
       orgncd: row.orgncd,
       destcd: row.desT_CD || row.destcd,
       pkgsno: row.pkgsno,
+      bkG_PKGSNO: totalPkgsVal,
+      bkG_ACTUWT: totalWtVal,
       invval: row.invval || 0,
       depstype: 'S',
       affectedPkgs: cleanSelectedBoxes.length,
       affectedWeight: affectedWeightVal,
       remarks: row.shortRemarks || row.shortageRemarks || '',
-      affectedInvVal: (+row.bkG_PKGSNO || +row.pkgsno) > 0 ? Number((( (row.invval || 0) / (+row.bkG_PKGSNO || +row.pkgsno || 0) ) * shortageQtyVal).toFixed(2)) : 0
+      affectedInvVal: affectedInvVal
     };
-    
+
     const thcNo = this.stockData.thcno || '';
     const thcDt = this.stockData.thcdt || '';
     if (this.shortagePopupComponent) {
@@ -491,12 +539,14 @@ export class NewStockupdatePopupComponent implements OnInit {
     const index = event.rowIndex;
     const depsData = event.depsData;
     if (this.listVSFUM[index]) {
+      this.listVSFUM[index]._previousIsDamage = true;
       if (depsData && depsData.selectedBoxIds) {
         this.listVSFUM[index].damageSelectedBoxIds = depsData.selectedBoxIds;
       }
       this.listVSFUM[index].damageDepsData = depsData;
       this.listVSFUM[index].depsData = depsData;
       this.listVSFUM[index].isDamage = true;
+      this.listVSFUM[index].isSelected = true;
       this.listVSFUM[index].damageQry = depsData.affectedQty || 0;
       this.listVSFUM[index].damageWeight = depsData.affectedWeight || 0;
       this.listVSFUM[index].damageType = depsData.damageType || '';
@@ -507,6 +557,32 @@ export class NewStockupdatePopupComponent implements OnInit {
         this.listVSFUM[index].damageDepsData.selectedBoxIds = depsData.selectedBoxIds;
       }
     }
+  }
+
+  onDepsCancelled(event: any) {
+    const index = typeof event === 'object' ? event?.rowIndex : event;
+    if (index === undefined || index === null || index < 0) return;
+    const row = this.listVSFUM[index];
+    if (!row) return;
+
+    if (!row._previousIsDamage || (!row.damageDepsData && (!row.depsData || row.depsData.depsTyp !== 'D'))) {
+      row.isDamage = false;
+      row._previousIsDamage = false;
+      row.damageDepsData = null;
+      row.damageQry = 0;
+      row.damageWeight = 0;
+      row.damageType = '';
+      row.severity = '';
+      row.remarks = row.shortRemarks || '';
+      row.depsfile = '';
+      row.damageSelectedBoxIds = [];
+      if (row.depsData && row.depsData.depsTyp === 'D') {
+        row.depsData = row.shortageDepsData || null;
+      }
+    } else {
+      row.isDamage = true;
+    }
+    this.cdr.detectChanges();
   }
 
   onShortageDataReceived(event: any) {
@@ -522,12 +598,20 @@ export class NewStockupdatePopupComponent implements OnInit {
       if (this.listVSFUM[index].shortageDepsData && depsData && depsData.selectedBoxIds) {
         this.listVSFUM[index].shortageDepsData.selectedBoxIds = depsData.selectedBoxIds;
       }
-      const shortQty = +(depsData.affectedQty || 0);
+      const shortQty = +(depsData.affectedQty || (depsData.selectedBoxIds ? depsData.selectedBoxIds.length : 0));
       this.listVSFUM[index].shortQty = shortQty;
       this.listVSFUM[index].shortageQty = shortQty;
 
       const totalPkgs = +(this.listVSFUM[index].bkG_PKGSNO || 0);
       const totalWt = +(this.listVSFUM[index].bkG_ACTUWT || 0);
+
+      // Reduce Arrived Pkgs: Total Pkgs - shortQty
+      if (totalPkgs > 0) {
+        this.listVSFUM[index].pkgsno = Math.max(0, totalPkgs - shortQty);
+        const calculatedWt = (this.listVSFUM[index].pkgsno * totalWt) / totalPkgs;
+        this.listVSFUM[index].actuwt = Number.isInteger(calculatedWt) ? calculatedWt : Number(calculatedWt.toFixed(2));
+      }
+
       const shortWt = +(depsData.affectedWeight) || (totalPkgs > 0 ? Number(((totalWt * shortQty) / totalPkgs).toFixed(2)) : 0);
 
       this.listVSFUM[index].shortWt = shortWt;
@@ -536,7 +620,47 @@ export class NewStockupdatePopupComponent implements OnInit {
       this.listVSFUM[index].shortageReason = depsData.reason || '';
       this.listVSFUM[index].shortRemarks = depsData.remarks || '';
       this.listVSFUM[index].shortageRemarks = depsData.remarks || '';
+
+      this.listVSFUM[index]._previousPkgsno = this.listVSFUM[index].pkgsno;
+      this.listVSFUM[index]._lastShortageArrPkgs = +this.listVSFUM[index].pkgsno;
+      this.cdr.detectChanges();
     }
+  }
+
+  onShortageCancelled(event: any) {
+    const index = typeof event === 'object' ? event?.rowIndex : event;
+    if (index === undefined || index === null || index < 0) return;
+    const row = this.listVSFUM[index];
+    if (!row) return;
+
+    if (row._previousPkgsno !== undefined && row._previousPkgsno !== null) {
+      row.pkgsno = row._previousPkgsno;
+    } else if (row.shortageDepsData && row.shortageDepsData.pkgsDelivered !== undefined) {
+      row.pkgsno = row.shortageDepsData.pkgsDelivered;
+    } else {
+      row.pkgsno = row.bkG_PKGSNO || 0;
+    }
+
+    this.onArrivedPkgsChange(row, index);
+
+    if (!row.shortageDepsData && (!row.depsData || row.depsData.depsTyp !== 'S')) {
+      row.shortQty = 0;
+      row.shortageQty = 0;
+      row.shortWt = 0;
+      row.shortageWeight = 0;
+      row.shortReason = '';
+      row.shortageReason = '';
+      row.shortRemarks = '';
+      row.shortageRemarks = '';
+      row.shortageSelectedBoxIds = [];
+      row._lastShortageArrPkgs = null;
+    } else {
+      const prevSavedShortage = +(row.shortageDepsData?.affectedQty || (row.depsData?.depsTyp === 'S' ? row.depsData?.affectedQty : 0));
+      row.shortQty = prevSavedShortage;
+      row.shortageQty = prevSavedShortage;
+      row._lastShortageArrPkgs = +row.pkgsno;
+    }
+    this.cdr.detectChanges();
   }
 
   toggleAll(event: any) {
@@ -685,6 +809,20 @@ export class NewStockupdatePopupComponent implements OnInit {
     return new Date().toISOString();
   }
 
+  onArrivedPkgsFocus(row: any) {
+    if (row && row.pkgsno !== undefined && row.pkgsno !== null && !isNaN(+row.pkgsno)) {
+      row._previousPkgsno = row.pkgsno;
+    }
+  }
+
+  onArrivedPkgsEnter(event: any, row: any, index: number) {
+    if (event?.target && typeof event.target.blur === 'function') {
+      event.target.blur();
+    } else {
+      this.checkAndOpenShortagePopup(row, index);
+    }
+  }
+
   onArrivedPkgsChange(row: any, index?: number) {
     const arrPkgs = +row.pkgsno || 0;
     const totalPkgs = +row.bkG_PKGSNO || 0;
@@ -697,7 +835,7 @@ export class NewStockupdatePopupComponent implements OnInit {
       if (row.selectedBoxIds && Array.isArray(row.selectedBoxIds)) {
         const dockno = row.dockNo || row.docketNo || '';
         const validBoxIds: string[] = [];
-        for (let k = 1; k <= newShortageQty; k++) {
+        for (let k = 1; k <= totalPkgs; k++) {
           validBoxIds.push(`${dockno}_${k.toString().padStart(3, '0')}`);
         }
         row.selectedBoxIds = row.selectedBoxIds.filter((id: string) => validBoxIds.includes(id));
@@ -706,6 +844,16 @@ export class NewStockupdatePopupComponent implements OnInit {
   }
 
   checkAndOpenShortagePopup(row: any, index: number) {
+    if (row.pkgsno === '' || row.pkgsno === null || row.pkgsno === undefined || isNaN(+row.pkgsno) || +row.pkgsno < 0) {
+      if (row._previousPkgsno !== undefined && row._previousPkgsno !== null) {
+        row.pkgsno = row._previousPkgsno;
+      } else {
+        row.pkgsno = row.bkG_PKGSNO || 0;
+      }
+      this.onArrivedPkgsChange(row, index);
+      return;
+    }
+
     const arrPkgs = +row.pkgsno || 0;
     const totalPkgs = +row.bkG_PKGSNO || 0;
     if (totalPkgs > 0 && arrPkgs >= 0 && arrPkgs < totalPkgs) {
@@ -716,6 +864,21 @@ export class NewStockupdatePopupComponent implements OnInit {
         row._lastShortageArrPkgs = arrPkgs;
         this.openShortagePopup(row, index);
       }
+    } else if (totalPkgs > 0 && arrPkgs >= totalPkgs) {
+      row.shortQty = 0;
+      row.shortageQty = 0;
+      row.shortWt = 0;
+      row.shortageWeight = 0;
+      row.shortReason = '';
+      row.shortageReason = '';
+      row.shortRemarks = '';
+      row.shortageRemarks = '';
+      row.shortageDepsData = null;
+      if (row.depsData && row.depsData.depsTyp === 'S') {
+        row.depsData = null;
+      }
+      row._lastShortageArrPkgs = null;
+      row._previousPkgsno = row.pkgsno;
     }
   }
 
@@ -970,14 +1133,36 @@ export class NewStockupdatePopupComponent implements OnInit {
     this.loadingChargeCtrl.markAsTouched();
   }
 
+  onMfViewPrint(mfNo: string) {
+    const url = `${this.env.liveUrl}ViewPrint/ViewMF?MFNO=${mfNo}&src=angular`;
+    const popup = window.open('', 'popupWindow',
+      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+    );
+
+    if (popup) {
+      popup.location.href = url;
+    }
+  }
+
+  isUnloaderInvalid(): boolean {
+    return (this.submitted || this.unloaderTouched) && !this.unloaderName;
+  }
+
+  isSupervisorInvalid(): boolean {
+    return (this.submitted || this.supervisorTouched) && !this.unloadingSupervisor;
+  }
+
   submitStockUpdate() {
     this.submitted = true;
+    this.unloaderTouched = true;
+    this.supervisorTouched = true;
+
+    // if (this.loadingChargeCtrl.invalid) {
+    //   this.loadingChargeCtrl.markAsTouched();
+    //   return;
+    // }
+
     if (!this.unloaderName || !this.unloadingSupervisor) {
-      return;
-    }
-    
-    if (this.loadingChargeCtrl.invalid) {
-      this.loadingChargeCtrl.markAsTouched();
       return;
     }
 
@@ -1005,9 +1190,10 @@ export class NewStockupdatePopupComponent implements OnInit {
       return;
     }
 
-    const missingVendor = selectedRows.find(row => row.luVendorTyp && row.luVendorTyp !== 'XX9' && (!row.luVendorCode || !row.rateType));
+    const missingVendor = selectedRows.find(row =>
+      row.luVendorTyp && row.luVendorTyp !== 'XX9' && (!row.luVendorCode || !row.rateType)
+    );
     if (missingVendor) {
-      this.sweetAlertService.warning(`Please select Vendor and Rate Type for Docket No ${missingVendor.dockNo || missingVendor.tcno}`);
       return;
     }
 
@@ -1026,7 +1212,7 @@ export class NewStockupdatePopupComponent implements OnInit {
         docket: depsData.docket || '',
         affectedQty: +depsData.affectedQty || 0,
         affectedInvVal: +depsData.affectedInvVal || 0,
-        reason: depsData.reason  || '',
+        reason: depsData.reason || '',
         depsNo: depsData.depsNo || '',
         depsTyp: depsData.depsTyp || '',
         fileName: depsData.fileName || '',
@@ -1037,8 +1223,8 @@ export class NewStockupdatePopupComponent implements OnInit {
         remarks: depsData.remarks || '',
         docketsf: depsData.docketsf || '.',
         documentNo: depsData.documentNo || '',
-        pkgsDelivered: +depsData.pkgsDelivered  || 0,
-        severity: depsData.severity|| ''
+        pkgsDelivered: +depsData.pkgsDelivered || 0,
+        severity: depsData.severity || ''
       };
 
       const rowDelyDate = row.delyForm?.get('DELYDATE')?.value;
@@ -1131,21 +1317,22 @@ export class NewStockupdatePopupComponent implements OnInit {
       next: (res: any) => {
         this.isLoading = false;
         if (res) {
-          this.sweetAlertService.success(`<div style="text-align:left;font-size:15px;">
-    <h3 style="margin:0 0 10px;color:#28a745;">
-        ✅ Stock Update Successful
-    </h3>
+          const thcNo = this.stockData?.thcno || this.stockData?.thcNo || this.stockData?.THCNO || '';
+          const depsId = (res?.depsId || res?.DepsId || res?.deps_id || '')?.toString().trim();
+          const hasDepsId = !!depsId &&
+            depsId.toLowerCase() !== 'null' &&
+            depsId.toLowerCase() !== 'undefined' &&
+            depsId !== '0' &&
+            depsId.toLowerCase() !== 'n/a';
 
-    <div style="padding:10px;background:#f8f9fa;border-radius:8px;">
-        <p style="margin:5px 0;">
-            <strong>📦 THC No:</strong> ${this.stockData.thcno}
-        </p>
+          const successHtml = `
+            <div style="font-size: 15px; color: #475569; line-height: 1.7; margin-top: 4px;">
+              <div>Stock update completed successfully for THC: <strong style="color: #0b1a30; font-size: 16px;">${thcNo}</strong></div>
+              ${hasDepsId ? `<div style="margin-top: 8px; color: #b91c1c; font-weight: 600; font-size: 15px;">DEPS ID: <strong style="color: #b91c1c; font-size: 16px;">${depsId}</strong></div>` : ''}
+            </div>
+          `;
 
-        <p style="margin:5px 0;">
-            <strong>🆔 DEPS ID:</strong> ${res.depsId}
-        </p>
-    </div>
-</div>`);
+          this.sweetAlertService.success(successHtml);
           this.dataEmitter.emit();
           this.modalRef?.hide();
         }

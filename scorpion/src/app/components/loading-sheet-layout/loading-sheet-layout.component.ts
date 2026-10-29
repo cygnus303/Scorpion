@@ -16,12 +16,12 @@ import { LSUpdatePopupComponent } from './lsupdate-popup/lsupdate-popup.componen
 import Swal from 'sweetalert2';
 import { HccViewComponent } from '../hcc-view/hcc-view.component';
 import { MenuAccessService } from 'app/shared/services/menu-access.service';
-import { it } from 'node:test';
+import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
 
 @Component({
   selector: 'app-loading-sheet-layout',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, HCCDetailsComponent, LSUpdatePopupComponent, HccViewComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, HCCDetailsComponent, LSUpdatePopupComponent, HccViewComponent, DateRangePickerComponent],
   templateUrl: './loading-sheet-layout.component.html',
   styleUrl: './loading-sheet-layout.component.scss',
   providers: [BsModalService]
@@ -99,6 +99,12 @@ export class LoadingSheetLayoutComponent implements OnInit, OnDestroy {
   fetchData() {
     this.config.page = 1;
     this.fetchSubject.next();
+  }
+
+  onDateRangeSelected(event: { fromDate: Date, toDate: Date, rangeType: string }) {
+    this.config.fromDateStr = event.fromDate;
+    this.config.toDateStr = event.toDate;
+    this.fetchData();
   }
 
   setPage(p: number) {

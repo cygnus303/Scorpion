@@ -953,6 +953,15 @@ export class DRSUpdateListComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  onDepsCancelled(event: any) {
+    const index = typeof event === 'object' ? event?.rowIndex : event;
+    if (index === undefined || index === null || index < 0) return;
+    const row = this.drsList.at(index) as FormGroup;
+    if (row && !row.get('depsData')?.value) {
+      row.get('isBadPod')?.setValue(false);
+    }
+  }
+
   clearDepsData(index: number) {
     const row = this.drsList.at(index) as FormGroup;
     if (row) {

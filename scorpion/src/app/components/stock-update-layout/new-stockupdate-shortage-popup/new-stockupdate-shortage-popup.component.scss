@@ -1,68 +1,151 @@
 .shortage-modal-wrapper {
+  max-width: 1300px !important;
+  width: 95% !important;
+  --bs-modal-width: 1300px !important;
+
   .modal-content {
-    border-radius: 8px;
+    border-radius: 8px !important;
     overflow: visible !important;
-    border: none;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: none !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .modal-header {
+    border-top-left-radius: 8px !important;
+    border-top-right-radius: 8px !important;
+  }
+
+  .modal-footer {
+    border-bottom-left-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
   }
 }
 
 .shortage-body {
   overflow: visible !important;
-  min-height: 230px;
+  max-width: 100% !important;
+  width: 100% !important;
+  min-height: 220px;
 }
 
 .shortage-tbl {
-  overflow: visible !important;
+  width: 100% !important;
+  margin-bottom: 0 !important;
+  border-collapse: collapse !important;
+  border: 1px solid #cbd5e1 !important;
 
-  th {
-    background-color: #f8fafc;
-    color: #475569;
-    font-size: 12px;
+  thead th {
+    background-color: #eff1f8 !important;
+    color: #1a237e !important;
+    font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    padding: 12px 10px;
-    border-bottom: 2px solid #e2e8f0;
+    padding: 9px 8px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-bottom: 2px solid #94a3b8 !important;
+    vertical-align: middle;
   }
 
-  td {
-    font-size: 13px;
-    padding: 10px;
+  tbody td {
+    font-size: 12px;
+    padding: 7px 8px !important;
     vertical-align: middle;
-    overflow: visible !important;
+    border: 1px solid #cbd5e1 !important;
   }
 
   tr:hover {
     background-color: #f8fafc;
   }
+
+  .form-control-sm {
+    height: 31px;
+    font-size: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+  }
+
+  .ng-select.ng-select-sm,
+  .ng-select {
+    font-size: 12px;
+    .ng-select-container {
+      min-height: 31px !important;
+      height: 31px !important;
+      border: 1px solid #cbd5e1 !important;
+      border-radius: 4px;
+    }
+  }
 }
 
+// Custom Multi-select Dropdown (Box ID Checkbox list panel)
 .ms-dropdown {
   position: relative;
-  
+  width: 100%;
+
+  .form-select {
+    font-size: 12px !important;
+    text-align: left;
+    height: 31px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    background-color: #ffffff;
+  }
+
   .ms-panel {
     display: none;
     position: absolute;
-    top: 100%;
-    bottom: auto;
+    top: 33px;
     left: 0;
-    margin-top: 2px;
-    z-index: 99999;
-    min-width: 180px;
-    max-height: 200px;
+    min-width: 190px;
+    max-height: 180px;
     overflow-y: auto;
+    z-index: 1060;
     background: #ffffff;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
     border-radius: 4px;
     border: 1px solid #cbd5e1 !important;
+
+    label {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      padding: 6px 10px !important;
+      margin: 0 !important;
+      cursor: pointer;
+      font-size: 11.5px !important;
+      border-radius: 4px;
+      color: #334155;
+      font-weight: 500;
+
+      &:hover {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      input[type="checkbox"] {
+        accent-color: #b71c1c;
+        cursor: pointer;
+        margin: 0 !important;
+        width: 14px;
+        height: 14px;
+      }
+    }
   }
 
-  &.open .ms-panel {
-    display: block;
+  &.open {
+    .ms-panel {
+      display: block !important;
+    }
   }
 }
 
 .hover-opacity:hover {
   opacity: 1 !important;
 }
+
