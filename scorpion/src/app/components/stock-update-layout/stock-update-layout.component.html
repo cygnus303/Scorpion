@@ -206,6 +206,11 @@
                                     [disabled]="row.pendingCNote === 0">
                                     📦 Stock Update
                                 </button>
+                                  <button 
+                                    class="btn btn-sm bg-success-subtle border-success-subtle text-success-emphasis py-1 px-3"
+                                    (click)="openHHCDetails(row)">
+                                    🏷 HCC
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -224,3 +229,4 @@
 <app-stockupdate-popup #StockupdatePopupComponent (dataEmitter)="onDataUpdate()"></app-stockupdate-popup>
 <app-new-stockupdate-popup #NewStockupdatePopupComponent (dataEmitter)="onDataUpdate()"></app-new-stockupdate-popup>
 <app-deps-details #DepsDetailsComponent ></app-deps-details>
+<app-hcc-details #HCCDetailsComponent (dataEmitter)="onDataUpdate()"></app-hcc-details>
