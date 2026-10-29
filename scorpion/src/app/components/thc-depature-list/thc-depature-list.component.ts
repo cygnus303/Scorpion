@@ -92,6 +92,10 @@ export class ThcDepatureListComponent implements OnInit {
     this.fetchData();
   }
 
+  get isHQTR(): boolean {
+    return this.docketService.loginUserList?.LocationCode === 'HQTR';
+  }
+
   formatDateToISO(date: Date): string {
     if (!date) return '';
     const year = date.getFullYear();
