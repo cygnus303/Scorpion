@@ -228,6 +228,9 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
             item.backFiles = [];
             item.backFile = null;
             item.backPreview = null;
+            item.isValidatingFront = false;
+            item.isValidatingBack = false;
+            item.podValidated = false;
 
             item.luVendorTyp = item.luVendorTyp || null;
             item.luVendorCode = item.luVendorCode || null;
@@ -250,7 +253,7 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
               }
             }
             item.bookingDate = formattedBookingDate;
-            const initialDelyDate = item.delydate || item.cdelydt || new Date();
+            const initialDelyDate = new Date();
             item.delyForm = new FormGroup({
               DELYDATE: new FormControl(initialDelyDate)
             });
@@ -262,6 +265,12 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
         console.error('Error fetching stock update details:', err);
       }
     });
+  }
+
+  onRowDeliveryProcessChange(row: any) {
+    if (this.isDeliveryOnArrival(row) && row.delyForm) {
+      row.delyForm.get('DELYDATE')?.setValue(new Date());
+    }
   }
 
   isEligibleForDeliveryProcess(row: any): boolean {
@@ -279,6 +288,9 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
       this.listVSFUM.forEach(item => {
         if (this.isEligibleForDeliveryProcess(item)) {
           item.dp = this.selectedDeliveryProcessAll;
+          if (this.isDeliveryOnArrival(item) && item.delyForm) {
+            item.delyForm.get('DELYDATE')?.setValue(new Date());
+          }
         }
       });
     }
@@ -691,6 +703,7 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
       row.frontFiles = [file];
       row.frontFile = file;
       row.frontPreview = previewUrl;
+      row.podValidated = false;
     } else {
       if (row.backPreview) {
         URL.revokeObjectURL(row.backPreview);
@@ -713,6 +726,8 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
       row.frontFiles = [];
       row.frontFile = null;
       row.frontPreview = null;
+      row.isValidatingFront = false;
+      row.podValidated = false;
     } else {
       if (row.backPreview) {
         URL.revokeObjectURL(row.backPreview);
@@ -778,7 +793,67 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
     return false;
   }
 
+  formatDateTime(dateVal: any): string {
+    if (!dateVal) return '';
+    let d: Date;
+    if (dateVal instanceof Date) {
+      d = dateVal;
+    } else if (typeof dateVal === 'string') {
+      const trimmed = dateVal.trim();
+      const match = trimmed.match(/^(\d{1,2})[-/\s]+([A-Za-z]{3,9})[-/\s]+(\d{4})(?:[,\s]+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*([AMPMampm]{2})?)?/);
+      if (match) {
+        const day = parseInt(match[1], 10);
+        const monthStr = match[2].toLowerCase();
+        const year = parseInt(match[3], 10);
+        let hours = match[4] ? parseInt(match[4], 10) : 0;
+        const minutes = match[5] ? parseInt(match[5], 10) : 0;
+        const seconds = match[6] ? parseInt(match[6], 10) : 0;
+        const ampm = match[7] ? match[7].toUpperCase() : '';
+        if (ampm === 'PM' && hours < 12) hours += 12;
+        if (ampm === 'AM' && hours === 12) hours = 0;
+        const monthsList = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+        const monthIndex = monthsList.indexOf(monthStr.substring(0, 3));
+        if (monthIndex !== -1) {
+          d = new Date(year, monthIndex, day, hours, minutes, seconds);
+        } else {
+          d = new Date(trimmed);
+        }
+      } else {
+        const dmyMatch = trimmed.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})(?:[T\s](\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+        if (dmyMatch && parseInt(dmyMatch[3], 10) > 1900) {
+          const day = parseInt(dmyMatch[1], 10);
+          const month = parseInt(dmyMatch[2], 10);
+          const year = parseInt(dmyMatch[3], 10);
+          const hours = dmyMatch[4] ? parseInt(dmyMatch[4], 10) : 0;
+          const minutes = dmyMatch[5] ? parseInt(dmyMatch[5], 10) : 0;
+          const seconds = dmyMatch[6] ? parseInt(dmyMatch[6], 10) : 0;
+          d = new Date(year, month - 1, day, hours, minutes, seconds);
+        } else {
+          d = new Date(trimmed);
+        }
+      }
+    } else {
+      d = new Date(dateVal);
+    }
+
+    if (isNaN(d.getTime())) return String(dateVal);
+
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    const seconds = String(d.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.000Z`;
+  }
+
   getIsoDateString(dateStr?: string): string {
+    return this.formatDateTime(dateStr || new Date());
+  }
+
+  old_getIsoDateString(dateStr?: string): string {
     if (!dateStr) return new Date().toISOString();
     try {
       const match = dateStr.match(/^(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})(?:\s+(\d{1,2}):(\d{2})\s+([AMPMampm]{2}))?/);
@@ -1172,6 +1247,18 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const validatingPod = this.listVSFUM.find(row => row.isValidatingFront || row.isValidatingBack);
+    if (validatingPod) {
+      this.sweetAlertService.warning(`POD validation is in progress for Docket No ${validatingPod.dockNo || validatingPod.tcno || ''}. Please wait.`);
+      return;
+    }
+
+    const missingDeliveryProcess = selectedRows.find(row => this.isEligibleForDeliveryProcess(row) && !row.dp);
+    if (missingDeliveryProcess) {
+      this.sweetAlertService.warning(`Please select Delivery Process for Docket No ${missingDeliveryProcess.dockNo || missingDeliveryProcess.tcno || ''}`);
+      return;
+    }
+
     const invalidPkgs = selectedRows.find(row => +row.pkgsno > +row.bkG_PKGSNO);
     if (invalidPkgs) {
       this.sweetAlertService.warning(`Arrived Pkgs cannot be greater than Total Pkgs (${invalidPkgs.bkG_PKGSNO}) for Docket No ${invalidPkgs.dockNo || invalidPkgs.tcno}.`);
@@ -1187,6 +1274,12 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
     const missingPod = selectedRows.find(row => this.isDeliveryOnArrival(row) && (!row.frontFiles || row.frontFiles.length === 0));
     if (missingPod) {
       this.sweetAlertService.warning(`Please upload POD Front file for Docket No ${missingPod.dockNo} (Delivery On Arrival).`);
+      return;
+    }
+
+    const unvalidatedPod = selectedRows.find(row => this.isDeliveryOnArrival(row) && !row.podValidated);
+    if (unvalidatedPod) {
+      this.sweetAlertService.warning(`POD is not validated for Docket No ${unvalidatedPod.dockNo || unvalidatedPod.tcno || ''}. Please ensure valid POD is uploaded.`);
       return;
     }
 
@@ -1228,7 +1321,7 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
       };
 
       const rowDelyDate = row.delyForm?.get('DELYDATE')?.value;
-      const formattedDelyDate = rowDelyDate ? this.getIsoDateString(typeof rowDelyDate === 'string' ? rowDelyDate : rowDelyDate.toString()) : isoUpdateDate;
+      const formattedDelyDate = this.formatDateTime(rowDelyDate || this.stockData?.updateDate);
 
       return {
         actuwt: row.actuwt || 0,
@@ -1280,12 +1373,20 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
     formData.append("ViewModel.VSFUM.THCNO", this.stockData?.thcno || '');
     formData.append("ViewModel.VSFUM.THC_NextLoc", this.docketService.Location || this.docketService.loginUserList?.LocationCode || '');
     formData.append("ViewModel.VSFUM.UpdateDate", isoUpdateDate);
+
+
+    //   formData.append("ViewModel.VSFUM.THCDT", this.formatDateTime(this.stockData.thcdt));
+    // }
+    // if (this.stockData?.actarrv_dt) {
+    //   formData.append("ViewModel.VSFUM.Actarrv_dt", this.formatDateTime(this.stockData.actarrv_dt));
+    //   formData.append("ViewModel.VSFUM.THC_ArrivalDate", this.formatDateTime(this.stockData.actarrv_dt));
+    // }
     formData.append("ViewModel.VSFUM.DepsId", selectedRows[0]?.depsData?.depsId || selectedRows[0]?.depsId || '');
     // const totalShortageQty = selectedRows.reduce((sum, r) => sum + (+r.shortQty || +r.shortageQty || 0), 0);
     // const totalShortageWt = selectedRows.reduce((sum, r) => sum + (+r.shortWt || +r.shortageWeight || 0), 0);
     // formData.append("ViewModel.VSFUM.ShortageQty", totalShortageQty.toString());
     // formData.append("ViewModel.VSFUM.ShortageWeight", totalShortageWt.toString());
-    formData.append("ViewModel.VSFUM.ISCheckRemarks", 'ddfg');
+    formData.append("ViewModel.VSFUM.ISCheckRemarks", '');
     formData.append("ViewModel.VSFUM.UnLoadingSupervisor", this.unloadingSupervisor || '');
     formData.append("ViewModel.VSFUM.UnLoaderName", this.unloaderName || '');
     formData.append("BaseUserName", this.docketService.loginUserList?.BaseUserName || this.docketService.loginUserList?.UserId || '');
