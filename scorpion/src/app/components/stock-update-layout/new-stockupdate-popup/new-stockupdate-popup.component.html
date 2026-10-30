@@ -283,9 +283,14 @@
                                                 *ngIf="isEligibleForDeliveryProcess(row); else emptyDpCell">
                                                 <ng-select [items]="dlyPrcList" bindLabel="codeDesc" bindValue="codeId"
                                                     appendTo="body" placeholder="Delivery Process" [(ngModel)]="row.dp"
+                                                    (change)="onRowDeliveryProcessChange(row)"
                                                     [clearable]="true" [dropdownPosition]="'bottom'"
-                                                    style="width: 180px; font-size: 13px;">
+                                                    [ngClass]="{ 'required2': isEligibleForDeliveryProcess(row), 'border-danger': submitted && row.isSelected && isEligibleForDeliveryProcess(row) && !row.dp }" style="width: 180px; font-size: 13px;">
                                                 </ng-select>
+                                                <div class="text-danger small mt-1 text-start"
+                                                    *ngIf="submitted && row.isSelected && isEligibleForDeliveryProcess(row) && !row.dp">
+                                                    This field is required
+                                                </div>
                                             </td>
                                             <ng-template #emptyDpCell>
                                                 <td class="table-cell-custom"></td>
