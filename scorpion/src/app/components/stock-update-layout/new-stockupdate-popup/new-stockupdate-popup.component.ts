@@ -1284,18 +1284,6 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const invalidDelyDate = selectedRows.find(row => {
-      const delyVal = row.delyForm?.get('DELYDATE')?.value;
-      if (!delyVal || !row.actarrv_dt) return false;
-      const delyDate = delyVal instanceof Date ? delyVal : new Date(delyVal);
-      const arrvDate = row.actarrv_dt instanceof Date ? row.actarrv_dt : new Date(row.actarrv_dt);
-      return !isNaN(delyDate.getTime()) && !isNaN(arrvDate.getTime()) && delyDate < arrvDate;
-    });
-    if (invalidDelyDate) {
-      this.sweetAlertService.warning(`Delivery Date & Time cannot be earlier than THC Arrival Date & Time for Docket No ${invalidDelyDate.dockNo || invalidDelyDate.tcno || ''}.`);
-      return;
-    }
-
     const missingVendor = selectedRows.find(row =>
       row.luVendorTyp && row.luVendorTyp !== 'XX9' && (!row.luVendorCode || !row.rateType)
     );
