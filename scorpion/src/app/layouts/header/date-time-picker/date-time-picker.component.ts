@@ -9,13 +9,14 @@ import { NgbDateStruct, NgbPopover, NgbTimeStruct } from '@ng-bootstrap/ng-boots
   styleUrls: ['./date-time-picker.component.scss']
 })
 export class DateTimePickerComponent implements OnInit {
-   @Input() controlName!: string;      
+  @Input() controlName!: string;      
   @Input() placeholder: string = 'Select Date';
   @Input() disabled: boolean = false;
   @Input() maxDate?: Date;
   @Input() minDate?: Date;
   @Input() dropUp: boolean = false;
   @Input() placement: 'bottom' | 'top' = 'bottom';
+  @Input() enforceMinTime: boolean = false;
 
   @ViewChild('popupEl') popupEl?: ElementRef<HTMLElement>;
 
@@ -23,6 +24,7 @@ export class DateTimePickerComponent implements OnInit {
 
   selectedDate: Date = new Date();
   selectedTime: Date = new Date();
+  minTimeForPicker?: Date;
   displayDateTime: string = '';
 
   control!: FormControl;
@@ -75,6 +77,8 @@ export class DateTimePickerComponent implements OnInit {
       this.closePicker();
     } else {
       this.showPicker = true;
+      this.updateMinTime();
+      this.updateFinal();
       setTimeout(() => this.positionPopup(), 0);
     }
   }
@@ -136,7 +140,66 @@ export class DateTimePickerComponent implements OnInit {
     }
   }
 
+  isSameDay(d1?: Date, d2?: Date): boolean {
+    if (!d1 || !d2) return false;
+    return d1.getFullYear() === d2.getFullYear() &&
+           d1.getMonth() === d2.getMonth() &&
+           d1.getDate() === d2.getDate();
+  }
+
+  updateMinTime() {
+    if (this.enforceMinTime && this.minDate && this.selectedDate && this.isSameDay(this.selectedDate, this.minDate)) {
+      const y = this.selectedDate.getFullYear();
+      const m = this.selectedDate.getMonth();
+      const d = this.selectedDate.getDate();
+      const minH = this.minDate.getHours();
+      const minM = this.minDate.getMinutes();
+
+      if (this.selectedTime) {
+        if (
+          this.selectedTime.getFullYear() !== y ||
+          this.selectedTime.getMonth() !== m ||
+          this.selectedTime.getDate() !== d
+        ) {
+          this.selectedTime = new Date(y, m, d, this.selectedTime.getHours(), this.selectedTime.getMinutes(), 0);
+        }
+
+        const curH = this.selectedTime.getHours();
+        const curM = this.selectedTime.getMinutes();
+        if (curH < minH || (curH === minH && curM < minM)) {
+          this.selectedTime = new Date(y, m, d, minH, minM, 0);
+        }
+      }
+
+      // targetMinTime is set 1 second before exact minute so ngx-bootstrap's strict min < _newHour works smoothly
+      const exactMinTime = new Date(y, m, d, minH, minM, 0, 0);
+      const targetMinTime = new Date(exactMinTime.getTime() - 1000);
+
+      if (!this.minTimeForPicker || this.minTimeForPicker.getTime() !== targetMinTime.getTime()) {
+        this.minTimeForPicker = targetMinTime;
+      }
+    } else {
+      if (this.minTimeForPicker !== undefined) {
+        this.minTimeForPicker = undefined;
+      }
+      if (this.selectedDate && this.selectedTime) {
+        const y = this.selectedDate.getFullYear();
+        const m = this.selectedDate.getMonth();
+        const d = this.selectedDate.getDate();
+        if (
+          this.selectedTime.getFullYear() !== y ||
+          this.selectedTime.getMonth() !== m ||
+          this.selectedTime.getDate() !== d
+        ) {
+          this.selectedTime = new Date(y, m, d, this.selectedTime.getHours(), this.selectedTime.getMinutes(), 0);
+        }
+      }
+    }
+  }
+
   updateFinal() {
+    this.updateMinTime();
+
     if (!this.selectedDate) {
       this.displayDateTime = '';
       return;
@@ -164,6 +227,7 @@ export class DateTimePickerComponent implements OnInit {
 
   applyDateTime() {
     if (!this.selectedDate) return;
+    this.updateMinTime();
 
     const final = new Date(
       this.selectedDate.getFullYear(),

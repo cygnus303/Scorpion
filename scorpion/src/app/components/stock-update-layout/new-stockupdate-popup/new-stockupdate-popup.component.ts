@@ -253,6 +253,7 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
               }
             }
             item.bookingDate = formattedBookingDate;
+            item.actarrv_dt = vsfum.actarrv_dt ? new Date(vsfum.actarrv_dt) : formattedBookingDate;
             const initialDelyDate = new Date();
             item.delyForm = new FormGroup({
               DELYDATE: new FormControl(initialDelyDate)
@@ -1280,6 +1281,18 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
     const unvalidatedPod = selectedRows.find(row => this.isDeliveryOnArrival(row) && !row.podValidated);
     if (unvalidatedPod) {
       this.sweetAlertService.warning(`POD is not validated for Docket No ${unvalidatedPod.dockNo || unvalidatedPod.tcno || ''}. Please ensure valid POD is uploaded.`);
+      return;
+    }
+
+    const invalidDelyDate = selectedRows.find(row => {
+      const delyVal = row.delyForm?.get('DELYDATE')?.value;
+      if (!delyVal || !row.actarrv_dt) return false;
+      const delyDate = delyVal instanceof Date ? delyVal : new Date(delyVal);
+      const arrvDate = row.actarrv_dt instanceof Date ? row.actarrv_dt : new Date(row.actarrv_dt);
+      return !isNaN(delyDate.getTime()) && !isNaN(arrvDate.getTime()) && delyDate < arrvDate;
+    });
+    if (invalidDelyDate) {
+      this.sweetAlertService.warning(`Delivery Date & Time cannot be earlier than THC Arrival Date & Time for Docket No ${invalidDelyDate.dockNo || invalidDelyDate.tcno || ''}.`);
       return;
     }
 

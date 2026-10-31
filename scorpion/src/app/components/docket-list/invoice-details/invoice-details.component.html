@@ -118,7 +118,7 @@
                           <td class="center">
                             <div class="input-group">
                               <input type="text" class="form-control uppercase-none" #dp2="bsDatepicker" bsDatepicker
-                                [class.disabled-input]="row.get('ewayBillNo')?.value?.length > 0"
+                                [class.disabled-input]="true"
                                 [minDate]="getMinInvoiceDate(row)" [maxDate]="getMaxInvoiceDate(row)"
                                 [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMM YYYY' }"
                                 [attr.tabindex]="-1" placeholder="dd/MMM/yyyy" formControlName="ewayinvoiceDate"
