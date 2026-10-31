@@ -30,6 +30,7 @@
       [(ngModel)]="selectedTime"
       [ngModelOptions]="{standalone: true}"
       (ngModelChange)="updateFinal()"
+      [min]="minTimeForPicker"
       [showMeridian]="true">
     </timepicker>
 
