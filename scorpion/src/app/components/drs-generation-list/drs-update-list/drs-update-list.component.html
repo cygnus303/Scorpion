@@ -32,7 +32,6 @@
             </div>
         </form>
     </div> -->
-
     <div>
         <!-- Content Area -->
         <div>
@@ -84,12 +83,10 @@
                         </div>
                     </div>
 
-                    <!-- Operational Info Bar (KM & Vehicle) -->
-                    <div class="bg-light p-2 border-bottom mb-3">
-                        <div class="row align-items-center m-0">
-                            <!-- Start/Close KM Input -->
-                            <div class="col-md-6">
-                                <!-- <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <!-- Vehicle & Consignment Info (compact) -->
+                    <div class="bg-light px-3 py-1 border-bottom">
+                        <!-- Start/Close KM Input -->
+                        <!-- <div class="d-flex align-items-center gap-2 flex-wrap">
                                     <span class="text-muted fw-semibold" style="font-size: 12px;">Start/Close KM:</span>
                                     <span class="fw-bold text-dark" style="font-size: 12px;">{{ DRSInformation?.start_KM
                                         }}</span>
@@ -108,37 +105,32 @@
                                         Max: {{ maxCloseKMValue }}
                                     </div>
                                 </div> -->
-                            </div>
-
-                            <!-- Vehicle & Consignment Info -->
-                            <div class="col-md-6">
-                                <div class="d-flex align-items-center justify-content-md-end gap-2 text-muted"
-                                    style="font-size: 12px;">
-                                    <span class="fw-semibold">Vehicle:</span>
-                                    <span class="fw-bold text-dark">{{ DRSInformation?.vehno }}</span>
-                                    <span class="mx-2 text-secondary">|</span>
-                                    <span class="fw-semibold">Carrying:</span>
-                                    <span class="fw-bold text-dark">{{ DRSInformation?.total_Dockets_In_DRS }}
-                                        Consignment(s)</span>
-                                </div>
-                            </div>
+                        <div class="d-flex align-items-center justify-content-end gap-2 text-muted"
+                            style="font-size: 12px;">
+                            <span class="fw-semibold">Vehicle:</span>
+                            <span class="fw-bold text-dark">{{ DRSInformation?.vehno }}</span>
+                            <span class="mx-2 text-secondary">|</span>
+                            <span class="fw-semibold">Carrying:</span>
+                            <span class="fw-bold text-dark">{{ DRSInformation?.total_Dockets_In_DRS }}
+                                Consignment(s)</span>
                         </div>
                     </div>
 
-                    <div class="cnote-entry-container mt-3">
-                        <div class="p-3 pt-4 bg-white border rounded">
+                    <div class="cnote-entry-container mt-2">
+                        <div class="p-2 bg-white border rounded">
                             <!-- <div class="alert alert-warning d-flex align-items-center ps-0 py-0" role="alert">
                                 <span class="fw-semibold me-2 border-start border-2 border-primary m-0 ps-2 py-2 ">Note:</span>
                                 <span>ADD as per POD Copy.</span>
                             </div> -->
                             <div class="table-responsive custom-table-scroll">
-                                <table class="table table-bordered align-middle text-nowrap bg-white mb-0"
+                                <table class="table table-bordered align-middle bg-white mb-0 drs-table"
                                     style="font-size: 12px;">
-                                    <thead class="sticky-thead" style="position: sticky; top: 0; z-index: 15;">
+                                    <thead class="sticky-thead">
                                         <tr>
                                             <!-- Group 1: Blue -->
-                                            <th class="text-center align-middle"
-                                                style="background-color: #e3f2fd; color: #0d47a1; min-width: 60px;">
+                                            <!-- STICKY 1: # -->
+                                            <th class="text-center align-middle sticky-col sticky-col-1"
+                                                style="background-color: #e3f2fd; color: #0d47a1;">
                                                 <div class="d-flex align-items-center justify-content-center gap-2">
                                                     <input class="form-check-input m-0" type="checkbox"
                                                         style="transform: scale(1.2); border-color: #0d47a1;"
@@ -146,7 +138,9 @@
                                                     #
                                                 </div>
                                             </th>
-                                            <th class="align-middle" style="background-color: #e3f2fd; color: #0d47a1;">
+                                            <!-- STICKY 2: Docket No / Date -->
+                                            <th class="align-middle sticky-col sticky-col-2"
+                                                style="background-color: #e3f2fd; color: #0d47a1;">
                                                 Docket No / Date</th>
                                             <th class="align-middle" style="background-color: #e3f2fd; color: #0d47a1;">
                                                 Org / Dest / Paybase</th>
@@ -157,20 +151,20 @@
 
                                             <!-- Group 2: Green -->
                                             <th class="align-middle"
-                                                style="background-color: #e8f5e9; color: #1b5e20; min-width: 120px;">
+                                                style="background-color: #e8f5e9; color: #1b5e20;">
                                                 Delivered Pkgs</th>
                                             <th class="align-middle"
-                                                style="background-color: #e8f5e9; color: #1b5e20; min-width: 250px;">
+                                                style="background-color: #e8f5e9; color: #1b5e20;">
                                                 Part Del / Undel Reason</th>
                                             <th class="align-middle"
-                                                style="background-color: #e8f5e9; color: #1b5e20; min-width: 150px;">
+                                                style="background-color: #e8f5e9; color: #1b5e20;">
                                                 PKg / Act Qty</th>
                                             <th class="align-middle" style="background-color: #e8f5e9; color: #1b5e20;">
                                                 Committed Dely. Dt</th>
 
                                             <!-- Group 3: Purple -->
                                             <th class="align-middle"
-                                                style="background-color: #f3e5f5; color: #6a1b9a; min-width: 160px;">
+                                                style="background-color: #f3e5f5; color: #6a1b9a;">
                                                 <div class="mb-1">HCC Vendor Type</div>
                                                 <ng-select class="mt-1 clear-icon bg-white rounded"
                                                     [items]="generalMasterService.loadingData" bindLabel="codeDesc"
@@ -179,7 +173,7 @@
                                                     [dropdownPosition]="'auto'"></ng-select>
                                             </th>
                                             <th class="align-middle"
-                                                style="background-color: #f3e5f5; color: #6a1b9a; min-width: 200px;">
+                                                style="background-color: #f3e5f5; color: #6a1b9a;">
                                                 <div class="mb-1">Vendor Name</div>
                                                 <ng-select class="mt-1 clear-icon remove-white-space bg-white rounded"
                                                     [items]="headerVendorList" bindLabel="text" bindValue="value"
@@ -191,7 +185,7 @@
                                                 </ng-select>
                                             </th>
                                             <th class="align-middle"
-                                                style="background-color: #f3e5f5; color: #6a1b9a; min-width: 150px;">
+                                                style="background-color: #f3e5f5; color: #6a1b9a;">
                                                 <div class="mb-1">Rate Type</div>
                                                 <ng-select class="clear-icon mt-1 bg-white rounded"
                                                     formControlName="ratetype" bindLabel="codeDesc" bindValue="codeId"
@@ -200,52 +194,52 @@
                                                     (change)="onHeaderRateTypeChange($event)"></ng-select>
                                             </th>
                                             <th class="align-middle"
-                                                style="background-color: #f3e5f5; color: #6a1b9a; min-width: 100px;">
+                                                style="background-color: #f3e5f5; color: #6a1b9a;">
                                                 Rate (₹)</th>
                                             <!-- <th class="align-middle"
                                                 style="background-color: #f3e5f5; color: #6a1b9a; min-width: 120px;">HCC
                                                 Amt (₹)</th> -->
                                             <th class="align-middle"
-                                                style="background-color: #f3e5f5; color: #6a1b9a; min-width: 120px;">OTP
+                                                style="background-color: #f3e5f5; color: #6a1b9a;">OTP
                                             </th>
 
                                             <!-- Group 4: Light Green (delivery info) -->
                                             <th class="align-middle"
-                                                style="background-color: #f1f8e9; color: #33691e; min-width: 180px;">
+                                                style="background-color: #f1f8e9; color: #33691e;">
                                                 Delivered To</th>
                                             <th class="align-middle"
-                                                style="background-color: #f1f8e9; color: #33691e; min-width: 150px;">
+                                                style="background-color: #f1f8e9; color: #33691e;">
                                                 Person</th>
                                             <th class="align-middle"
-                                                style="background-color: #f1f8e9; color: #33691e; min-width: 140px;">
+                                                style="background-color: #f1f8e9; color: #33691e;">
                                                 Contact No</th>
                                             <th class="align-middle"
-                                                style="background-color: #f1f8e9; color: #33691e; min-width: 160px;">
+                                                style="background-color: #f1f8e9; color: #33691e;">
                                                 Delivery Date</th>
 
                                             <!-- Group 5: Orange -->
                                             <th class="align-middle"
-                                                style="background-color: #fff3e0; color: #e65100; min-width: 100px;">POD
+                                                style="background-color: #fff3e0; color: #e65100;">POD
                                                 1</th>
                                             <th class="align-middle"
-                                                style="background-color: #fff3e0; color: #e65100; min-width: 100px;">POD
+                                                style="background-color: #fff3e0; color: #e65100;">POD
                                                 2</th>
 
                                             <!-- Group 6: Red -->
                                             <th class="align-middle text-center"
-                                                style="background-color: #ffebee; color: #b71c1c; min-width: 120px;">POD
+                                                style="background-color: #ffebee; color: #b71c1c;">POD
                                                 Quality ^</th>
                                         </tr>
                                     </thead>
 
                                     <tbody formArrayName="drsList">
                                         <tr *ngIf="isLoading">
-                                            <td colspan="25" class="text-center py-4 text-primary fw-bold">
+                                            <td colspan="21" class="text-center py-4 text-primary fw-bold">
                                                 <i class="fas fa-spinner fa-spin me-2"></i> Loading Details...
                                             </td>
                                         </tr>
                                         <tr *ngIf="drsList.controls.length === 0 && !isLoading">
-                                            <td colspan="25" class="text-center py-4 text-muted fw-bold">
+                                            <td colspan="21" class="text-center py-4 text-muted fw-bold">
                                                 <i class="fas fa-exclamation-circle me-1"></i> No Data Found
                                             </td>
                                         </tr>
@@ -253,8 +247,8 @@
                                             [formGroupName]="i">
                                             <tr
                                                 [ngClass]="{'row-selected': row.get('isChecked')?.value, 'row-unchecked': !row.get('isChecked')?.value}">
-                                                <!-- 1. Sr.No -->
-                                                <td class="text-center align-middle">
+                                                <!-- 1. Sr.No (STICKY 1) -->
+                                                <td class="text-center align-middle sticky-col sticky-col-1">
                                                     <div class="d-flex align-items-center justify-content-center gap-2">
                                                         <input class="form-check-input m-0 border-primary shadow-none"
                                                             type="checkbox" style="transform: scale(1.3);"
@@ -263,8 +257,8 @@
                                                     </div>
                                                 </td>
 
-                                                <!-- 2. Docket No / Date -->
-                                                <td class="align-middle">
+                                                <!-- 2. Docket No / Date (STICKY 2) -->
+                                                <td class="align-middle sticky-col sticky-col-2">
                                                     <div class="text-primary text-decoration-underline fw-bold mb-1">
                                                         {{ row.value.dockno }}{{row.value.docksf }}</div>
                                                     <div class="text-muted">
@@ -330,7 +324,7 @@
                                                         formControlName="remarks" placeholder="Enter Remarks"></textarea>
                                                 </td>
 
-                                                <!-- 8. Total Wt / Delivered Wt -->
+                                                <!-- 8. Pkg / Act Qty -->
                                                 <td class="align-middle text-center">
                                                     <div class="text-muted mb-1">
                                                         {{ row.get('pkgQty')?.value }}/{{ row.get('actQty')?.value }}</div>
@@ -384,12 +378,14 @@
                                                         oninput="this.value = this.value.replace(/[^0-9.]/g,'');"
                                                         class="form-control form-control-sm text-center"
                                                         formControlName="newRate"
+                                                        [ngClass]="{'border-danger': row.get('rateError')?.value}"
                                                         [readOnly]="row.get('luVendorTyp')?.value === 'XX5' || row.get('luVendorTyp')?.value === 'XX9'"
                                                         (focus)="clearNewRateOnFocus(i)" (blur)="resetNewRateOnBlur(i)"
                                                         placeholder="0.00" />
-                                                    <div class="text-danger mt-1" style="font-size: 11px;"
-                                                        *ngIf="row.get('rateError')?.value">{{
-                                                        row.get('rateError')?.value }}</div>
+                                                    <div class="cell-error" *ngIf="row.get('rateError')?.value"
+                                                        [title]="row.get('rateError')?.value">
+                                                        <i class="fas fa-exclamation-circle me-1"></i>{{ row.get('rateError')?.value }}
+                                                    </div>
                                                 </td>
 
                                                 <!-- 14. HCC Amt (₹)
@@ -400,7 +396,7 @@
 
                                                 <!-- 15. OTP -->
                                                 <td class="align-top">
-                                                    <div class="input-group input-group-sm">
+                                                    <div class="input-group input-group-sm flex-nowrap">
                                                         <input type="text" class="form-control form-control-sm"
                                                             formControlName="otp" placeholder="Enter OTP" (input)="onOTPInput(i)" (blur)="verifyOTP(i)">
                                                         <button class="btn btn-outline-primary" type="button" (click)="resendOTP(i)" title="Resend OTP">
@@ -411,9 +407,9 @@
                                                         *ngIf="row.get('otpVerified')?.value">
                                                         <i class="fas fa-check-circle"></i> Verified
                                                     </div>
-                                                    <div class="text-danger mt-1" style="font-size: 11px;"
-                                                        *ngIf="row.get('otpError')?.value">
-                                                        {{ row.get('otpError')?.value }}
+                                                    <div class="cell-error" *ngIf="row.get('otpError')?.value"
+                                                        [title]="row.get('otpError')?.value">
+                                                        <i class="fas fa-exclamation-circle me-1"></i>{{ row.get('otpError')?.value }}
                                                     </div>
                                                 </td>
 
@@ -471,12 +467,13 @@
                                                     </div>
                                                 </td>
 
+                                                <!-- 19. Delivery Date -->
                                                 <td class="align-top">
-                                                    <div class="input-group">
+                                                    <div class="input-group input-group-sm flex-nowrap">
                                                         <input type="text" class="form-control minput" #dp="bsDatepicker" bsDatepicker
                                                             [minDate]="minDrsDate"
                                                             [maxDate]="maxDate"
-                                                            [bsConfig]="bsConfig" 
+                                                            [bsConfig]="bsConfig"
                                                             placeholder="dd-mmm-yyyy" formControlName="DELYDATE"
                                                             [attr.disabled]="row.get('deliveredPkgs')?.value == 0 ? true : null"
                                                             [ngClass]="{ 'border-danger': row.get('DELYDATE')?.invalid && row.get('DELYDATE')?.touched }">
@@ -487,10 +484,9 @@
                                                 </td>
 
                                                 <!-- 20. POD 1 -->
-                                                <td class="align-top">
+                                                <td class="align-middle text-center">
                                                     <div *ngIf="validatingIndex === i && validatingType === 'FRONT'"
-                                                        class="d-flex align-items-center gap-1 text-primary p-1"
-                                                        style="font-size: 11px;">
+                                                        class="pod-validating">
                                                         <span class="spinner-border spinner-border-sm"
                                                             role="status"></span> Validating...
                                                     </div>
@@ -498,26 +494,26 @@
                                                         *ngIf="!(validatingIndex === i && validatingType === 'FRONT')">
                                                         <ng-container
                                                             *ngIf="row.get('frontPreview')?.value; else frontUpload">
-                                                            <div class="d-flex flex-column gap-1">
-                                                                <img [src]="row.get('frontPreview')?.value"
-                                                                    style="width:30px;height:30px;object-fit:cover;border-radius:4px;cursor:pointer"
+                                                            <div class="pod-thumb-wrap">
+                                                                <img class="pod-thumb"
+                                                                    [src]="row.get('frontPreview')?.value"
+                                                                    title="Click to change"
                                                                     (click)="frontInput.click()" />
-                                                                <button type="button"
-                                                                    class="btn btn-sm text-danger p-0 border-0 bg-transparent"
-                                                                    style="font-size: 10px;"
-                                                                    (click)="removeFile(i, 'FRONT')">Remove</button>
+                                                                <button type="button" class="pod-remove" title="Remove"
+                                                                    (click)="removeFile(i, 'FRONT')">
+                                                                    <i class="fas fa-times"></i>
+                                                                </button>
                                                             </div>
                                                         </ng-container>
                                                         <ng-template #frontUpload>
-                                                            <button type="button"
-                                                                class="btn btn-light btn-sm text-primary border-primary border-dashed p-1"
-                                                                style="font-size:11px;"
+                                                            <button type="button" class="pod-upload"
+                                                                [class.pod-upload-error]="isPodFrontRequired(i, row)"
                                                                 (click)="row.get('deliveredPkgs')?.value == 0 ? null : frontInput.click()"
                                                                 [disabled]="row.get('deliveredPkgs')?.value == 0">
-                                                                📎 Upload POD 1
+                                                                <i class="fas fa-cloud-upload-alt"></i> Upload
                                                             </button>
-                                                            <div class="text-danger mt-1" style="font-size:10px;"
-                                                                *ngIf="isPodFrontRequired(i, row)">Required</div>
+                                                            <div class="cell-error" *ngIf="isPodFrontRequired(i, row)">
+                                                                Required</div>
                                                         </ng-template>
                                                     </ng-container>
                                                     <input type="file" #frontInput hidden accept="image/*"
@@ -525,26 +521,25 @@
                                                 </td>
 
                                                 <!-- 21. POD 2 -->
-                                                <td class="align-top">
+                                                <td class="align-middle text-center">
                                                     <ng-container
                                                         *ngIf="row.get('backPreview')?.value; else backUpload">
-                                                        <div class="d-flex flex-column gap-1">
-                                                            <img [src]="row.get('backPreview')?.value"
-                                                                style="width:30px;height:30px;object-fit:cover;border-radius:4px;cursor:pointer"
+                                                        <div class="pod-thumb-wrap">
+                                                            <img class="pod-thumb"
+                                                                [src]="row.get('backPreview')?.value"
+                                                                title="Click to change"
                                                                 (click)="backInput.click()" />
-                                                            <button type="button"
-                                                                class="btn btn-sm text-danger p-0 border-0 bg-transparent"
-                                                                style="font-size: 10px;"
-                                                                (click)="removeFile(i, 'BACK')">Remove</button>
+                                                            <button type="button" class="pod-remove" title="Remove"
+                                                                (click)="removeFile(i, 'BACK')">
+                                                                <i class="fas fa-times"></i>
+                                                            </button>
                                                         </div>
                                                     </ng-container>
                                                     <ng-template #backUpload>
-                                                        <button type="button"
-                                                            class="btn btn-light btn-sm text-primary border-primary border-dashed p-1"
-                                                            style="font-size:11px;"
+                                                        <button type="button" class="pod-upload"
                                                             (click)="row.get('deliveredPkgs')?.value == 0 ? null : backInput.click()"
                                                             [disabled]="row.get('deliveredPkgs')?.value == 0">
-                                                            📎 Upload POD 2
+                                                            <i class="fas fa-cloud-upload-alt"></i> Upload
                                                         </button>
                                                     </ng-template>
                                                     <input type="file" #backInput hidden accept="image/*"
@@ -553,36 +548,31 @@
 
                                                 <!-- 22. POD Quality -->
                                                 <td class="align-middle">
-                                                    <div class="d-flex flex-column gap-2"
+                                                    <div class="pod-quality"
                                                         [class.pe-none]="row.get('deliveredPkgs')?.value == 0"
                                                         [class.opacity-50]="row.get('deliveredPkgs')?.value == 0">
-                                                        <div
-                                                            class="form-check m-0 d-flex align-items-center gap-1 ps-0">
-                                                            <input
-                                                                class="form-check-input text-success m-0 ms-1 me-1 border-success"
-                                                                type="radio" id="badpodNo{{ i }}"
+                                                        <!-- Good / Bad segmented toggle -->
+                                                        <div class="pod-toggle">
+                                                            <input type="radio" class="pod-radio" id="badpodNo{{ i }}"
                                                                 [value]="false" formControlName="isBadPod"
                                                                 (change)="clearDepsData(i)">
-                                                            <label class="text-success small fw-bold m-0"
-                                                                for="badpodNo{{ i }}"><i class="bi bi-check-circle"></i>
-                                                                Good POD</label>
-                                                        </div>
-                                                        <div
-                                                            class="form-check m-0 d-flex align-items-center gap-1 ps-0">
-                                                            <input
-                                                                class="form-check-input text-danger m-0 ms-1 me-1 border-danger"
-                                                                type="radio" id="badpodYes{{ i }}"
+                                                            <label class="pod-opt pod-good" for="badpodNo{{ i }}">
+                                                                <i class="fas fa-check-circle"></i> Good
+                                                            </label>
+
+                                                            <input type="radio" class="pod-radio" id="badpodYes{{ i }}"
                                                                 [value]="true" formControlName="isBadPod"
                                                                 (click)="openDeps(row.value, i)">
-                                                            <label class="text-danger small fw-bold m-0"
-                                                                for="badpodYes{{ i }}"><i class="bi bi-x-circle"></i>
-                                                                Bad POD</label>
+                                                            <label class="pod-opt pod-bad" for="badpodYes{{ i }}">
+                                                                <i class="fas fa-times-circle"></i> Bad
+                                                            </label>
                                                         </div>
-                                                        <div *ngIf="row.get('depsData')?.value"
-                                                            class="badge bg-danger-subtle text-danger border border-danger-subtle mt-1 text-wrap"
-                                                            style="font-size: 9px; cursor: pointer; display: inline-block; width: fit-content;"
-                                                            (click)="openDeps(row.value, i)">
-                                                            DEPS Generated <i class="fas fa-edit ms-1"></i>
+
+                                                        <!-- DEPS generated chip -->
+                                                        <div *ngIf="row.get('depsData')?.value" class="pod-deps"
+                                                            title="Click to edit DEPS" (click)="openDeps(row.value, i)">
+                                                            <i class="fas fa-file-alt"></i> DEPS Generated
+                                                            <i class="fas fa-edit"></i>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -597,7 +587,7 @@
                 </form>
 
                 <!-- Footer -->
-                <div class="d-flex justify-content-between align-items-center bg-white px-4 py-3 border-top mt-auto shadow-sm"
+                <div class="d-flex justify-content-between align-items-center bg-white px-3 py-2 border-top mt-auto shadow-sm"
                     style="border-radius: 0 0 8px 8px;">
                     <div class="d-flex align-items-center flex-wrap gap-4 text-muted small fw-bold">
                         <div>Total Dockets: <span class="text-dark fw-bolder">{{ drsList.controls.length }}</span></div>
@@ -621,8 +611,6 @@
                 </div>
             </div>
         </div>
-
-
     </div>
 </div>
 <div *ngIf="isSubmit" class="loading-overlay">

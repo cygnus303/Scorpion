@@ -2,6 +2,39 @@
   display: block;
 }
 
+// ===== Sticky column widths (change here only) =====
+$col1-width: 70px;    // 1. # (checkbox + Sr.No)  [sticky]
+$col2-width: 115px;   // 2. Docket No / Date      [sticky]
+
+// Baaki columns ni width (th ni position: 3 thi 21). Koi kolum nu width badalvu hoy to fakt ahi badlo.
+$col-widths: (
+  3: 120px,   // Org / Dest / Paybase
+  4: 190px,   // Billing Party / Consignee
+  5: 95px,    // Pkg Booked/Arrived/Pending
+  6: 75px,    // Delivered Pkgs
+  7: 190px,   // Part Del / Undel Reason
+  8: 70px,    // Pkg / Act Qty
+  9: 100px,   // Committed Dely. Dt
+  10: 125px,  // HCC Vendor Type
+  11: 175px,  // Vendor Name
+  12: 115px,  // Rate Type
+  13: 140px,  // Rate (error message mate wide)
+  14: 140px,  // OTP (error message mate wide)
+  15: 210px,  // Delivered To
+  16: 125px,  // Person
+  17: 115px,  // Contact No
+  18: 140px,  // Delivery Date
+  19: 100px,  // POD 1
+  20: 100px,  // POD 2
+  21: 130px   // POD Quality
+);
+
+// Table ni total width automatic
+$table-total: $col1-width + $col2-width;
+@each $i, $w in $col-widths {
+  $table-total: $table-total + $w;
+}
+
 .drs-update-main-wrapper {
   display: flex;
   flex-direction: column;
@@ -23,7 +56,7 @@
 .custom-table-scroll {
   display: block;
   width: 100%;
-  max-height: calc(80vh - 225px);
+  max-height: calc(80vh - 190px);
   overflow-x: auto !important;
   overflow-y: auto !important;
   background: #fff;
@@ -57,8 +90,72 @@
   }
 
   table {
-    min-width: 1600px !important;
     margin-bottom: 0;
+
+    /* ============ COMPACT LAYOUT ============ */
+    table-layout: fixed;
+    width: $table-total;
+    min-width: $table-total !important;
+
+    th,
+    td {
+      padding: 4px 6px !important;
+      white-space: normal !important;   /* text wrap thay, width vadhe nahi */
+      word-break: break-word;
+    }
+
+    thead th {
+      font-size: 11.5px;
+      line-height: 1.2;
+      min-width: 0 !important;
+      vertical-align: middle;
+    }
+
+    /* Column widths (fixed layout ma th ni width j badha rows follow kare) */
+    @each $i, $w in $col-widths {
+      thead th:nth-child(#{$i}) {
+        width: $w;
+      }
+    }
+
+    .form-control-sm {
+      min-height: 26px;
+      padding: 2px 6px;
+      font-size: 12px;
+    }
+
+    textarea.form-control {
+      resize: none;
+    }
+
+    /* Error messages (Rate / OTP): full message dekhay, pan wide column ne lidhe max 2 line */
+    .cell-error {
+      display: block;
+      max-width: 100%;
+      margin-top: 2px;
+      font-size: 11px;
+      line-height: 1.25;
+      color: #dc3545;
+      white-space: normal !important;
+      word-break: normal;
+      overflow-wrap: break-word;
+    }
+
+    .mb-1 {
+      margin-bottom: 2px !important;
+    }
+
+    .mt-1 {
+      margin-top: 2px !important;
+    }
+
+    /* IMPORTANT: sticky columns need separate borders (collapse mode breaks sticky) */
+    border-collapse: separate !important;
+    border-spacing: 0;
+
+    &.table-bordered > :not(caption) > * > * {
+      border-width: 0 1px 1px 0;
+    }
 
     thead.sticky-thead,
     thead {
@@ -73,6 +170,53 @@
         box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.15);
         white-space: nowrap;
       }
+    }
+
+    /* ================= STICKY LEFT COLUMNS ================= */
+    .sticky-col {
+      position: sticky !important;
+      background-clip: padding-box;
+    }
+
+    .sticky-col-1 {
+      left: 0;
+      width: $col1-width;
+      min-width: $col1-width;
+      max-width: $col1-width;
+    }
+
+    .sticky-col-2 {
+      left: $col1-width;
+      width: $col2-width;
+      min-width: $col2-width;
+      max-width: $col2-width;
+    }
+
+    /* Header: sticky top + left, stays above other header cells */
+    thead th.sticky-col {
+      z-index: 20;
+    }
+
+    thead th.sticky-col-2 {
+      box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.15), 3px 0 5px -2px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Body: solid backgrounds so scrolling content does not show through */
+    tbody td.sticky-col {
+      z-index: 5;
+      background-color: #fff !important;
+    }
+
+    tbody td.sticky-col-2 {
+      box-shadow: 3px 0 5px -2px rgba(0, 0, 0, 0.25);
+    }
+
+    tbody tr.row-selected td.sticky-col {
+      background-color: #f0f7e6 !important;
+    }
+
+    tbody tr.row-unchecked td.sticky-col {
+      background-color: #fafafa !important;
     }
   }
 }
@@ -146,7 +290,7 @@
   align-items: center;
   background: linear-gradient(90deg, #c8102e 0%, #9b0a22 100%) !important;
   color: white;
-  padding: 12px 16px;
+  padding: 10px 16px;
   border-bottom: none;
 }
 
@@ -178,7 +322,7 @@
 .modal-info-bar {
   display: flex;
   background: white;
-  padding: 8px 16px;
+  padding: 6px 16px;
   border-bottom: 1px solid #ddd;
   font-size: 13px;
   align-items: center;
@@ -529,4 +673,191 @@ th:has(.ng-select-opened) {
       }
     }
   }
+}
+
+
+/* ================= POD QUALITY (Good / Bad toggle) ================= */
+.pod-quality {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.pod-toggle {
+  display: flex;
+  width: 100%;
+  border: 1px solid #cfd8dc;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+}
+
+/* real radio hidden, label act kare chhe (formControl same rahe chhe) */
+.pod-radio {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.pod-opt {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 4px 6px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.pod-good {
+  color: #2e7d32;
+
+  &:hover {
+    background: #e8f5e9;
+  }
+}
+
+.pod-bad {
+  color: #c62828;
+  border-left: 1px solid #cfd8dc;
+
+  &:hover {
+    background: #ffebee;
+  }
+}
+
+/* selected state */
+.pod-radio:checked + .pod-good {
+  background: #2e7d32;
+  color: #fff;
+}
+
+.pod-radio:checked + .pod-bad {
+  background: #c62828;
+  color: #fff;
+}
+
+.pod-radio:focus-visible + .pod-opt {
+  outline: 2px solid #0d6efd;
+  outline-offset: -2px;
+}
+
+.pod-deps {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #c62828;
+  background: #ffebee;
+  border: 1px solid #f5c2c7;
+  border-radius: 10px;
+  cursor: pointer;
+
+  &:hover {
+    background: #ffd9de;
+  }
+}
+
+
+/* ================= POD 1 / POD 2 UPLOAD ================= */
+.pod-upload {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 100%;
+  padding: 5px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  color: #0d6efd;
+  background: #f5f9ff;
+  border: 1.5px dashed #9ec5fe;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+
+  i {
+    font-size: 13px;
+  }
+
+  &:hover:not(:disabled) {
+    background: #e7f1ff;
+    border-color: #0d6efd;
+  }
+
+  &:disabled {
+    color: #9aa5b1;
+    background: #f5f6f8;
+    border-color: #d5dae0;
+    cursor: not-allowed;
+  }
+
+  /* mandatory POD missing */
+  &.pod-upload-error {
+    color: #dc3545;
+    background: #fff5f5;
+    border-color: #dc3545;
+  }
+}
+
+.pod-thumb-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.pod-thumb {
+  display: block;
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 2px solid #198754;
+  cursor: pointer;
+}
+
+.pod-remove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  font-size: 9px;
+  color: #fff;
+  background: #dc3545;
+  border: 0;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+
+  &:hover {
+    background: #b02a37;
+  }
+}
+
+.pod-validating {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #0d6efd;
 }
