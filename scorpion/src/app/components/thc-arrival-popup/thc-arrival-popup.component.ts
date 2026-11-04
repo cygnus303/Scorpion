@@ -37,6 +37,8 @@ export class ThcArrivalPopupComponent {
   public maxCloseKMValue: number = 900000;
   public isLarRequired: boolean = false;
   public apiSealNo: string = '';
+  public apiSealList: string[] = [];
+  public expectedSealCount: number = 1;
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
   @ViewChild('Templatepod', { static: true }) Templatepod!: TemplateRef<any>;
 
@@ -119,11 +121,16 @@ export class ThcArrivalPopupComponent {
   }
 
   buildForm() {
-    this.apiSealNo = '';
+    if (!this.apiSealList || this.apiSealList.length === 0) {
+      this.apiSealNo = '';
+    }
+
     this.isStatusFrozen = true;
     this.activeSeallist = [...this.mismatchSeallist];
     this.arrivalForm = new FormGroup({
       ISN: new FormControl('', [Validators.required, Validators.maxLength(6)]),
+      ISN2: new FormControl('', [Validators.maxLength(6)]),
+      ISN3: new FormControl('', [Validators.maxLength(6)]),
       s2id_Status: new FormControl(null, [Validators.required]),
       AD: new FormControl(this.getCurrentDateTime()),
       CLOSEKM: new FormControl('0'),
@@ -136,14 +143,23 @@ export class ThcArrivalPopupComponent {
       LoadingCharge: new FormControl(0)
     });
 
-    this.arrivalForm.get('ISN')?.valueChanges.subscribe(val => {
-      this.onSealNumberChange(val);
+    this.arrivalForm.get('ISN')?.valueChanges.subscribe(() => {
+      this.validateAllSeals();
+    });
+
+    this.arrivalForm.get('ISN2')?.valueChanges.subscribe(() => {
+      this.validateAllSeals();
+    });
+
+    this.arrivalForm.get('ISN3')?.valueChanges.subscribe(() => {
+      this.validateAllSeals();
     });
 
     this.arrivalForm.get('s2id_Status')?.valueChanges.subscribe(status => {
       this.onStatusChange(status);
     });
 
+    this.setupSealFormControls();
     this.arrivalForm.get('AD')?.valueChanges.subscribe(() => {
       this.validateLateArrivalReason();
     });
@@ -178,14 +194,26 @@ export class ThcArrivalPopupComponent {
     }
     this.isFetchingData = true;
     this.stockUpdateService.getArrivalDetail(params).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         this.arrivalDetail = response;
         this.arrivalForm.patchValue({
           CLOSEKM: this.arrivalDetail.closekm
         });
-        this.fetchPreparedByEmployee()
+        this.fetchPreparedByEmployee();
         this.isFetchingData = false;
         this.validateLateArrivalReason();
+        if (!this.apiSealNo) {
+          const resAny = response as any;
+          const detailSeal = (resAny?.sealNo ?? resAny?.SealNo ?? resAny?.SEALNO ?? resAny?.isn ?? '').toString().trim();
+          if (detailSeal && detailSeal.toLowerCase() !== 'null' && detailSeal.toLowerCase() !== 'undefined') {
+            this.apiSealNo = detailSeal;
+            this.parseApiSeals(detailSeal);
+            this.setupSealFormControls();
+            this.validateAllSeals();
+            this.cdr.detectChanges();
+          }
+        }
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.isFetchingData = false;
@@ -216,123 +244,207 @@ export class ThcArrivalPopupComponent {
       }
     };
 
+    let seal = '';
     this.dynamicDataService.getDynamicData(payload).subscribe({
       next: (response: any) => {
         const list = response?.Table1 || (Array.isArray(response) ? response : (response?.data?.Table1 || []));
-        let seal = '';
+        seal = '';
         if (list && list.length > 0) {
-          seal = (list[0]?.SealNo ?? '').toString().trim();
+          const allRowSeals = list.map((r: any) => (r?.SealNo ?? r?.sealNo ?? r?.SEALNO ?? r?.Sealno ?? r?.seal_no ?? r?.isn ?? '').toString().trim()).filter((s: string) => s && s.toLowerCase() !== 'null' && s.toLowerCase() !== 'undefined');
+          seal = allRowSeals.join(',');
+
           if (seal.toLowerCase() === 'null' || seal.toLowerCase() === 'undefined') {
             seal = '';
           }
         }
+        if (!seal && this.THCData) {
+          seal = (this.THCData?.sealNo ?? this.THCData?.SealNo ?? this.THCData?.SEALNO ?? '').toString().trim();
+        }
+        if (!seal && this.arrivalDetail) {
+          seal = (this.arrivalDetail?.sealNo ?? this.arrivalDetail?.SealNo ?? this.arrivalDetail?.isn ?? '').toString().trim();
+        }
         this.apiSealNo = seal;
-        console.log('Report 395 apiSealNo:', this.apiSealNo);
-        this.onSealNumberChange(this.arrivalForm.get('ISN')?.value);
+        this.parseApiSeals(seal);
+        this.cdr.detectChanges();
+        this.setupSealFormControls();
+        this.validateAllSeals();
+        this.cdr.detectChanges();
       },
       error: (err: any) => {
         console.error('Error in sealvalidation:', err);
         this.apiSealNo = '';
-        this.onSealNumberChange(this.arrivalForm.get('ISN')?.value);
+        this.apiSealList = [];
+        this.expectedSealCount = 1;
+        this.parseApiSeals('');
+        this.cdr.detectChanges();
+        this.setupSealFormControls();
+        this.validateAllSeals();
+        this.cdr.detectChanges();
       }
     });
   }
 
-  onSealNumberChange(val: any) {
-    const entered = (val || '').toString().trim();
-    const statusControl = this.arrivalForm?.get('s2id_Status');
-    const isnControl = this.arrivalForm?.get('ISN');
+  parseApiSeals(rawSeal: string) {
+    if (!rawSeal) {
+      this.apiSealList = [];
+      this.expectedSealCount = 1;
+      return;
+    }
+    const seals = rawSeal
+      .split(',')
+      .map(s => s.trim())
+      .filter(s => s && s.toLowerCase() !== 'null' && s.toLowerCase() !== 'undefined');
+    this.apiSealList = seals;
+    this.expectedSealCount = seals.length > 0 ? Math.min(seals.length, 3) : 1;
+  }
 
-    if (!this.apiSealNo) {
-      // Seal number is null/empty: give all 3 options for selection and unfreeze
+  setupSealFormControls() {
+    const isnCtrl = this.arrivalForm?.get('ISN');
+    const isn2Ctrl = this.arrivalForm?.get('ISN2');
+    const isn3Ctrl = this.arrivalForm?.get('ISN3');
+
+    isnCtrl?.setValidators([Validators.required, Validators.maxLength(6)]);
+    isnCtrl?.updateValueAndValidity({ emitEvent: false });
+
+    if (this.expectedSealCount >= 2) {
+      isn2Ctrl?.setValidators([Validators.required, Validators.maxLength(6)]);
+    } else {
+      isn2Ctrl?.clearValidators();
+      isn2Ctrl?.setValue('', { emitEvent: false });
+    }
+    isn2Ctrl?.updateValueAndValidity({ emitEvent: false });
+
+    if (this.expectedSealCount >= 3) {
+      isn3Ctrl?.setValidators([Validators.required, Validators.maxLength(6)]);
+    } else {
+      isn3Ctrl?.clearValidators();
+      isn3Ctrl?.setValue('', { emitEvent: false });
+    }
+    isn3Ctrl?.updateValueAndValidity({ emitEvent: false });
+  }
+
+  validateAllSeals() {
+    if (!this.arrivalForm) return;
+
+    const s1 = (this.arrivalForm.get('ISN')?.value || '').toString().trim();
+    const s2 = (this.arrivalForm.get('ISN2')?.value || '').toString().trim();
+    const s3 = (this.arrivalForm.get('ISN3')?.value || '').toString().trim();
+
+    const isnCtrl = this.arrivalForm.get('ISN');
+    const isn2Ctrl = this.arrivalForm.get('ISN2');
+    const isn3Ctrl = this.arrivalForm.get('ISN3');
+    const statusControl = this.arrivalForm.get('s2id_Status');
+
+    // Case 1: No seal in API
+    if (this.apiSealList.length === 0) {
       this.activeSeallist = [...this.Seallist];
       this.isStatusFrozen = false;
-      if (!entered) {
-        isnControl?.setErrors({ required: true });
-      } else if (entered.length > 6) {
-        isnControl?.setErrors({ maxlength: true });
+      if (!s1) {
+        isnCtrl?.setErrors({ required: true });
+      } else if (s1.length > 6) {
+        isnCtrl?.setErrors({ maxlength: true });
       } else {
-        isnControl?.setErrors(null);
+        isnCtrl?.setErrors(null);
       }
       this.cdr.detectChanges();
       return;
     }
 
-    if (!entered) {
+    // Case 2: API has seals
+    const activeControls = [isnCtrl];
+    const enteredValues = [s1];
+    if (this.expectedSealCount >= 2) {
+      activeControls.push(isn2Ctrl);
+      enteredValues.push(s2);
+    }
+    if (this.expectedSealCount >= 3) {
+      activeControls.push(isn3Ctrl);
+      enteredValues.push(s3);
+    }
+
+    let anyEmpty = false;
+    activeControls.forEach((ctrl, idx) => {
+      const val = enteredValues[idx];
+      if (!val) {
+        ctrl?.setErrors({ required: true });
+        anyEmpty = true;
+      } else if (val.length > 6) {
+        ctrl?.setErrors({ maxlength: true });
+      }
+    });
+
+    if (anyEmpty) {
       this.isStatusFrozen = true;
       this.activeSeallist = [...this.mismatchSeallist];
-      statusControl?.setValue(null, { emitEvent: false });
-      isnControl?.setErrors({ required: true });
+      if (statusControl?.value === 'Ok') {
+        statusControl?.setValue(null, { emitEvent: false });
+      }
       this.cdr.detectChanges();
       return;
     }
 
-    const isMatch = entered.toLowerCase() === this.apiSealNo.toLowerCase();
-    if (isMatch) {
+    // Check if ALL entered seals match the API seals (sorted comparison)
+    const expectedSorted = [...this.apiSealList.slice(0, this.expectedSealCount)].map(s => s.toLowerCase()).sort();
+    const enteredSorted = [...enteredValues].map(s => s.toLowerCase()).sort();
+    const allMatched = JSON.stringify(expectedSorted) === JSON.stringify(enteredSorted);
+
+    if (allMatched) {
       this.activeSeallist = [...this.matchSeallist];
       statusControl?.setValue('Ok', { emitEvent: false });
       this.isStatusFrozen = true;
-      isnControl?.setErrors(null);
+      activeControls.forEach(ctrl => ctrl?.setErrors(null));
       statusControl?.setErrors(null);
     } else {
-      // Ok is strictly EXCLUDED when mismatch occurs
+      // Ok is strictly EXCLUDED when mismatch occurs; only Broken & Unsealed are shown
       this.activeSeallist = [...this.mismatchSeallist];
       this.isStatusFrozen = false;
-      const currentStatus = statusControl?.value;
-      if (currentStatus === 'Ok') {
+      if (statusControl?.value === 'Ok') {
         statusControl?.setValue(null, { emitEvent: false });
       }
 
-      const updatedStatus = statusControl?.value;
-      if (updatedStatus === 'Broken' || updatedStatus === 'Unsealed') {
-        isnControl?.setErrors(null);
+      const currentStatus = statusControl?.value;
+      if (currentStatus === 'Broken' || currentStatus === 'Unsealed') {
+        activeControls.forEach(ctrl => {
+          if (!ctrl?.errors?.['required'] && !ctrl?.errors?.['maxlength']) {
+            ctrl?.setErrors(null);
+          }
+        });
       } else {
-        isnControl?.setErrors({ sealMismatch: true });
+        activeControls.forEach((ctrl, idx) => {
+          const val = enteredValues[idx];
+          const matchesAnyExpected = this.apiSealList.some(exp => exp.toLowerCase() === val.toLowerCase());
+          const countInEntered = enteredValues.filter(v => v.toLowerCase() === val.toLowerCase()).length;
+          if (!matchesAnyExpected || countInEntered > 1) {
+            ctrl?.setErrors({ sealMismatch: true });
+          } else {
+            ctrl?.setErrors(null);
+          }
+        });
       }
     }
     this.cdr.detectChanges();
   }
 
+  getFormattedArrivalSeals(): string {
+    const s1 = (this.arrivalForm.get('ISN')?.value || '').toString().trim();
+    const s2 = (this.arrivalForm.get('ISN2')?.value || '').toString().trim();
+    const s3 = (this.arrivalForm.get('ISN3')?.value || '').toString().trim();
+
+    const seals: string[] = [];
+    if (s1) seals.push(s1);
+    if (s2) seals.push(s2);
+    if (s3) seals.push(s3);
+
+    return seals.join(',');
+  }
+
   onStatusDropdownOpen() {
-    const entered = (this.arrivalForm?.get('ISN')?.value || '').toString().trim();
-    if (!this.apiSealNo) {
-      // Seal number is null: give all 3 options for selection
-      this.activeSeallist = [...this.Seallist];
-      this.isStatusFrozen = false;
-    } else {
-      const isMatch = entered.toLowerCase() === this.apiSealNo.toLowerCase();
-      if (isMatch) {
-        this.activeSeallist = [...this.matchSeallist];
-        this.isStatusFrozen = true;
-      } else {
-        this.activeSeallist = [...this.mismatchSeallist];
-        this.isStatusFrozen = false;
-        if (this.arrivalForm?.get('s2id_Status')?.value === 'Ok') {
-          this.arrivalForm?.get('s2id_Status')?.setValue(null, { emitEvent: false });
-        }
-      }
-    }
+    this.validateAllSeals();
     this.cdr.detectChanges();
   }
 
   onStatusChange(status: any) {
-    if (this.apiSealNo) {
-      const entered = (this.arrivalForm.get('ISN')?.value || '').toString().trim();
-      const isMatch = entered.toLowerCase() === this.apiSealNo.toLowerCase();
-      if (!isMatch) {
-        if (status === 'Broken' || status === 'Unsealed') {
-          this.arrivalForm.get('ISN')?.setErrors(null);
-        } else {
-          this.arrivalForm.get('ISN')?.setErrors({ sealMismatch: true });
-        }
-      }
-    } else {
-      const entered = (this.arrivalForm.get('ISN')?.value || '').toString().trim();
-      if (entered && entered.length <= 6) {
-        this.arrivalForm.get('ISN')?.setErrors(null);
-      }
-    }
-    this.cdr.detectChanges();
+    this.validateAllSeals();
   }
 
   onlyNumberKey(event: KeyboardEvent): boolean {
@@ -344,13 +456,13 @@ export class ThcArrivalPopupComponent {
     return false;
   }
 
-  onSealInput(event: any): void {
+  onSealInput(event: any, controlName: string = 'ISN'): void {
     const input = event.target as HTMLInputElement;
     if (!input) return;
     const cleanValue = (input.value || '').replace(/\D/g, '').slice(0, 6);
     if (input.value !== cleanValue) {
       input.value = cleanValue;
-      this.arrivalForm.get('ISN')?.setValue(cleanValue, { emitEvent: true });
+      this.arrivalForm.get(controlName)?.setValue(cleanValue, { emitEvent: true });
     }
   }
 
@@ -489,43 +601,10 @@ export class ThcArrivalPopupComponent {
   }
 
   onSubmit() {
-    const enteredSeal = (this.arrivalForm.get('ISN')?.value || '').toString().trim();
-    const currentStatus = this.arrivalForm.get('s2id_Status')?.value;
-    const isnControl = this.arrivalForm.get('ISN');
+    this.validateAllSeals();
     const statusControl = this.arrivalForm.get('s2id_Status');
-
-    if (!enteredSeal) {
-      isnControl?.setErrors({ required: true });
-    } else if (this.apiSealNo) {
-      const isMatch = enteredSeal.toLowerCase() === this.apiSealNo.toLowerCase();
-      if (isMatch) {
-        this.activeSeallist = [...this.matchSeallist];
-        statusControl?.setValue('Ok');
-        this.isStatusFrozen = true;
-        isnControl?.setErrors(null);
-      } else {
-        this.activeSeallist = [...this.mismatchSeallist];
-        this.isStatusFrozen = false;
-        if (currentStatus === 'Broken' || currentStatus === 'Unsealed') {
-          isnControl?.setErrors(null);
-        } else {
-          isnControl?.setErrors({ sealMismatch: true });
-          if (!currentStatus) {
-            statusControl?.setErrors({ required: true });
-          }
-        }
-      }
-    } else {
-      this.activeSeallist = [...this.Seallist];
-      this.isStatusFrozen = false;
-      if (enteredSeal.length > 6) {
-        isnControl?.setErrors({ maxlength: true });
-      } else {
-        isnControl?.setErrors(null);
-      }
-      if (!currentStatus) {
-        statusControl?.setErrors({ required: true });
-      }
+    if (!statusControl?.value) {
+      statusControl?.setErrors({ required: true });
     }
     this.cdr.detectChanges();
 
@@ -539,6 +618,7 @@ export class ThcArrivalPopupComponent {
       this.arrivalForm.markAllAsTouched();
       return;
     }
+
     if (this.arrivalForm.valid) {
       this.isloading = true;
       const payload = {
@@ -549,7 +629,7 @@ export class ThcArrivalPopupComponent {
         ad: this.formatDateTime(this.arrivalForm.value.AD),
         at: "",
         lar: this.isLarRequired ? (this.arrivalForm.value.LAR || '') : '',
-        isn: this.arrivalForm.value.ISN,
+        isn: this.getFormattedArrivalSeals(),
         ir: this.arrivalForm.value.IR,
         seal_Reason: "",
         loadingCharge: Number(this.arrivalForm.value.LoadingCharge) || 0,
@@ -567,23 +647,24 @@ export class ThcArrivalPopupComponent {
         isDeps: this.arrivalDetail?.isDeps,
         baseLocationCode: this.docketService.loginUserList.LocationCode,
         baseUserName: this.docketService.loginUserList.BaseUserName
-      }
+      };
       this.stockUpdateService.THCArrival(payload).subscribe({
         next: (response: any) => {
           if (response.success) {
             this.isloading = false;
             this.sweetAlertService.success(`THC arrived ${this.THCData?.thcNo} successfully.`);
-            this.dataEmitter.emit()
+            this.dataEmitter.emit();
             this.modalRef.hide();
           } else {
             this.isloading = false;
             this.sweetAlertService.error(response.message || 'Error from server');
           }
-        }, error: (error) => {
+        },
+        error: (error) => {
           this.isloading = false;
           this.sweetAlertService.error(error?.error?.message || error?.error?.title);
         }
-      })
+      });
     }
   }
 }
