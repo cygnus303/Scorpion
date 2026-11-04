@@ -70,15 +70,23 @@
           </div>
         </div>
 
-           <!-- Departure Inputs: Seal No & Outgoing Remarks -->
+        <!-- Departure Inputs: Seal No(s) & Outgoing Remarks -->
         <div class="row g-3 mb-2">
-          <div class="col-md-6">
+          <!-- Seal No 1 -->
+          <div [ngClass]="sealCount === 1 ? 'col-md-6' : (sealCount === 2 ? 'col-md-6' : 'col-md-4')">
             <div class="form-group">
-              <label class="form-label mb-1" style="font-size: 13px; font-weight: 600; color: #334155;">
-                Seal No. <span class="text-danger">*</span>
-              </label>
+              <div class="d-flex align-items-center justify-content-between mb-1">
+                <label class="form-label mb-0" style="font-size: 13px; font-weight: 600; color: #334155;">
+                  Seal No. 1 <span class="text-danger">*</span>
+                </label>
+                <button type="button" class="btn btn-xs btn-outline-primary py-0 px-2 fw-semibold"
+                  style="font-size: 11px; height: 20px; line-height: 18px;"
+                  *ngIf="sealCount < 3" (click)="addSeal()">
+                  <i class="ti ti-plus me-1"></i> Add Seal
+                </button>
+              </div>
               <input type="text" class="form-control form-control-sm required2" [(ngModel)]="sealNo"
-                (ngModelChange)="onSealNoChange($event)" (blur)="sealNoTouched = true" placeholder="Seal No." maxlength="6" minlength="6"
+                (ngModelChange)="onSealNoChange($event, 1)" (blur)="sealNoTouched = true" placeholder="Seal No. 1" maxlength="6" minlength="6"
                 oninput="this.value = this.value.replace(/[^0-9]/g, '');"
                 [class.is-invalid]="sealNoTouched && (!sealNo.trim() || !isValidSealNo(sealNo))">
               <div class="invalid-feedback" *ngIf="sealNoTouched && !sealNo.trim()">
@@ -89,7 +97,62 @@
               </div>
             </div>
           </div>
-          <div class="col-md-6">
+
+          <!-- Seal No 2 (Visible when 2 or 3 selected, Optional) -->
+          <div [ngClass]="sealCount === 2 ? 'col-md-6' : 'col-md-4'" *ngIf="sealCount >= 2">
+            <div class="form-group">
+              <div class="d-flex align-items-center justify-content-between mb-1">
+                <label class="form-label mb-0" style="font-size: 13px; font-weight: 600; color: #334155;">
+                  Seal No. 2
+                </label>
+                <div class="d-flex align-items-center gap-1">
+                  <button type="button" class="btn btn-xs btn-outline-primary py-0 px-2 fw-semibold"
+                    style="font-size: 11px; height: 20px; line-height: 18px;"
+                    *ngIf="sealCount === 2" (click)="addSeal()">
+                    <i class="ti ti-plus me-1"></i> Add
+                  </button>
+                  <button type="button" class="btn btn-xs btn-outline-danger py-0 px-1 fw-bold ms-1"
+                    style="font-size: 11px; height: 20px; line-height: 18px;"
+                    title="Remove Seal 2" (click)="removeSeal(2)">
+                    <i class="ti ti-x"></i>
+                  </button>
+                </div>
+              </div>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="sealNo2"
+                (ngModelChange)="onSealNoChange($event, 2)" (blur)="sealNo2Touched = true" placeholder="Seal No. 2 (Optional)" maxlength="6" minlength="6"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                [class.is-invalid]="sealNo2Touched && sealNo2.trim() && !isValidSealNo(sealNo2)">
+              <div class="invalid-feedback" *ngIf="sealNo2Touched && sealNo2.trim() && !isValidSealNo(sealNo2)">
+                Seal No 2 should be 6 digits.
+              </div>
+            </div>
+          </div>
+
+          <!-- Seal No 3 (Visible when 3 selected, Optional) -->
+          <div class="col-md-4" *ngIf="sealCount >= 3">
+            <div class="form-group">
+              <div class="d-flex align-items-center justify-content-between mb-1">
+                <label class="form-label mb-0" style="font-size: 13px; font-weight: 600; color: #334155;">
+                  Seal No. 3
+                </label>
+                <button type="button" class="btn btn-xs btn-outline-danger py-0 px-1 fw-bold"
+                  style="font-size: 11px; height: 20px; line-height: 18px;"
+                  title="Remove Seal 3" (click)="removeSeal(3)">
+                  <i class="ti ti-x"></i>
+                </button>
+              </div>
+              <input type="text" class="form-control form-control-sm" [(ngModel)]="sealNo3"
+                (ngModelChange)="onSealNoChange($event, 3)" (blur)="sealNo3Touched = true" placeholder="Seal No. 3 (Optional)" maxlength="6" minlength="6"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                [class.is-invalid]="sealNo3Touched && sealNo3.trim() && !isValidSealNo(sealNo3)">
+              <div class="invalid-feedback" *ngIf="sealNo3Touched && sealNo3.trim() && !isValidSealNo(sealNo3)">
+                Seal No 3 should be 6 digits.
+              </div>
+            </div>
+          </div>
+
+          <!-- Outgoing Remarks -->
+          <div [ngClass]="sealCount === 1 ? 'col-md-6' : 'col-12'">
             <div class="form-group">
               <label class="form-label mb-1" style="font-size: 13px; font-weight: 600; color: #334155;">
                 Outgoing Remarks <span class="text-danger">*</span>

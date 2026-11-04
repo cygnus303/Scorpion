@@ -157,7 +157,10 @@ export class AddThcPopupComponent {
       wtLoaded: [0],
       vehicleCapacityUti: [0],
       overLoadReason: [],
+      sealCount: [1],
       sealNo: [null, this.ThcType === 'A' ? [Validators.required, Validators.pattern(/^[0-9]{6}$/)] : []],
+      sealNo2: [null],
+      sealNo3: [null],
       TDSAcccode: [],
       vehicleNO: [null],
       TDSPercent: [],
@@ -170,6 +173,8 @@ export class AddThcPopupComponent {
       airWayBillNo: [null, initialRouteType === 'A' ? [Validators.required] : null],
       routeCode: [null, Validators.required],
     }, { validators: this.advanceNotGreaterThanNet.bind(this) });
+
+    this.ThcForm.get('sealCount')?.valueChanges.subscribe(() => this.onSealCountChange());
 
     this.ThcForm.get('routeType')?.valueChanges.subscribe(val => {
       const licenceCtrl = this.ThcForm.get('driver1Licence');
@@ -1071,6 +1076,10 @@ export class AddThcPopupComponent {
         console.error('Error fetching vehicle details:', err.error.message);
       }
     });
+
+   if (this.ThcForm.get('vendorType')?.value === '19' && this.ThcForm.get('bidType')?.value === 'With') {
+        this.getBidDetail();
+      } 
   }
 
   getAirportDetail() {
@@ -1139,6 +1148,9 @@ export class AddThcPopupComponent {
 
   getBidDetail() {
     let routeCode = this.ThcForm.get('routeCode')?.value || '';
+    if(!routeCode){
+      return;
+    }
     if (routeCode && routeCode.includes(':')) {
       routeCode = routeCode.split(':')[0];
     }
@@ -1296,7 +1308,105 @@ export class AddThcPopupComponent {
     });
   }
 
+  get sealCount(): number {
+    return Number(this.ThcForm?.get('sealCount')?.value) || 1;
+  }
+
+  addSeal() {
+    const current = this.sealCount;
+    if (current < 3) {
+      this.ThcForm.get('sealCount')?.setValue(current + 1);
+    }
+  }
+
+  removeSeal(index: number) {
+    const current = this.sealCount;
+    if (index === 2) {
+      if (current === 3) {
+        const s3Val = this.ThcForm.get('sealNo3')?.value;
+        this.ThcForm.get('sealNo2')?.setValue(s3Val || null);
+        this.ThcForm.get('sealNo3')?.setValue(null);
+      } else {
+        this.ThcForm.get('sealNo2')?.setValue(null);
+      }
+      this.ThcForm.get('sealCount')?.setValue(current - 1);
+    } else if (index === 3) {
+      this.ThcForm.get('sealNo3')?.setValue(null);
+      this.ThcForm.get('sealCount')?.setValue(current - 1);
+    }
+  }
+
+  onSealCountChange() {
+    const count = Number(this.ThcForm.get('sealCount')?.value) || 1;
+    const sealCtrl1 = this.ThcForm.get('sealNo');
+    const sealCtrl2 = this.ThcForm.get('sealNo2');
+    const sealCtrl3 = this.ThcForm.get('sealNo3');
+
+    // Seal No 1 is strictly required and must be 6 digits (if ThcType === 'A')
+    const seal1Validators = this.ThcType === 'A' ? [Validators.required, Validators.pattern(/^[0-9]{6}$/)] : [];
+    // Seal No 2 & 3 are optional: only validate 6 digits if entered
+    const optionalSealValidators = this.ThcType === 'A' ? [Validators.pattern(/^[0-9]{6}$/)] : [];
+
+    sealCtrl1?.setValidators(seal1Validators);
+    sealCtrl1?.updateValueAndValidity();
+
+    if (count >= 2) {
+      sealCtrl2?.setValidators(optionalSealValidators);
+    } else {
+      sealCtrl2?.clearValidators();
+      sealCtrl2?.setValue(null);
+    }
+    sealCtrl2?.updateValueAndValidity();
+
+    if (count >= 3) {
+      sealCtrl3?.setValidators(optionalSealValidators);
+    } else {
+      sealCtrl3?.clearValidators();
+      sealCtrl3?.setValue(null);
+    }
+    sealCtrl3?.updateValueAndValidity();
+  }
+
+  hasDuplicateSeals(): boolean {
+    if (this.ThcType !== 'A') return false;
+    const count = Number(this.ThcForm.get('sealCount')?.value) || 1;
+    const s1 = (this.ThcForm.get('sealNo')?.value || '').toString().trim();
+    const s2 = (this.ThcForm.get('sealNo2')?.value || '').toString().trim();
+    const s3 = (this.ThcForm.get('sealNo3')?.value || '').toString().trim();
+
+    const activeSeals: string[] = [];
+    if (s1) activeSeals.push(s1);
+    if (count >= 2 && s2) activeSeals.push(s2);
+    if (count >= 3 && s3) activeSeals.push(s3);
+
+    const uniqueSeals = new Set(activeSeals);
+    return uniqueSeals.size !== activeSeals.length;
+  }
+
+  getFormattedSealNumbers(): string {
+    const count = this.sealCount;
+    const seals: string[] = [];
+    const s1 = (this.ThcForm.get('sealNo')?.value ?? '').toString().trim();
+    const s2 = (this.ThcForm.get('sealNo2')?.value ?? '').toString().trim();
+    const s3 = (this.ThcForm.get('sealNo3')?.value ?? '').toString().trim();
+
+    if (s1) {
+      seals.push(s1);
+    }
+    if (count >= 2 && s2) {
+      seals.push(s2);
+    }
+    if (count >= 3 && s3) {
+      seals.push(s3);
+    }
+    return seals.join(',');
+  }
+
   onSubmit() {
+    if (this.hasDuplicateSeals()) {
+      this.sweetAlertService.warning('Duplicate seal numbers are not allowed. Please enter unique seal numbers.');
+      return;
+    }
     if (this.ThcForm.valid) {
       const formValue = this.ThcForm.value;
       const getISOString = (dateVal: any) => {
@@ -1365,7 +1475,7 @@ export class AddThcPopupComponent {
           "THCRemarks": "",
           "EntryBy": formValue.entryBy || "",
           "LorryOwnerPanNo": formValue.lorryOwnerPanNo || "",
-          "SealNo": formValue.sealNo || "",
+          "SealNo": this.getFormattedSealNumbers(),
           "ActualDeptDate": getISOString(formValue.actualDeptDate) || null,
           "ScheduleDeptDate": getISOString(formValue.scheduleDeptDate) || null,
           "ScheduleTime": "",

@@ -450,9 +450,18 @@
               <input class="form-control" placeholder="Capacity Utilization" type="text"
                 formControlName="vehicleCapacityUti" readonly appFocusNext>
             </div>
+
+            <!-- Seal No 1 -->
             <div class="thcform-field" *ngIf="ThcType === 'A'">
-              <label>Seal No <span class="req">*</span></label>
-              <input class="form-control required2" placeholder="Seal No" type="text" formControlName="sealNo" 
+              <div class="d-flex align-items-center justify-content-between mb-1">
+                <label class="mb-0">Seal No 1 <span class="req">*</span></label>
+                <button type="button" class="btn btn-xs btn-outline-primary py-0 px-2 fw-semibold"
+                  style="font-size: 11px; height: 20px; line-height: 18px;"
+                  *ngIf="sealCount < 3" (click)="addSeal()">
+                  <i class="fas fa-plus me-1"></i> Add Seal
+                </button>
+              </div>
+              <input class="form-control required2" placeholder="Seal No 1" type="text" formControlName="sealNo" 
                 maxlength="6" minlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '');" appFocusNext
                 [ngClass]="{ 'border-danger': ThcForm.get('sealNo')?.invalid && ThcForm.get('sealNo')?.touched }">
               <div class="text-danger text-start" *ngIf="ThcForm.get('sealNo')?.errors?.['required'] && ThcForm.get('sealNo')?.touched">
@@ -462,6 +471,50 @@
                 Seal No should be 6 digits.
               </div>
             </div>
+
+            <!-- Seal No 2 (Visible when 2 or 3 selected, Optional) -->
+            <div class="thcform-field" *ngIf="ThcType === 'A' && sealCount >= 2">
+              <div class="d-flex align-items-center justify-content-between mb-1">
+                <label class="mb-0">Seal No 2</label>
+                <div class="d-flex align-items-center gap-1">
+                  <button type="button" class="btn btn-xs btn-outline-primary py-0 px-2 fw-semibold"
+                    style="font-size: 11px; height: 20px; line-height: 18px;"
+                    *ngIf="sealCount === 2" (click)="addSeal()">
+                    <i class="fas fa-plus me-1"></i> Add
+                  </button>
+                  <button type="button" class="btn btn-xs btn-outline-danger py-0 px-1 fw-bold ms-1"
+                    style="font-size: 11px; height: 20px; line-height: 18px;"
+                    title="Remove Seal 2" (click)="removeSeal(2)">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <input class="form-control" placeholder="Seal No 2 (Optional)" type="text" formControlName="sealNo2" 
+                maxlength="6" minlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '');" appFocusNext
+                [ngClass]="{ 'border-danger': ThcForm.get('sealNo2')?.invalid && ThcForm.get('sealNo2')?.touched }">
+              <div class="text-danger text-start" *ngIf="ThcForm.get('sealNo2')?.invalid && ThcForm.get('sealNo2')?.touched">
+                Seal No 2 should be 6 digits.
+              </div>
+            </div>
+
+            <!-- Seal No 3 (Visible when 3 selected, Optional) -->
+            <div class="thcform-field" *ngIf="ThcType === 'A' && sealCount >= 3">
+              <div class="d-flex align-items-center justify-content-between mb-1">
+                <label class="mb-0">Seal No 3</label>
+                <button type="button" class="btn btn-xs btn-outline-danger py-0 px-1 fw-bold"
+                  style="font-size: 11px; height: 20px; line-height: 18px;"
+                  title="Remove Seal 3" (click)="removeSeal(3)">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+              <input class="form-control" placeholder="Seal No 3 (Optional)" type="text" formControlName="sealNo3" 
+                maxlength="6" minlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '');" appFocusNext
+                [ngClass]="{ 'border-danger': ThcForm.get('sealNo3')?.invalid && ThcForm.get('sealNo3')?.touched }">
+              <div class="text-danger text-start" *ngIf="ThcForm.get('sealNo3')?.invalid && ThcForm.get('sealNo3')?.touched">
+                Seal No 3 should be 6 digits.
+              </div>
+            </div>
+
             <div class="thcform-field" *ngIf="ThcType === 'A'">
               <label>Is Overload</label>
               <div class="thcform-checkbox-field" style="padding-top: 8px;"><input type="checkbox"

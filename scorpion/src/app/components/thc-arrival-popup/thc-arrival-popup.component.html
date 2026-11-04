@@ -84,9 +84,113 @@
                             </div>
                         </div>
                         <div class="p-3 bg-white">
-                            <!-- Row 1: Incoming Seal # & Status | Vehicle Arrival Date & Time | Unloader -->
+                            <!-- Dynamic Multiple Seals Row (Visible when 2 or 3 Seals from Dynamic API) -->
+                            <div class="row mb-3" *ngIf="expectedSealCount > 1">
+                                <div [ngClass]="expectedSealCount === 2 ? 'col-4' : 'col-3'">
+                                    <div class="form-group-input">
+                                        <label class="form-label d-flex align-items-center gap-1 fw-bold"
+                                            style="font-size: 11px;">
+                                            Incoming Seal 1 <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="text" class="form-control required2"
+                                            placeholder="Incoming Seal 1" formControlName="ISN" appFocusNext
+                                            maxlength="6"
+                                            (keypress)="onlyNumberKey($event)"
+                                            (input)="onSealInput($event, 'ISN')"
+                                            [ngClass]="{'border-danger': arrivalForm.get('ISN')?.invalid && (arrivalForm.get('ISN')?.touched || arrivalForm.get('ISN')?.dirty)}">
+                                        <div class="text-danger small mt-1 text-start"
+                                            *ngIf="arrivalForm.get('ISN')?.errors?.['required'] && (arrivalForm.get('ISN')?.touched || arrivalForm.get('ISN')?.dirty)">
+                                            This field is required.
+                                        </div>
+                                        <div class="text-danger small mt-1 text-start"
+                                            *ngIf="arrivalForm.get('ISN')?.errors?.['maxlength'] && (arrivalForm.get('ISN')?.touched || arrivalForm.get('ISN')?.dirty)">
+                                            Maximum 6 digits allowed.
+                                        </div>
+                                        <div class="text-danger small mt-1 text-start"
+                                            *ngIf="arrivalForm.get('ISN')?.errors?.['sealMismatch'] && (arrivalForm.get('ISN')?.touched || arrivalForm.get('ISN')?.dirty)">
+                                            Seal number does not match.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div [ngClass]="expectedSealCount === 2 ? 'col-4' : 'col-3'">
+                                    <div class="form-group-input">
+                                        <label class="form-label d-flex align-items-center gap-1 fw-bold"
+                                            style="font-size: 11px;">
+                                            Incoming Seal 2 <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="text" class="form-control required2"
+                                            placeholder="Incoming Seal 2" formControlName="ISN2" appFocusNext
+                                            maxlength="6"
+                                            (keypress)="onlyNumberKey($event)"
+                                            (input)="onSealInput($event, 'ISN2')"
+                                            [ngClass]="{'border-danger': arrivalForm.get('ISN2')?.invalid && (arrivalForm.get('ISN2')?.touched || arrivalForm.get('ISN2')?.dirty)}">
+                                        <div class="text-danger small mt-1 text-start"
+                                            *ngIf="arrivalForm.get('ISN2')?.errors?.['required'] && (arrivalForm.get('ISN2')?.touched || arrivalForm.get('ISN2')?.dirty)">
+                                            This field is required.
+                                        </div>
+                                        <div class="text-danger small mt-1 text-start"
+                                            *ngIf="arrivalForm.get('ISN2')?.errors?.['maxlength'] && (arrivalForm.get('ISN2')?.touched || arrivalForm.get('ISN2')?.dirty)">
+                                            Maximum 6 digits allowed.
+                                        </div>
+                                        <div class="text-danger small mt-1 text-start"
+                                            *ngIf="arrivalForm.get('ISN2')?.errors?.['sealMismatch'] && (arrivalForm.get('ISN2')?.touched || arrivalForm.get('ISN2')?.dirty)">
+                                            Seal number does not match.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-3" *ngIf="expectedSealCount >= 3">
+                                    <div class="form-group-input">
+                                        <label class="form-label d-flex align-items-center gap-1 fw-bold"
+                                            style="font-size: 11px;">
+                                            Incoming Seal 3 <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="text" class="form-control required2"
+                                            placeholder="Incoming Seal 3" formControlName="ISN3" appFocusNext
+                                            maxlength="6"
+                                            (keypress)="onlyNumberKey($event)"
+                                            (input)="onSealInput($event, 'ISN3')"
+                                            [ngClass]="{'border-danger': arrivalForm.get('ISN3')?.invalid && (arrivalForm.get('ISN3')?.touched || arrivalForm.get('ISN3')?.dirty)}">
+                                        <div class="text-danger small mt-1 text-start"
+                                            *ngIf="arrivalForm.get('ISN3')?.errors?.['required'] && (arrivalForm.get('ISN3')?.touched || arrivalForm.get('ISN3')?.dirty)">
+                                            This field is required.
+                                        </div>
+                                        <div class="text-danger small mt-1 text-start"
+                                            *ngIf="arrivalForm.get('ISN3')?.errors?.['maxlength'] && (arrivalForm.get('ISN3')?.touched || arrivalForm.get('ISN3')?.dirty)">
+                                            Maximum 6 digits allowed.
+                                        </div>
+                                        <div class="text-danger small mt-1 text-start"
+                                            *ngIf="arrivalForm.get('ISN3')?.errors?.['sealMismatch'] && (arrivalForm.get('ISN3')?.touched || arrivalForm.get('ISN3')?.dirty)">
+                                            Seal number does not match.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div [ngClass]="expectedSealCount === 2 ? 'col-4' : 'col-3'">
+                                    <div class="form-group-input">
+                                        <label class="form-label d-flex align-items-center gap-1 fw-bold"
+                                            style="font-size: 11px;">
+                                            Seal Status <span class="text-danger">*</span>
+                                        </label>
+                                        <ng-select class="noFoundTextColor required2 clear-icon"
+                                            [items]="activeSeallist" bindLabel="text" bindValue="value" appFocusNext
+                                            appendTo="body" [readonly]="isStatusFrozen"
+                                            [class.freeze-dropdown]="isStatusFrozen"
+                                            (open)="onStatusDropdownOpen()"
+                                            placeholder="Select Status" formControlName="s2id_Status"
+                                            [ngClass]="{ 'border-danger': arrivalForm.get('s2id_Status')?.invalid && arrivalForm.get('s2id_Status')?.touched}"></ng-select>
+                                        <div class="text-danger small mt-1 text-start"
+                                            *ngIf="arrivalForm.get('s2id_Status')?.invalid && arrivalForm.get('s2id_Status')?.touched">
+                                            This field is required.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Row 1: Incoming Seal # & Status (When 1 Seal) | Vehicle Arrival Date & Time | Unloader -->
                             <div class="row mb-3">
-                                <div class="col-4">
+                                <div class="col-4" *ngIf="expectedSealCount <= 1">
                                     <div class="form-group-input">
                                         <label class="form-label d-flex align-items-center gap-1 fw-bold"
                                             style="font-size: 11px;">
