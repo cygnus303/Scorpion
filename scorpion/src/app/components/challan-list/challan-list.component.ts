@@ -215,7 +215,7 @@ export class ChallanListComponent {
             if (docketArray && docketArray.length > 0) {
               updatedData.forEach((item: any) => {
                 const match = docketArray.controls.find(
-                  (ctrl: any) => ctrl.value.DOCKNO === item.dockno
+                  (ctrl: any) => ctrl.value.DOCKNO === item.dockno && ctrl.value.DOCKSF === item.docksf
                 );
                 if (match) {
                   match.get('ContractAmount')?.setValue(item.contractAmount);
