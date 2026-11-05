@@ -639,7 +639,7 @@ export class ThcArrivalPopupComponent {
         maxLimit: this.arrivalDetail.maxLimit,
         vendorCode: this.arrivalForm.value.VendorCode,
         vendorName: this.arrivalForm.value.vendorName,
-        isMonthly: true,
+        isMonthly: this.arrivalForm.value.isMonthly,
         isMathadi: this.arrivalDetail?.isMathadi,
         mathadiSlipNo: "",
         mathadiDate: this.arrivalDetail.mathadiDate,

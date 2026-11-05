@@ -546,6 +546,10 @@ export class InvoiceDetailsComponent {
                         destination: response.destcd,
                       });
                       this.docketService.GetPincodeOrigin('Origin');
+                      this.docketService.getPincodeMasterList(response.toPincode.toString());
+                      if (this.docketService.loginUserList?.prqData) {
+                          this.docketService.onFormFieldChange();
+                      }
                       this.docketService.GetGSTFromTrnMode();
                     }
                     else {
@@ -578,6 +582,10 @@ export class InvoiceDetailsComponent {
                           ewayBillNo: response.ewaybillNo,  // uat live
                         });
                         this.docketService.GetPincodeOrigin('Origin');
+                        this.docketService.getPincodeMasterList(response.toPincode.toString());
+                        if (this.docketService.loginUserList?.prqData) {
+                          this.docketService.onFormFieldChange();
+                        }
                         this.docketService.GetGSTFromTrnMode();
                       }
                     }
