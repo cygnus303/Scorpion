@@ -509,7 +509,7 @@ export class InvoiceDetailsComponent {
                     this.docketService.invoiceRows.controls[index].patchValue({
                       ewayinvoiceDate: invDate,
                       ewayBillExpiry: expiryDate,
-                      // invoicedate: invoiceDate,
+                      invoicedate: invoiceDate,
                       ewayBillNo: search,
                       invoiceNo: response.invno,
                       declaredvalue: response.decval,
