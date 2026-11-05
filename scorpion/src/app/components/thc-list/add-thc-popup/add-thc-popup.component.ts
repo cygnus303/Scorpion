@@ -1500,7 +1500,7 @@ export class AddThcPopupComponent {
           "ApprovedBy": "",
           "BiddingVendor": formValue.biddingVendor || "",
           "ERD": getISOString(formValue.ERD) || null,
-          "Version": 0
+          "Version": 1
         },
         "CTFD": {
           "ContractAmount": Number(formValue.contractAmount) || 0.0,
