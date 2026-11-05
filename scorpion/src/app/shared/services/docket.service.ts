@@ -394,6 +394,7 @@ export class DocketService {
       ewayBillNo: new FormControl(null),
       ewayBillExpiry: new FormControl(''),
       ewayinvoiceDate: new FormControl(''),
+      invoicedate:new FormControl(''),
       invoiceNo: new FormControl('', Validators.required),
       declaredvalue: new FormControl(0, Validators.required),
       transportation_distance: new FormControl(0),

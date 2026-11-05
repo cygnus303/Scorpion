@@ -430,7 +430,8 @@ export class DocketListComponent implements OnInit {
       srNo: item.srNo,
       ewayBillNo: item.eWayBillNo,
       ewayBillExpiry: item.eWayBillExpiredDate ? new Date(item.eWayBillExpiredDate) : null,
-      ewayinvoiceDate: item.eWayBillInvoiceDate ? new Date(item.eWayBillInvoiceDate) : null,
+      ewayinvoiceDate: item.invdt ? new Date(item.invdt) : null,
+      invoicedate: item.eWayBillInvoiceDate ? new Date(item.eWayBillInvoiceDate) : null,
       invoiceNo: item.invno,
       declaredvalue: item.declval,
       transportation_distance: item.transportation_distance
@@ -667,6 +668,12 @@ export class DocketListComponent implements OnInit {
           d.setHours(0, 0, 0, 0);
           const localIso = new Date(d.getTime() - (d.getTimezoneOffset() * 60000)).toISOString().slice(0, -1);
           invDtStr = localIso;
+        }
+        
+         if (row.invoicedate) {
+          const d = new Date(row.invoicedate);
+          d.setHours(0, 0, 0, 0);
+          const localIso = new Date(d.getTime() - (d.getTimezoneOffset() * 60000)).toISOString().slice(0, -1);
           ewayInvDtStr = localIso;
         }
 
