@@ -37,7 +37,7 @@
           <div class="form-group">
             <label class="col-md-5">EwayBill Number</label>
             <div class="col-md-7">
-              <input type="text" class="form-control " placeholder="EwayBill Number"  
+              <input type="text" class="form-control " placeholder="EwayBill Number"  [readonly]="this.docketService.ewayBillDataDisplayed || this.docketService.isComplition"
               [class.disabled-input]="this.docketService.ewayBillDataDisplayed || this.docketService.isComplition"  formControlName="ewayBillNo" 
                 maxlength="12" (input)="callEwayBillFromParent($event)" appFocusNext id="ewayBillInput"/>
             </div>
