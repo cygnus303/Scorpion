@@ -1459,7 +1459,7 @@ export class AddThcPopupComponent {
           "RouteName": formValue.routeCode || "",
           "VehicleNO": formValue.vehicleNO === 'O' ? (formValue.mKTVehicleNo || "") : (formValue.vehicleNO || formValue.vehicleNo || ""),
           "OpenKM": 0.0,
-          "TotalManifest": 0.0,
+          "TotalManifest": this.selectedMfs?.length || 0,
           "FreeSpace": 0.0,
           "WtLoaded": Number(formValue.wtLoaded) || 0.0,
           "IsOverLoad": formValue.isOverLoad || false,
