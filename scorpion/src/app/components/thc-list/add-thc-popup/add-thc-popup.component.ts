@@ -1429,6 +1429,28 @@ export class AddThcPopupComponent {
         return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.000Z`;
       };
 
+      const getTimeString = (dateVal: any) => {
+        if (!dateVal) return "";
+        const d = new Date(dateVal);
+        if (!isNaN(d.getTime())) {
+          const hours = ('0' + d.getHours()).slice(-2);
+          const minutes = ('0' + d.getMinutes()).slice(-2);
+          return `${hours}:${minutes}`;
+        }
+        if (typeof dateVal === 'string') {
+          const match = dateVal.match(/(\d{1,2}):(\d{2})(?::\d{2})?\s*(AM|PM)?/i);
+          if (match) {
+            let h = parseInt(match[1], 10);
+            const m = match[2];
+            const ampm = match[3]?.toUpperCase();
+            if (ampm === 'PM' && h < 12) h += 12;
+            if (ampm === 'AM' && h === 12) h = 0;
+            return `${('0' + h).slice(-2)}:${m}`;
+          }
+        }
+        return "";
+      };
+
       let thcChargeArray: any[] = [];
       if (this.chargesDetailsList && this.chargesDetailsList.length > 0) {
         this.chargesDetailsList.forEach((charge: any) => {
@@ -1459,7 +1481,7 @@ export class AddThcPopupComponent {
           "RouteName": formValue.routeCode || "",
           "VehicleNO": formValue.vehicleNO === 'O' ? (formValue.mKTVehicleNo || "") : (formValue.vehicleNO || formValue.vehicleNo || ""),
           "OpenKM": 0.0,
-          "TotalManifest": 0.0,
+          "TotalManifest": this.selectedMfs?.length || 0,
           "FreeSpace": 0.0,
           "WtLoaded": Number(formValue.wtLoaded) || 0.0,
           "IsOverLoad": formValue.isOverLoad || false,
@@ -1478,7 +1500,7 @@ export class AddThcPopupComponent {
           "SealNo": this.getFormattedSealNumbers(),
           "ActualDeptDate": getISOString(formValue.actualDeptDate) || null,
           "ScheduleDeptDate": getISOString(formValue.scheduleDeptDate) || null,
-          "ScheduleTime": "",
+          "ScheduleTime": getTimeString(formValue.scheduleDeptDate),
           "LateDepaturereason": "",
           "IsEmpty": this.ThcType !== 'A',
           "IsCityEnabled": false,

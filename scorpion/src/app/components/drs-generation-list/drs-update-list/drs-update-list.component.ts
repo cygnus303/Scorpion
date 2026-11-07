@@ -1189,7 +1189,7 @@ export class DRSUpdateListComponent implements AfterViewInit, OnDestroy {
     formData.append("RateType", this.DRSInformation.rateType);
     formData.append("Rate", this.DRSInformation.rate);
     formData.append("MathadiSlipNo", '0');
-    formData.append("MathadiDate", this.DRSInformation.mathadiDate);
+    formData.append("MathadiDate", new Date().toISOString());
     formData.append("MathadiAmt", this.DRSInformation.mathadiAmt);
     formData.append("LoadingBy", this.DRSInformation.loadingBy);
     formData.append("VendorCode", this.DRSSummaryForm.value.vendorCode);
