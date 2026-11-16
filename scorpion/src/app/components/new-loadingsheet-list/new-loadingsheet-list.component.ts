@@ -8,7 +8,6 @@ import { environment } from 'environments/environment';
 import { debounceTime, Subject, Subscription } from 'rxjs';
 import { HccViewComponent } from '../hcc-view/hcc-view.component';
 import { HCCDetailsComponent } from '../prs-generation-list/hcc-details/hcc-details.component';
-import { LSUpdatePopupComponent } from '../loading-sheet-layout/lsupdate-popup/lsupdate-popup.component';
 import { PaginationComponent } from 'app/shared/components/pagination/pagination.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { CommonModule } from '@angular/common';
@@ -17,12 +16,13 @@ import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { LSUpdateNewPopupComponent } from '../new-loadingsheet-popup/new-loadingsheet-popup.component';
 
 
 @Component({
   selector: 'app-new-loadingsheet-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, HCCDetailsComponent, LSUpdatePopupComponent, HccViewComponent, DateRangePickerComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, HCCDetailsComponent, LSUpdateNewPopupComponent, HccViewComponent, DateRangePickerComponent],
    providers: [BsModalService],
   templateUrl: './new-loadingsheet-list.component.html',
   styleUrl: './new-loadingsheet-list.component.scss'
@@ -35,7 +35,7 @@ export class NewLoadingsheetListComponent {
   private fetchSubject = new Subject<void>();
   @ViewChild('HccViewComponent') HccViewComponent!: HccViewComponent;
   @ViewChild('HCCDetailsComponent') HCCDetailsComponent!: HCCDetailsComponent;
-  @ViewChild('LSUpdatePopupComponent') LSUpdatePopupComponent!: LSUpdatePopupComponent;
+  @ViewChild('LSUpdatePopupComponent') LSUpdatePopupComponent!: LSUpdateNewPopupComponent;
 
   public loadingSheetData: any[] = [];
   public summaryData: any = {
