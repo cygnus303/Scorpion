@@ -428,7 +428,7 @@ export class LSUpdateNewPopupComponent {
       rateType: this.loadingSheetService.LSForm.value.rateType || '',
       baseCompanyCode: this.docketService.loginUserList.Companycode
     }
-    this.loadingSheetApiService.getDocketListForMF(payload).subscribe({
+    this.loadingSheetApiService.newgetDocketListForMF(payload).subscribe({
       next: (response) => {
         this.isLoadingSheet = false;
         if (response && Array.isArray(response)) {
