@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
-import { FormArray, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { VehicleNumbersResponse } from 'app/shared/models/general-master.model';
@@ -8,31 +7,32 @@ import { LocationResponse } from 'app/shared/models/loading-sheet.model';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { ChallanService } from 'app/shared/services/challan.service';
 import { CommonService } from 'app/shared/services/common.service';
-import { CustomerService } from 'app/shared/services/customer.service';
 import { DocketService } from 'app/shared/services/docket.service';
-import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
 import { LoadingSheetApiService } from 'app/shared/services/loading-sheet-api.service';
 import { LoadingSheetService } from 'app/shared/services/loading-sheet.service';
-import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
-import { VendorChargeHelperService } from 'app/shared/services/vendor-charge.service';
-import { SharedModule } from 'app/shared/shared/shared.module';
-import { environment } from 'environments/environment';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
-
+import { FormArray, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { SharedModule } from 'app/shared/shared/shared.module';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
+import { VendorChargeHelperService } from 'app/shared/services/vendor-charge.service';
+import { CustomerService } from 'app/shared/services/customer.service';
+import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
+import { environment } from 'environments/environment';
+import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
 
 @Component({
-  selector: 'app-new-loadingsheet-popup',
+  selector: 'app-lsupdate-popup',
   standalone: true,
-  imports: [CommonModule, RouterModule, NgSelectModule, ReactiveFormsModule, BsDatepickerModule, SharedModule, FormsModule],
-  providers: [BsModalService],
-  templateUrl: './new-loadingsheet-popup.component.html',
-  styleUrl: './new-loadingsheet-popup.component.scss'
+  imports: [CommonModule, RouterModule, NgSelectModule, ReactiveFormsModule, BsDatepickerModule, SharedModule, FormsModule, DateRangePickerComponent],
+  templateUrl: './lsupdate-popup.component.html',
+  styleUrl: './lsupdate-popup.component.scss',
+  providers: [BsModalService]
 })
-export class NewLoadingsheetPopupComponent {
- public modalRef!: BsModalRef;
+export class LSUpdatePopupComponent {
+  public modalRef!: BsModalRef;
   public isgetLoadingList: boolean = false;
   public nextLocationValue = 'Please enter atleast 1 character';
   public noVehicleValue = 'Please enter atleast 1 character';
@@ -55,6 +55,19 @@ export class NewLoadingsheetPopupComponent {
 
   public LsTypeList: any[] = [];
   public transportModeList: any[] = [];
+
+  public config = {
+    fromDateStr: new Date(new Date().setDate(new Date().getDate() - 29)),
+    toDateStr: new Date()
+  };
+
+  onDateRangeSelected(event: { fromDate: Date, toDate: Date, rangeType: string }) {
+    this.config.fromDateStr = event.fromDate;
+    this.config.toDateStr = event.toDate;
+    this.loadingSheetService.LSForm.patchValue({
+      reportrange: [event.fromDate, event.toDate]
+    });
+  }
   constructor(
     public loadingSheetService: LoadingSheetService,
     public generalMasterService: GeneralMasterService,
@@ -77,6 +90,11 @@ export class NewLoadingsheetPopupComponent {
     this.docketService.loginUserList.Type = type;
     this.isgetLoadingList = type === 'ULS' ? true : false;
     this.loadingSheetService.buildForm();
+    const range = this.loadingSheetService.LSForm?.value?.reportrange;
+    if (range && range[0] && range[1]) {
+      this.config.fromDateStr = new Date(range[0]);
+      this.config.toDateStr = new Date(range[1]);
+    }
     this.fetchPreparedByEmployee();
 
     if (type === 'ULS') {

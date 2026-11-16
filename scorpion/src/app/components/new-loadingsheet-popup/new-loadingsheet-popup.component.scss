@@ -2,8 +2,22 @@
     --bs-modal-width: 1450px !important;
 }
 
-::ng-deep .modal-body {
-    padding: 9px 7px !important;
+::ng-deep .modal-dialog {
+    overflow: visible !important;
+}
+
+::ng-deep .modal-content {
+    overflow: visible !important;
+}
+
+.detail-card {
+    overflow: visible !important;
+}
+
+::ng-deep app-date-range-picker {
+    .picker-dropdown {
+        z-index: 999999 !important;
+    }
 }
 
 ::ng-deep .remove-select-color{

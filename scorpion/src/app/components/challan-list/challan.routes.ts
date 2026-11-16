@@ -67,7 +67,7 @@ export const ChallanRoutes: Routes = [
   {
     path: 'LSList',
     loadComponent: () => import('../new-loadingsheet-list/new-loadingsheet-list.component').then(m => m.NewLoadingsheetListComponent),
-    // canActivate: [DocketGuard]
+    canActivate: [DocketGuard]
   },
   {
     path: 'THCArrivalList',
