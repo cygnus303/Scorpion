@@ -44,6 +44,9 @@ export class ThcDepartureConfirmPopupComponent {
   public sealNoByThc: { [thcno: string]: string } = {};
   public sealDataByThc: { [thcno: string]: { count: number, s1: string, s2: string, s3: string } } = {};
   public errorMessage: string = '';
+  public isFromArrival: boolean = false;
+  public arrivalSealNumber: string = '';
+  public arrivalSealNoByThc: { [thcno: string]: string } = {};
 
   public env = environment;
 
@@ -65,8 +68,18 @@ export class ThcDepartureConfirmPopupComponent {
     return this.currentThc ? (this.manifestsByThc[this.currentThc.thcno] || []) : [];
   }
 
-  showPopup(thcList: any[]) {
-    this.thcList = thcList || [];
+  showPopup(thcList: any[], isFromArrival: boolean = false) {
+    this.isFromArrival = isFromArrival;
+    this.thcList = (thcList || []).map(thc => {
+      if (typeof thc === 'string') {
+        return { thcno: thc, thcNo: thc };
+      }
+      return {
+        ...thc,
+        thcno: thc?.thcno || thc?.thcNo,
+        thcNo: thc?.thcno || thc?.thcNo
+      };
+    });
     this.selectedThcIndex = 0;
     this.sealCount = 1;
     this.sealNo = '';
@@ -82,6 +95,8 @@ export class ThcDepartureConfirmPopupComponent {
     this.errorMessage = '';
     this.manifestsByThc = {};
     this.modelsByThc = {};
+    this.arrivalSealNumber = '';
+    this.arrivalSealNoByThc = {};
 
     if (this.thcList.length === 0) {
       return;
@@ -232,16 +247,16 @@ export class ThcDepartureConfirmPopupComponent {
     if (!this.outgoingRemarks || !this.outgoingRemarks.trim()) {
       return true;
     }
-    if (!this.sealNo || !this.isValidSealNo(this.sealNo)) {
+    if (!this.isFromArrival && (!this.sealNo || !this.isValidSealNo(this.sealNo))) {
       return true;
     }
-    if (this.sealCount >= 2 && this.sealNo2 && this.sealNo2.trim() && !this.isValidSealNo(this.sealNo2)) {
+    if (!this.isFromArrival && this.sealCount >= 2 && this.sealNo2 && this.sealNo2.trim() && !this.isValidSealNo(this.sealNo2)) {
       return true;
     }
-    if (this.sealCount >= 3 && this.sealNo3 && this.sealNo3.trim() && !this.isValidSealNo(this.sealNo3)) {
+    if (!this.isFromArrival && this.sealCount >= 3 && this.sealNo3 && this.sealNo3.trim() && !this.isValidSealNo(this.sealNo3)) {
       return true;
     }
-    if (this.hasDuplicateSeals()) {
+    if (!this.isFromArrival && this.hasDuplicateSeals()) {
       return true;
     }
     return false;
@@ -272,7 +287,7 @@ export class ThcDepartureConfirmPopupComponent {
           const rawList = res?.thcDepList || [];
           const mappedList = rawList.map((m: any) => ({
             ...m,
-            isChecked: false,
+            isChecked: this.isFromArrival ? true : false,
             parentThc: thc
           }));
 
@@ -465,27 +480,27 @@ export class ThcDepartureConfirmPopupComponent {
       this.saveCurrentThcSealData();
     }
 
-    if (!this.sealNo || !this.sealNo.trim()) {
+    if (!this.isFromArrival && (!this.sealNo || !this.sealNo.trim())) {
       this.errorMessage = 'Please enter Seal No. 1';
       return;
     }
 
-    if (!this.isValidSealNo(this.sealNo)) {
+    if (!this.isFromArrival && !this.isValidSealNo(this.sealNo)) {
       this.errorMessage = 'Seal No. 1 should be 6 digits.';
       return;
     }
 
-    if (this.sealCount >= 2 && this.sealNo2 && this.sealNo2.trim() && !this.isValidSealNo(this.sealNo2)) {
+    if (!this.isFromArrival && this.sealCount >= 2 && this.sealNo2 && this.sealNo2.trim() && !this.isValidSealNo(this.sealNo2)) {
       this.errorMessage = 'Seal No. 2 should be 6 digits.';
       return;
     }
 
-    if (this.sealCount >= 3 && this.sealNo3 && this.sealNo3.trim() && !this.isValidSealNo(this.sealNo3)) {
+    if (!this.isFromArrival && this.sealCount >= 3 && this.sealNo3 && this.sealNo3.trim() && !this.isValidSealNo(this.sealNo3)) {
       this.errorMessage = 'Seal No. 3 should be 6 digits.';
       return;
     }
 
-    if (this.hasDuplicateSeals()) {
+    if (!this.isFromArrival && this.hasDuplicateSeals()) {
       this.errorMessage = 'Duplicate seal numbers are not allowed. Please enter unique seal numbers.';
       return;
     }
@@ -514,7 +529,8 @@ export class ThcDepartureConfirmPopupComponent {
         thcno: thc.thcno,
         atd: nowISO,
         deptime_flight: nowTime,
-        sealno_in: sealVal,
+        sealno_in:this.isFromArrival?'': sealVal,
+        isDirectDeparted: this.isFromArrival?'Y': 'N',
         outRemarks: this.outgoingRemarks.trim(),
         tcList: manifests
       });

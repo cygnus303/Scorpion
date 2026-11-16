@@ -14,11 +14,12 @@ import { ExportService } from 'app/shared/services/export.service';
 import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
 import { MfViewComponent } from '../thc-list/mf-view/mf-view.component';
 import { HccViewComponent } from '../hcc-view/hcc-view.component';
+import { ThcDepartureConfirmPopupComponent } from '../thc-depature-list/thc-departure-confirm-popup/thc-departure-confirm-popup.component';
 
 @Component({
   selector: 'app-thc-arrival-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, NgSelectModule, BsDatepickerModule, PaginationComponent,HccViewComponent, ThcArrivalPopupComponent, DateRangePickerComponent,MfViewComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, NgSelectModule, BsDatepickerModule, PaginationComponent,HccViewComponent, ThcArrivalPopupComponent, DateRangePickerComponent,MfViewComponent,ThcDepartureConfirmPopupComponent],
   providers: [BsModalService],
   templateUrl: './thc-arrival-list.component.html',
   styleUrl: './thc-arrival-list.component.scss'
@@ -34,6 +35,7 @@ export class ThcArrivalListComponent {
   @ViewChild('ThcArrivalPopupComponent') ThcArrivalPopupComponent!: ThcArrivalPopupComponent;
   @ViewChild('MfViewComponent') MfViewComponent!: MfViewComponent;
   @ViewChild('HccViewComponent') HccViewComponent!: HccViewComponent;
+  @ViewChild('departureConfirmPopup') departureConfirmPopup!: ThcDepartureConfirmPopupComponent;
   
 
   public arrivalData:any;
@@ -277,5 +279,24 @@ export class ThcArrivalListComponent {
 
     openHccPopup(data: any, chargeType: string) {
     this.HccViewComponent.showPopup(data, chargeType, 'M', 'T');
+  }
+
+  openConfirmPopup(data: any) {
+    if (!data) return;
+    let item: any;
+    if (typeof data === 'string') {
+      const found = this.arrivalData?.find((t: any) => t.thcNo === data || t.thcno === data);
+      item = found ? { ...found } : { thcNo: data, thcno: data };
+    } else {
+      item = { ...data };
+    }
+
+    const thcNumber = item.thcNo || item.thcno || (typeof data === 'string' ? data : '');
+    item.thcno = thcNumber;
+    item.thcNo = thcNumber;
+    item.thcbr = item.thcbr || item.previousLocation || this.docketService.loginUserList?.LocationCode || '';
+    item.thcdt = item.thcdt || item.thcDate;
+
+    this.departureConfirmPopup.showPopup([item], true);
   }
 }

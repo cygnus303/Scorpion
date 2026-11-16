@@ -28,7 +28,7 @@
           <button *ngFor="let thc of thcList; let idx = index" type="button" class="tab-btn"
             [class.active]="selectedThcIndex === idx" (click)="selectThcTab(idx)">
             <span>{{ thc.thcno }}</span>
-            <span class="badge ms-1"
+            <span class="badge ms-1" *ngIf="!isFromArrival"
               [ngClass]="selectedThcIndex === idx ? 'bg-light text-dark' : 'bg-secondary text-white'">
               {{ getSelectedCountForThc(thc.thcno) }}/{{ getManifestCountForThc(thc.thcno) }} MFs
             </span>
@@ -73,7 +73,7 @@
         <!-- Departure Inputs: Seal No(s) & Outgoing Remarks -->
         <div class="row g-3 mb-2">
           <!-- Seal No 1 -->
-          <div [ngClass]="sealCount === 1 ? 'col-md-6' : (sealCount === 2 ? 'col-md-6' : 'col-md-4')">
+          <div *ngIf="!isFromArrival" [ngClass]="sealCount === 1 ? 'col-md-6' : (sealCount === 2 ? 'col-md-6' : 'col-md-4')">
             <div class="form-group">
               <div class="d-flex align-items-center justify-content-between mb-1">
                 <label class="form-label mb-0" style="font-size: 13px; font-weight: 600; color: #334155;">
@@ -99,7 +99,7 @@
           </div>
 
           <!-- Seal No 2 (Visible when 2 or 3 selected, Optional) -->
-          <div [ngClass]="sealCount === 2 ? 'col-md-6' : 'col-md-4'" *ngIf="sealCount >= 2">
+          <div [ngClass]="sealCount === 2 ? 'col-md-6' : 'col-md-4'" *ngIf="!isFromArrival && sealCount >= 2">
             <div class="form-group">
               <div class="d-flex align-items-center justify-content-between mb-1">
                 <label class="form-label mb-0" style="font-size: 13px; font-weight: 600; color: #334155;">
@@ -129,7 +129,7 @@
           </div>
 
           <!-- Seal No 3 (Visible when 3 selected, Optional) -->
-          <div class="col-md-4" *ngIf="sealCount >= 3">
+          <div class="col-md-4" *ngIf="!isFromArrival && sealCount >= 3">
             <div class="form-group">
               <div class="d-flex align-items-center justify-content-between mb-1">
                 <label class="form-label mb-0" style="font-size: 13px; font-weight: 600; color: #334155;">
@@ -152,7 +152,7 @@
           </div>
 
           <!-- Outgoing Remarks -->
-          <div [ngClass]="sealCount === 1 ? 'col-md-6' : 'col-12'">
+          <div [ngClass]="isFromArrival ? 'col-12' : (sealCount === 1 ? 'col-md-6' : 'col-12')">
             <div class="form-group">
               <label class="form-label mb-1" style="font-size: 13px; font-weight: 600; color: #334155;">
                 Outgoing Remarks <span class="text-danger">*</span>
@@ -175,7 +175,7 @@
         </div>
 
         <!-- Manifest Table Header Info -->
-        <div class="d-flex justify-content-between align-items-center mb-2 mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-2 mt-4" *ngIf="!isFromArrival">
           <div class="fw-bold text-dark d-flex align-items-center gap-2" style="font-size: 13.5px;">
             <i class="ti ti-list-check text-danger"></i>
             <span>MFs available for THC Departure</span>
@@ -189,7 +189,7 @@
         </div>
 
         <!-- Manifest Table -->
-        <div class="table-wrap-modal mb-3">
+        <div class="table-wrap-modal mb-3" *ngIf="!isFromArrival">
           <table class="modal-table">
             <thead>
               <tr>
@@ -284,7 +284,7 @@
     <!-- ── Modal Footer ── -->
     <div class="modal-footer px-4 py-3 bg-light border-top d-flex justify-content-between align-items-center">
       <div>
-        <span class="text-muted small" *ngIf="!isLoading">
+        <span class="text-muted small" *ngIf="!isLoading && !isFromArrival">
           Total Selected: <strong class="text-dark">{{ getTotalSelectedCount() }}</strong> Manifest(s)
         </span>
       </div>

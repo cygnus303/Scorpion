@@ -207,7 +207,7 @@
                             <span class="pill-badge px-2 py-1 cursor-pointer" [ngClass]="getStatusClass(data.status)">{{
                                 data.status }}</span>
                         </td>
-                        <td style="width: 200px !important;">
+                        <td style="width: 280px !important;">
                             <div class="d-flex flex-wrap gap-2 justify-content-center">
                                 <button
                                     class="btn btn-sm bg-primary-subtle border-primary-subtle text-primary py-1 px-3"
@@ -219,6 +219,13 @@
                                     (click)="openThcArrival(data)" [disabled]="data.status==='Arrival Completed'">
                                     🏷 THC Arrival
                                 </button>
+                                <button *ngIf="!isHQTR && data.iSdirectDepart === 'Y'" class="action-btn btn-depart" 
+                                 (click)="openConfirmPopup(data)">
+                                    <i class="ti ti-send"></i> Depart THC
+                                </button>
+                                <!-- <button *ngIf="!isHQTR && data.departureStatus === 'Departed'" class="action-btn btn-departed-done" disabled>
+                                    <i class="ti ti-check"></i> Departed
+                                </button> -->
                             </div>
                         </td>
                     </tr>
@@ -235,4 +242,4 @@
 <app-thc-arrival-popup #ThcArrivalPopupComponent (dataEmitter)="onDataUpdate()"></app-thc-arrival-popup>
 <app-mf-view #MfViewComponent></app-mf-view>
 <app-hcc-view #HccViewComponent></app-hcc-view>
-
+<app-thc-departure-confirm-popup #departureConfirmPopup (departSuccess)="onDataUpdate()"></app-thc-departure-confirm-popup>
