@@ -24,6 +24,18 @@ export class PFMapiService {
     return this.apiHandlerService.Post(`Operation/NewForwardFMAckDocumentsDone`, payload);
   }
 
+  ForwardAckBothSubmit(payload: any) {
+    return this.apiHandlerService.Post(`Operation/ForwardAckBothSubmit`, payload);
+  }
+
+  GetLocationList(payload: any = {}) {
+    return this.apiHandlerService.Post(`Operation/GetLocationList`, payload);
+  }
+
+  GetLocationsDirect() {
+    return this.apiHandlerService.Get(`External/GetLocations`);
+  }
+
   PFMCourierUpdate(payload: any) {
     return this.apiHandlerService.Post(`Operation/PFMCourierUpdate`, payload);
   }
