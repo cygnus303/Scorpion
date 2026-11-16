@@ -24,14 +24,14 @@ import { environment } from 'environments/environment';
 import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
 
 @Component({
-  selector: 'app-lsupdate-popup',
+  selector: 'app-new-lsupdate-popup',
   standalone: true,
   imports: [CommonModule, RouterModule, NgSelectModule, ReactiveFormsModule, BsDatepickerModule, SharedModule, FormsModule, DateRangePickerComponent],
-  templateUrl: './lsupdate-popup.component.html',
-  styleUrl: './lsupdate-popup.component.scss',
+  templateUrl: './new-loadingsheet-popup.component.html',
+  styleUrl: './new-loadingsheet-popup.component.scss',
   providers: [BsModalService]
 })
-export class LSUpdatePopupComponent {
+export class LSUpdateNewPopupComponent {
   public modalRef!: BsModalRef;
   public isgetLoadingList: boolean = false;
   public nextLocationValue = 'Please enter atleast 1 character';
