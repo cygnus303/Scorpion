@@ -94,10 +94,23 @@
                         <label class="form-label-custom">UnLoading Charge</label>
                         <input class="form-control hcc-readonly-input highlight-red-text" placeholder="UnLoading Charge"
                             type="text" [formControl]="loadingChargeCtrl" readonly appFocusNext>
-                        <!-- <div *ngIf="loadingChargeCtrl.hasError('min') && loadingChargeCtrl.touched"
-                            class="text-danger text-start" style="font-size: 11px; margin-top: 4px;">
-                            Please enter a value >= 0.01.
-                        </div> -->
+                    </div>
+                </div>
+
+                <div class="row g-3 mt-1">
+                    <div class="col-md-3">
+                        <label class="form-label-custom">Incoming Seal No. </label>
+                        <input type="text" class="form-control form-control-sm input-readonly-custom" placeholder="Incoming Seal No."
+                            [value]="incomingSealNo" readonly>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label-custom">Seal Status </label>
+                        <ng-select placeholder="Select Seal Status" class="clear-icon"
+                            [items]="sealStatusList" bindLabel="text" bindValue="value"
+                            [(ngModel)]="sealStatus"
+                            (clear)="sealStatus = null"
+                            [dropdownPosition]="'bottom'" style="font-size: 13px;">
+                        </ng-select>
                     </div>
                 </div>
             </div>

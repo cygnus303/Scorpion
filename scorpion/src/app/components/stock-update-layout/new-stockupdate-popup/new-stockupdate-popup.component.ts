@@ -53,6 +53,22 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
   public headerRateType: any = null;
   // public loadingChargeCtrl = new FormControl('0.00', [Validators.min(0.01)]);
   public loadingChargeCtrl = new FormControl('0.00');
+  public incomingSealNo: string = '';
+  public sealStatus: string | null = null;
+  public sealStatusList: any[] = [
+    { text: 'Ok', value: 'Ok' },
+    { text: 'Broken', value: 'Broken' },
+    { text: 'Unsealed', value: 'Unsealed' }
+  ];
+
+  onlyNumberKey(event: KeyboardEvent): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode >= 48 && charCode <= 57) {
+      return true;
+    }
+    event.preventDefault();
+    return false;
+  }
 
   public stockData: any = {
     thcno: '',
@@ -210,6 +226,10 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
             vehno: vsfum.vehno || '',
             updateDate: this.getCurrentFormattedDate()
           };
+          const sealNoVal = this.stockData?.isn || this.stockData?.sealno || this.stockData?.sealNo || this.stockData?.sealno_in || '';
+          const sealStatusVal = this.stockData?.sealStatus || this.stockData?.status || this.stockData?.seal_status || (sealNoVal ? 'Ok' : null);
+          this.incomingSealNo = sealNoVal;
+          this.sealStatus = sealStatusVal;
 
           this.listVSFUM = res.listVSFUM || [];
           // Pre-populate fields if needed
@@ -1390,6 +1410,8 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
     formData.append("ViewModel.VSFUM.ISCheckRemarks", '');
     formData.append("ViewModel.VSFUM.UnLoadingSupervisor", this.unloadingSupervisor || '');
     formData.append("ViewModel.VSFUM.UnLoaderName", this.unloaderName || '');
+    formData.append("ViewModel.VSFUM.ISN", this.incomingSealNo || this.stockData?.isn || '');
+    formData.append("ViewModel.VSFUM.SealStatus", this.sealStatus || this.stockData?.sealStatus || this.stockData?.status || '');
     formData.append("BaseUserName", this.docketService.loginUserList?.BaseUserName || this.docketService.loginUserList?.UserId || '');
     formData.append("BaseFinYear", this.docketService.loginUserList?.FinYear || '');
 

@@ -1,3 +1,5 @@
+@import url("https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css");
+
 .pill-badge {
     padding: 5px 12px;
     border-radius: 20px;
@@ -122,4 +124,38 @@
     background: #f3e5f5;
     color: #6a1b9a;
     border: 1px solid #ce93d8;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 0.5px solid rgba(0, 0, 0, 0.18);
+  background: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.12s, border-color 0.12s;
+}
+
+.btn-depart {
+  background: #fdecea;
+  border-color: #f5c6c6;
+  color: #C8181A;
+}
+
+.btn-depart:hover {
+  background: #C8181A;
+  color: #fff;
+  border-color: #C8181A;
+}
+
+.btn-departed-done {
+  background: #dcfce7;
+  border-color: #86efac;
+  color: #166534;
+  cursor: default;
 }

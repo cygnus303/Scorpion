@@ -10,45 +10,46 @@
       </div>
     </div>
 
-    <div class="modal-body bg-light" style="max-height: 80vh; overflow-y: auto; padding: 9px 7px !important;">
+    <div class="modal-body bg-light" [style.overflow]="isgetLoadingList ? 'auto' : 'visible'" style="max-height: 80vh; padding: 9px 7px !important;">
     @if(this.docketService.loginUserList.Type === 'LS'){
-    <div class="detail-card mb-3 border shadow-sm">
+    <div class="detail-card mb-3 border shadow-sm" style="overflow: visible !important;">
       <div class="detail-card-head">
         <span class="dch-dot"></span> LOADING SHEET GENERATION CRITERIA
       </div>
-      <div class="p-3 bg-white">
-        <div class="row mb-3">
-          <div class="col-3">
+      <div class="p-3 bg-white" style="overflow: visible !important;">
+        <!-- Row 1: 3 Fields (evenly balanced across 12 cols) -->
+        <div class="row g-3 mb-3">
+          <!-- <div class="col-3">
             <div class="form-group-input">
               <label class="form-label d-flex align-items-center gap-2 fw-bold"> Loading Sheet No.</label>
               <input class="form-control" formControlName="lsNO" placeholder="System Generated" readonly>
             </div>
-          </div>
-          <div class="col-3">
+          </div> -->
+          <div class="col-md-4">
             <div class="form-group-input">
               <label class="form-label d-flex align-items-center gap-2 fw-bold"> Loading Sheet Date</label>
               <div class="input-group">
-                <input type="text" class="form-control required2" formControlName="lsDate" [class.disabled-input]="true"  placeholder="Loading Sheet Date"
+                <input type="text" class="form-control required2" formControlName="lsDate" [class.disabled-input]="true" placeholder="Loading Sheet Date"
                   #dvL="bsDatepicker" bsDatepicker [bsConfig]="{ containerClass: 'theme-dark-blue', dateInputFormat: 'DD MMM YYYY' }" readonly>
-                <span class="input-group-text cursor-pointer" >
+                <span class="input-group-text cursor-pointer">
                   <i class="fa fa-calendar"></i>
                 </span>
               </div>
             </div>
           </div>
-          <div class="col-3">
+          <!-- <div class="col-3">
             <div class="form-group-input">
               <label class="form-label d-flex align-items-center gap-2 fw-bold"> Manual LS No.</label>
               <input class="form-control" formControlName="manualLsNO" readonly>
             </div>
-          </div>
-          <div class="col-3">
+          </div> -->
+          <div class="col-md-4">
             <div class="form-group-input">
               <label class="form-label d-flex align-items-center gap-2 fw-bold"> Next Stop Location</label>
               <ng-select class="noFoundTextColor required2 clear-icon remove-select-color"
                 placeholder="Select Next Stop Location" formControlName="nextStopLocation" appFocusNext
                 notFoundText="No matches found"
-                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('nextStopLocation')?.invalid  && loadingSheetService.LSForm.get('nextStopLocation')?.touched }"
+                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('nextStopLocation')?.invalid && loadingSheetService.LSForm.get('nextStopLocation')?.touched }"
                 (search)="getLocationDetail($event)" [notFoundText]="nextLocationValue"
                 (open)="resetNextLocationDropdown()" [readonly]="isgetLoadingList">
                 <ng-option *ngFor="let item of locationData" [value]="item.id">
@@ -61,45 +62,24 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-3">
+          <div class="col-md-4">
             <div class="form-group-input">
               <label class="form-label d-flex align-items-center gap-2 fw-bold"> Prepared By</label>
               <input class="form-control" formControlName="preparedBy" placeholder="Prepared By" readonly>
             </div>
           </div>
-          <!-- <div class="col-3">
-            <div class="form-group-input">
-              <label class="form-label d-flex align-items-center gap-2 fw-bold">LS Type</label>
-              <ng-select class="noFoundTextColor clear-icon remove-select-color required2" placeholder="Select LS Type"
-                formControlName="lsType" notFoundText="No matches found" bindLabel="ServiceType" bindValue="ServiceType" appFocusNext appendTo="body" (change)="onLsTypeChange($event)"
-                [items]="LsTypeList"
-                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('lsType')?.invalid  && loadingSheetService.LSForm.get('lsType')?.touched }"></ng-select>
-              <div class="text-danger text-start"
-                *ngIf="loadingSheetService.LSForm.get('lsType')?.invalid && loadingSheetService.LSForm.get('lsType')?.touched">
-                This field is required. </div>
-            </div>
-          </div> -->
-             <!-- <div class="col-3">
-              <div class="form-group-input">
-                <label class="form-label d-flex align-items-center gap-2 fw-bold">LS Transport Mode</label>
-                <ng-select class="noFoundTextColor required2 clear-icon" placeholder="Select LS Transport Mode"
-                  formControlName="mF_TransportMode" notFoundText="No matches found" bindLabel="codeDesc" bindValue="codeId"
-                  [items]="generalMasterService.LsTransportModeData" 
-                  [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('mF_TransportMode')?.invalid  && loadingSheetService.LSForm.get('mF_TransportMode')?.touched }"></ng-select>
-                <div class="text-danger text-start"
-                  *ngIf="loadingSheetService.LSForm.get('mF_TransportMode')?.invalid && loadingSheetService.LSForm.get('mF_TransportMode')?.touched">
-                  This field is required. </div>
-              </div>
-            </div> -->
         </div>
-        <div class="row mb-3">
-          <div class="col-4">
+
+        <!-- Row 2: 4 Fields (evenly balanced 4 x 3 = 12 cols) -->
+        <div class="row g-3 mb-3">
+          <div class="col-md-3">
             <div class="form-group-input">
-              <label class="form-label d-flex align-items-center gap-2 fw-bold"> Select Date</label>
-              <div class="d-flex align-items-center gap-1 flex-wrap flex-xl-nowrap">
-                <!-- From Date -->
+              <label class="form-label d-flex align-items-center gap-2 fw-bold">Select Date</label>
+              <app-date-range-picker [initialFromDate]="config.fromDateStr" [initialToDate]="config.toDateStr"
+                (onRangeSelect)="onDateRangeSelected($event)">
+              </app-date-range-picker>
+
+              <!-- <div class="d-flex align-items-center gap-1 flex-wrap flex-xl-nowrap">
                 <div class="input-group flex-nowrap" (click)="!isgetLoadingList && !this.docketService.isComplition && dpFrom.toggle()">
                   <span class="input-group-text cursor-pointer px-2"
                     [class.disabled-input]="this.docketService.isComplition">
@@ -115,7 +95,6 @@
 
                 <span class="fw-bold text-muted">&rarr;</span>
 
-                <!-- To Date -->
                 <div class="input-group flex-nowrap" (click)="!isgetLoadingList && !this.docketService.isComplition && dpTo.toggle()">
                   <span class="input-group-text cursor-pointer px-2"
                     [class.disabled-input]="this.docketService.isComplition">
@@ -129,7 +108,7 @@
                     [class.disabled-input]="true" appFocusNext
                     [bsConfig]="{ dateInputFormat: 'DD MMM YYYY', containerClass: 'theme-dark-blue' }" />
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
           <!-- <div class="col-3">
@@ -140,36 +119,42 @@
                 [items]="transportModeList"></ng-select>
             </div>
           </div> -->
-                <div class="col-3">
+          <div class="col-md-3">
             <div class="form-group-input">
               <label class="form-label d-flex align-items-center gap-2 fw-bold">LS Type</label>
               <ng-select class="noFoundTextColor clear-icon remove-select-color required2" placeholder="Select LS Type"
                 formControlName="lsType" notFoundText="No matches found" bindLabel="ServiceType" bindValue="ServiceType" appFocusNext appendTo="body" (change)="onLsTypeChange($event)"
                 [items]="LsTypeList"
-                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('lsType')?.invalid  && loadingSheetService.LSForm.get('lsType')?.touched }"></ng-select>
+                [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('lsType')?.invalid && loadingSheetService.LSForm.get('lsType')?.touched }"></ng-select>
               <div class="text-danger text-start"
                 *ngIf="loadingSheetService.LSForm.get('lsType')?.invalid && loadingSheetService.LSForm.get('lsType')?.touched">
                 This field is required. </div>
             </div>
           </div>
-          <div class="col-2">
+          <div class="col-md-3">
             <div class="form-group-input">
               <label class="form-label d-flex align-items-center gap-2 fw-bold"> Destination</label>
               <input class="form-control" formControlName="destinationList" placeholder="Destination" appFocusNext>
-              <span class="text-muted small">[Separated by <b>&nbsp;<i>Comma</i>&nbsp;</b> if multiple]</span>
+              <span class="text-muted small d-block" style="font-size: 10px; margin-top: 3px;">[Separated by <b>&nbsp;<i>Comma</i>&nbsp;</b> if multiple]</span>
             </div>
           </div>
-          <div class="col-3">
+          <div class="col-md-3">
             <div class="form-group-input">
               <label class="form-label d-flex align-items-center gap-2 fw-bold"> Docket No.</label>
               <input class="form-control" formControlName="docketNoList" placeholder="Docket No." appFocusNext>
-              <span class="text-muted small">[Separated by <b>&nbsp;<i>Comma</i>&nbsp;</b> if multiple]</span>
+              <span class="text-muted small d-block" style="font-size: 10px; margin-top: 3px;">[Separated by <b>&nbsp;<i>Comma</i>&nbsp;</b> if multiple]</span>
             </div>
           </div>
         </div>
-        <button type="button" class="mfbtn mfbtn-submit shadow-sm" (click)="getLoadinglist()">
-          <i class="fas fa-check"></i> Apply List
-        </button>
+
+        <div class="d-flex align-items-center justify-content-between pt-3 mt-1 border-top">
+          <div class="text-muted" style="font-size: 11px;">
+            <i class="fas fa-info-circle text-primary me-1"></i> Filter dockets by date range, location, and type to generate loading sheet.
+          </div>
+          <button type="button" class="mfbtn mfbtn-submit shadow-sm" (click)="getLoadinglist()" style="padding: 7px 22px; font-size: 12px; font-weight: 700; border-radius: 4px;">
+            <i class="fas fa-check"></i> Apply List
+          </button>
+        </div>
       </div>
     </div>
     }
