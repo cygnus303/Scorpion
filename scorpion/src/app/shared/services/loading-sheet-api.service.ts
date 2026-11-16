@@ -16,6 +16,10 @@ export class LoadingSheetApiService {
     return this.apiHandlerService.Post(`Operation/GetDocketListForMFGeneration`,payload);
   }
 
+    newgetDocketListForMF(payload:any){
+    return this.apiHandlerService.Post(`Operation/GetDocketListForMFGenerationNewTesting`,payload);
+  }
+
   prepareLoadingSheet(payload: any) {
     return this.apiHandlerService.Post(`Operation/PrepareLoadingSheet`, payload);
   }
