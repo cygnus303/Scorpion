@@ -51,9 +51,9 @@
                             <div class="fw-bold text-primary">{{totalLRs}}</div>
                         </div>
                     </div>
-                    <div class="col-3">
+                    <div class="col-3" *ngIf="forwardedToType !== 'SELF'">
                         <div class="form-group-input">
-                            <label class="form-label meta-label">Courier Number</label>
+                            <label class="form-label meta-label">Courier Number <span class="text-danger">*</span></label>
                             <input class="form-control required2 input-background-color" type="text"
                                 placeholder="Tracking / docket number" style="margin-top:3px;"
                                 [ngClass]="{ 'border-danger': forwardForm.get('courierNo')?.invalid && forwardForm.get('courierNo')?.touched}"
@@ -67,10 +67,59 @@
                         </div>
                     </div>
                 </div>
-                <div class="row mt-2">
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="form-group-input">
+                            <label class="form-label meta-label">FORWARDED TO <span class="text-danger">*</span></label>
+                            <div class="d-flex align-items-center gap-2 flex-wrap">
+                                <label class="fwd-radio-pill" [class.selected]="forwardedToType === 'HQTR'" [class.hqtr]="forwardedToType === 'HQTR'" (click)="onForwardedToChange('HQTR')">
+                                    <input type="radio" name="fwdRadio" [checked]="forwardedToType === 'HQTR'" (change)="onForwardedToChange('HQTR')">
+                                    <span class="pill-icon">📠</span>
+                                    <span class="pill-title">HQTR</span>
+                                </label>
+                                <label class="fwd-radio-pill" [class.selected]="forwardedToType === 'BRANCH'" [class.branch]="forwardedToType === 'BRANCH'" (click)="onForwardedToChange('BRANCH')">
+                                    <input type="radio" name="fwdRadio" [checked]="forwardedToType === 'BRANCH'" (change)="onForwardedToChange('BRANCH')">
+                                    <span class="pill-icon">📍</span>
+                                    <span class="pill-title">Branch</span>
+                                </label>
+                                <label class="fwd-radio-pill" [class.selected]="forwardedToType === 'SELF'" [class.self]="forwardedToType === 'SELF'" (click)="onForwardedToChange('SELF')">
+                                    <input type="radio" name="fwdRadio" [checked]="forwardedToType === 'SELF'" (change)="onForwardedToChange('SELF')">
+                                    <span class="pill-icon">🏢</span>
+                                    <span class="pill-title">Send to Self <span class="pill-sub">({{ loginLocation }})</span></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2" *ngIf="forwardedToType === 'BRANCH'">
+                    <div class="col-12">
+                        <div class="branch-search-wrap">
+                            <span class="branch-search-icon">🔍</span>
+                            <input type="text" class="branch-search-input"
+                                placeholder="Search branch code or name..."
+                                [value]="branchSearchText"
+                                (input)="onBranchSearch($any($event.target).value)"
+                                (focus)="showBranchDropdown = true">
+                            <button type="button" class="branch-clear-btn" *ngIf="branchSearchText" (click)="clearBranch()">✕</button>
+                            <div class="branch-dropdown" *ngIf="showBranchDropdown">
+                                <div class="branch-item" *ngFor="let branch of filteredBranchList" (click)="selectBranch(branch)">
+                                    <span class="fw-bold">{{ branch.locCode }}</span> - <span>{{ branch.locName }}</span>
+                                </div>
+                                <div class="branch-empty" *ngIf="filteredBranchList.length === 0">
+                                    No branches found
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fwd-self-banner" *ngIf="forwardedToType === 'SELF'">
+                    <span>ℹ</span>
+                    <span>PFM will be sent to self (<strong>{{ loginLocation }}</strong>) and <strong>auto Acknowledged</strong> on submit.</span>
+                </div>
+                <div class="row mt-2" *ngIf="forwardedToType !== 'SELF'">
                     <div class="col-6">
                         <div class="form-group-input">
-                            <label class="form-label meta-label">Courier Company Name</label>
+                            <label class="form-label meta-label">Courier Company Name <span class="text-danger">*</span></label>
                             <input class="form-control required2 input-background-color" type="text" id="fwdCompany"
                                 placeholder="Courier Company Name" style="margin-top:3px;"
                                 [ngClass]="{ 'border-danger': forwardForm.get('courierName')?.invalid && forwardForm.get('courierName')?.touched}"
@@ -179,9 +228,11 @@
         <div><span class="text-danger">*</span> Required fields</div>
         <div class="gap-3 d-flex">
             <button type="button" class="btn btn-light px-4 py-2 rounded" (click)="modalRef.hide()">Cancel</button>
-            <button type="button" class="btn btn-primary px-4 py-2 rounded" [disabled]="totalLRs === 0"
+            <button type="button" class="btn px-4 py-2 rounded"
+                [ngClass]="forwardedToType === 'SELF' ? 'btn-purple' : 'btn-primary'"
+                [disabled]="totalLRs === 0"
                 (click)="submitForward()">
-                <span class="me-2 fs-5">↗</span> Submit Forward
+                <span class="me-2 fs-5">↗</span> {{ forwardedToType === 'SELF' ? 'Submit Forward/Acknowledge' : 'Submit Forward' }}
             </button>
         </div>
     </div>
