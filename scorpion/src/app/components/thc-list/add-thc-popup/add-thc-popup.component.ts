@@ -1542,6 +1542,7 @@ export class AddThcPopupComponent {
         "CTVD": {
           "VehicleNO": formValue.vehicleNO === 'O' ? (formValue.mKTVehicleNo || "") : (formValue.vehicleNO || formValue.vehicleNo || ""),
           "FTLType": formValue.fTLType || "",
+          "VehicleType":formValue.vehicleType || "",
           "Driver1Name": formValue.driver1Name || "",
           "Driver1MobileNo": formValue.driver1MobileNo || "",
           "Driver1RTONo": formValue.driver1RTONo || "",
