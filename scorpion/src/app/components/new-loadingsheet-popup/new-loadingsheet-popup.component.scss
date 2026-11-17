@@ -1,5 +1,9 @@
 ::ng-deep.modal-xl {
-    --bs-modal-width: 1450px !important;
+    --bs-modal-width: min(1450px, 98vw) !important;
+}
+
+::ng-deep .ng-dropdown-panel {
+    z-index: 999999 !important;
 }
 
 ::ng-deep .modal-dialog {

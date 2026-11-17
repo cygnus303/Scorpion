@@ -123,7 +123,7 @@
             <div class="form-group-input">
               <label class="form-label d-flex align-items-center gap-2 fw-bold">LS Type</label>
               <ng-select class="noFoundTextColor clear-icon remove-select-color required2" placeholder="Select LS Type"
-                formControlName="lsType" notFoundText="No matches found" bindLabel="ServiceType" bindValue="ServiceType" appFocusNext appendTo="body" (change)="onLsTypeChange($event)"
+                formControlName="lsType" notFoundText="No matches found" bindLabel="ServiceType" bindValue="ServiceType" appFocusNext (change)="onLsTypeChange($event)"
                 [items]="LsTypeList"
                 [ngClass]="{ 'border-danger': loadingSheetService.LSForm.get('lsType')?.invalid && loadingSheetService.LSForm.get('lsType')?.touched }"></ng-select>
               <div class="text-danger text-start"
