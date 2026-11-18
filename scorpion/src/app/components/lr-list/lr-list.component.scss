@@ -32,7 +32,7 @@
             background: #f8fafc;
             z-index: 10;
             border-left: 2px solid #e2e8f0;
-            box-shadow: -4px 0 6px -2px rgba(0,0,0,0.05);
+            box-shadow: -4px 0 6px -2px rgba(0, 0, 0, 0.05);
         }
 
         tbody td {
@@ -51,7 +51,7 @@
             background: #ffffff;
             z-index: 9;
             border-left: 2px solid #e2e8f0;
-            box-shadow: -4px 0 6px -2px rgba(0,0,0,0.05);
+            box-shadow: -4px 0 6px -2px rgba(0, 0, 0, 0.05);
         }
 
         tbody tr:hover td {
@@ -126,6 +126,30 @@
         display: flex;
         flex-direction: column;
         gap: 2px;
+    }
+
+    .billing-party {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        width: 100%;
+        max-width: 100%;
+        white-space: normal;
+        line-height: 1.25;
+
+        .party-code {
+            font-weight: 700;
+            color: #1d4ed8;
+            font-size: 11.5px;
+            white-space: nowrap;
+        }
+
+        .party-name {
+            font-size: 11px;
+            color: #334155;
+            font-weight: 500;
+            word-break: break-word;
+        }
     }
 
     .route .org,
@@ -254,6 +278,69 @@
         border-color: #e2e8f0;
     }
 
+    /* ── GB / GD Links & HCC Tags ── */
+    .gb-link {
+        font-weight: 700;
+        color: #1a237e;
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 11.5px;
+
+        &:hover {
+            text-decoration: underline;
+            color: #3949ab;
+        }
+    }
+
+    .gd-link {
+        font-weight: 700;
+        color: #00695c;
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 11.5px;
+
+        &:hover {
+            text-decoration: underline;
+            color: #00897b;
+        }
+    }
+
+    .gb-none {
+        color: #9e9e9e;
+        font-size: 11.5px;
+    }
+
+    .hcc-tag {
+        display: inline-block;
+        font-size: 9.5px;
+        font-weight: 800;
+        border-radius: 3px;
+        padding: 1px 5px;
+        margin-right: 4px;
+        letter-spacing: .3px;
+    }
+
+    .hcc-tag-gb {
+        background: #fff3e0;
+        color: #ef6c00;
+        border: 1px solid #ffe0b2;
+    }
+
+    .hcc-tag-gd {
+        background: #e0f2f1;
+        color: #00695c;
+        border: 1px solid #b2dfdb;
+    }
+
+    .pd-type {
+        display: inline-block;
+        border-radius: 3px;
+        padding: 3px 6px;
+        font-size: 9.5px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
     /* ── Status Chip (Sharp & Compact) ── */
     .status-chip {
         display: inline-flex;
@@ -306,18 +393,18 @@
     /* ── Action Buttons (Colorful & Compact) ── */
     .action-btns {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, max-content));
+        grid-template-columns: repeat(3, 1fr);
         justify-content: center;
         gap: 4px;
-        min-width: 230px;
+        min-width: 250px;
     }
 
     .ab {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 4px;
-        padding: 4px 8px;
+        gap: 3px;
+        padding: 4px 6px;
         border-radius: 3px;
         font-size: 10.5px;
         font-weight: 600;
@@ -327,6 +414,8 @@
         white-space: nowrap;
         box-shadow: none;
         width: 100%;
+        height: 25px;
+        box-sizing: border-box;
     }
 
     .ab-eway {
@@ -465,11 +554,23 @@
         color: #7b890e;
     }
 
+    .ab-sticker {
+        background: #ecfeff;
+        border-color: #a5f3fc;
+        color: #0891b2;
+    }
+
+    .ab-sticker:hover {
+        background: #cffafe;
+        border-color: #67e8f9;
+    }
+
     /* ── Dropdowns ── */
     .track-wrap,
     .print-wrap {
         position: relative;
-        display: inline-flex;
+        display: flex;
+        width: 100%;
     }
 
     .ab-track {
