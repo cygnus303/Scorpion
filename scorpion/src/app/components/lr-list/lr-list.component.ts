@@ -150,13 +150,13 @@ export class LrListComponent {
     }
   }
 
-  openHCCModal(lr: any) {
-    this.HCCDetailsComponent.showPopup(lr, 'G', 'GB');
-  }
+  // openHCCModal(lr: any) {
+  //   this.HCCDetailsComponent.showPopup(lr, 'G', 'GB');
+  // }
 
-  openGDHCCModal(lr: any) {
-    this.HCCDetailsComponent.showPopup(lr, 'G', 'GD');
-  }
+  // openGDHCCModal(lr: any) {
+  //   this.HCCDetailsComponent.showPopup(lr, 'G', 'GD');
+  // }
 
   private apiCache = new Map<string, any>();
 

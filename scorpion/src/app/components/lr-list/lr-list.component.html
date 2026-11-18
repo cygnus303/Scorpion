@@ -146,16 +146,16 @@
                     <tr>
                         <th class="text-center">#</th>
                         <th class="text-center">LR No. / Date</th>
-                        <th class="text-center">GHB / GHD No.</th>
+                        <th class="text-center">GB / GD No.</th>
                         <th class="text-center">HCC No.</th>
                         <th class="text-center">Org / Dest</th>
                         <th class="text-center">From / To City</th>
                         <th class="text-center" style="white-space: normal; line-height: 1.2; width: 110px;">Pickup /<br>Delivery Type</th>
                         <th class="text-center">EDD /ADD</th>
-                        <th class="text-center">Billing Party</th>
+                        <th class="text-center" style="width: 190px; min-width: 170px; max-width: 210px;">Billing Party</th>
                         <th class="text-center" style="white-space: normal; line-height: 1.2; width: 110px;">Pay Base /<br>Mode / Service</th>
                         <th class="text-center">Status</th>
-                        <th class="text-center">Actions</th>
+                        <th class="text-center" style="min-width: 250px;">Actions</th>
                     </tr>
                 </thead>
                 <tbody *ngIf="isLoading">
@@ -192,12 +192,12 @@
                                 <span class="fw-bold cursor-pointer" style="color: #1a237e; font-size: 12px;"
                                     *ngIf="lr.gbNo"
                                     (click)="onGBNo(lr)">
-                                    <span style="font-size: 9px; color: #64748b;" class="me-1">GHB:</span>{{ lr.gbNo }}
+                                    <span style="font-size: 9px; color: #64748b;" class="me-1">GB:</span>{{ lr.gbNo }}
                                 </span>
                                 <span class="fw-bold cursor-pointer" style="color: #b45309; font-size: 12px;"
                                     *ngIf="lr.gdNo"
                                     (click)="onGDNo(lr)">
-                                    <span style="font-size: 9px; color: #64748b;" class="me-1">GHD:</span>{{ lr.gdNo }}
+                                    <span style="font-size: 9px; color: #64748b;" class="me-1">GD:</span>{{ lr.gdNo }}
                                 </span>
                                 <span *ngIf="!lr.gbNo && !lr.gdNo">--</span>
                             </div>
@@ -244,10 +244,11 @@
                                         }}</span></div>
                             </div>
                         </td>
-                        <td>
+                        <td style="width: 190px; min-width: 170px; max-width: 210px;">
                             <div class="billing-party">
-                                <span class="fw-bold" style="color: #1d4ed8;">{{ lr.partY_CODE }}</span><span
-                                    class="text-muted mx-1">-</span><span>{{ lr.party_name }}</span>
+                                <span class="party-code" *ngIf="lr.partY_CODE">{{ lr.partY_CODE }}</span>
+                                <span class="party-name" *ngIf="lr.party_name">{{ lr.party_name }}</span>
+                                <span *ngIf="!lr.partY_CODE && !lr.party_name" class="text-muted">—</span>
                             </div>
                         </td>
                         <td>
@@ -269,17 +270,12 @@
                                 <button *ngIf="menuAccessService.hasPermission('View')" class="ab ab-view"
                                     (click)="onView(lr.dockno)">👁 View</button>
                                 <button *ngIf="!isHQTR && menuAccessService.hasPermission('Edit')" class="ab ab-edit"
-                                    (click)="openQuick(lr.dockno)" [disabled]="lr.isQuickMode!=='Q'"> Quick LR
-                                    Edit</button>
+                                    (click)="openQuick(lr.dockno)" [disabled]="lr.isQuickMode!=='Q'">Quick LR Edit</button>
                                 <div class="track-wrap">
                                     <button class="ab ab-track" (click)="openTrack(lr.dockno)">📍 Track</button>
                                 </div>
                                 <!-- <button class="ab ab-finedit" (click)="openEdit(lr.dockno)"
                                     [disabled]="lr.isQuickMode==='Q'||lr.status ==='Cancelled'">💰 Fin Edit</button> -->
-
-                                <button *ngIf="isHQTR && menuAccessService.hasPermission('Cancel')" class="ab ab-cancel"
-                                    (click)="onCancel(lr.dockno)" [disabled]="lr.isDocketCancel==='Y'">🚫
-                                    Cancel</button>
                                 <div class="print-wrap">
                                     <button class="ab ab-print" (click)="openPrint(lr.dockno)">🖨 Print</button>
                                     <div class="print-dropdown">
@@ -288,16 +284,16 @@
                                         <a><span class="pi">🔖</span> UBI Sticker Print</a>
                                     </div>
                                 </div>
-                                <button class="ab ab-hcc" (click)="openHCCModal(lr)"
+                                <!-- <button class="ab ab-hcc" (click)="openHCCModal(lr)"
                                     [disabled]="lr.ishccAllow === 'N' ? true : false">🏢 GHB HCC</button>
                                 <button class="ab ab-gdhcc" (click)="openGDHCCModal(lr)"
-                                    [disabled]="lr.ishccAllowGD === 'N' ? true : false">📦 GHD HCC</button>
+                                    [disabled]="lr.ishccAllowGD === 'N' ? true : false">📦 GHD HCC</button> -->
                                 <button class="ab ab-lrprint" (click)="openLrPrintModal(lr)">📄 LR Print</button>
-                                <button class="ab ab-eway m-0" style="grid-column: span 2; white-space: nowrap;"
+                                <button class="ab ab-sticker" (click)="openStickerPrintModal(lr)">🏷️ Sticker Print</button>
+                                <button class="ab ab-eway" [style.grid-column]="(isHQTR && menuAccessService.hasPermission('Cancel')) ? 'span 2' : '1 / -1'"
                                     (click)="getEwaybillData(lr)">🧾 E-Way No. / Invoice</button>
-                                <button class="ab ab-view m-0" style="grid-column: 1 / -1; width: max-content; justify-self: center;"
-                                    (click)="openStickerPrintModal(lr)">🏷️ Sticker
-                                    Print</button>
+                                <button *ngIf="isHQTR && menuAccessService.hasPermission('Cancel')" class="ab ab-cancel"
+                                    (click)="onCancel(lr.dockno)" [disabled]="lr.isDocketCancel==='Y'">🚫 Cancel</button>
                             </div>
                         </td>
                     </tr>
@@ -317,7 +313,7 @@
 
 <app-ewaybill-invoice-modal #EwaybillInvoiceModalComponent></app-ewaybill-invoice-modal>
 
-<app-hcc-details #HCCDetailsComponent (dataEmitter)="fetchLRList()"></app-hcc-details>
+<!-- <app-hcc-details #HCCDetailsComponent (dataEmitter)="fetchLRList()"></app-hcc-details> -->
 <app-gb-view #GbViewComponent></app-gb-view>
 <app-gd-view #GdViewComponent></app-gd-view>
 <app-sticker-print #StickerPrintComponent></app-sticker-print>

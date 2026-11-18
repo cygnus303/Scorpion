@@ -1,0 +1,200 @@
+<div style="background: var(--bg);" class="p-3">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <div class="page-title">
+                <span class="icon">📦</span>
+                Godown Delivery
+            </div>
+            <div class="text-muted" style="font-size: 12px; margin-top: 2px;">
+                Operations &gt; Delivery &gt; Godown Delivery <span class="mx-1 text-secondary">|</span> 
+                Pickup/Delivery Type: <strong>Godown-Door</strong>, <strong>Door-Godown</strong> and <strong>Godown to Godown</strong> — showing dockets where <strong>PIM</strong> is the origin or delivery branch
+            </div>
+        </div>
+        <div class="btn-group gap-3 ms-auto">
+            <button class="btn btn-success px-4 py-2 rounded fw-bold">
+                <span> <span class="fs-5 me-1">📥</span> Download XLS</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Summary Strip -->
+    <div class="summary-strip mt-3">
+        <div class="summary-card c-blue cursor-pointer px-3 py-3 active-card">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="card-content">
+                    <div class="s-label">Total LR</div>
+                    <div class="s-val fs-2 fw-bold lh-1">{{ godownDeliveryList.length }}</div>
+                    <div class="small text-body-tertiary">Godown-Door, Door-Godown & Godown to Godown</div>
+                </div>
+                <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">📋</div>
+            </div>
+        </div>
+
+        <div class="summary-card px-3 py-3 c-orange cursor-pointer">
+            <div class="card-content">
+                <div class="s-label">Pending for Delivery</div>
+                <div class="s-val fs-2 fw-bold lh-1">9</div>
+                <div class="small text-body-tertiary">Yet to be delivered</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">⏳</div>
+        </div>
+
+        <div class="summary-card px-3 py-3 c-green cursor-pointer">
+            <div class="card-content">
+                <div class="s-label">Delivered</div>
+                <div class="s-val fs-2 fw-bold lh-1">4</div>
+                <div class="small text-body-tertiary">Delivery updated</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">✅</div>
+        </div>
+    </div>
+
+    <!-- Table Panel -->
+    <div >
+          <div class="table-panel rounded-top border-0 d-flex align-items-center justify-content-between gap-2">
+            <div class="control-bar border-0 shadow-none mb-0">
+                <app-date-range-picker [initialFromDate]="config.fromDateStr" [initialToDate]="config.toDateStr"
+                   >
+                </app-date-range-picker>
+            </div>
+            <div class="table-toolbar">
+                <div class="search-box d-flex align-items-center"><span class="text-muted">🔍</span>
+                    <input type="text" placeholder="Search LR..."
+                        class="form-control border-0 shadow-none" style="min-width: 380px;"
+                       >
+                </div>
+            </div>
+        </div>
+
+        <div class="table-wrap">
+            <table class="table align-middle data-table mb-0">
+                <thead>
+                    <tr>
+                        <th class="text-center" style="width: 40px;"><input type="checkbox" style="cursor: pointer;"></th>
+                        <th class="text-center" style="width: 45px;">#</th>
+                        <th class="text-center">LR NUMBER</th>
+                        <th class="text-center">LR DATE</th>
+                        <th class="text-center">ORG / DEST</th>
+                        <th class="text-center">REASSIGNED LOCATION</th>
+                        <th class="text-center" style="width: 190px; min-width: 170px; max-width: 210px;">BILLING PARTY</th>
+                        <th class="text-center" style="white-space: normal; line-height: 1.2; width: 120px;">PICKUP / DELI TYPE</th>
+                        <th class="text-center">GB NO.</th>
+                        <th class="text-center">GD NO.</th>
+                        <th class="text-center" style="white-space: normal; line-height: 1.2;">GB HCC NO.</th>
+                        <th class="text-center" style="white-space: normal; line-height: 1.2;">GD HCC NO.</th>
+                        <th class="text-center">DEPS</th>
+                        <th class="text-center">STATUS</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let item of godownDeliveryList; let i = index">
+                        <td class="text-center">
+                            <input type="checkbox" style="cursor: pointer;">
+                        </td>
+                        <td style="color:#9e9e9e;text-align:center">{{ i + 1 }}</td>
+                        <td>
+                            <a class="lr-no cursor-pointer">{{ item.lrNumber }}</a>
+                        </td>
+                        <td class="text-center text-nowrap">
+                            <span class="lr-date">{{ item.lrDate }}</span>
+                        </td>
+                        <td class="text-center">
+                            {{ item.orgDest }}
+                        </td>
+                        <td class="text-center fw-bold">
+                            <span *ngIf="item.isReassigned" class="reassigned-chip">{{ item.reassignedLocation }}</span>
+                            <span *ngIf="!item.isReassigned">{{ item.reassignedLocation }}</span>
+                        </td>
+                        <td style="width: 190px; min-width: 170px; max-width: 210px;">
+                            <div class="billing-party">
+                                <span class="party-code">{{ item.billingPartyCode }} : </span>
+                                <span class="party-name">{{ item.billingPartyName }}</span>
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <span class="badge" [ngClass]="item.pickupDeliveryTypeClass">{{ item.pickupDeliveryType }}</span>
+                        </td>
+                        <td>
+                            <ng-container *ngIf="item.isGbNA"><span class="text-muted">N/A</span></ng-container>
+                            <ng-container *ngIf="item.isGbNotGenerated"><span class="text-muted fst-italic">Not Generated</span></ng-container>
+                            <ng-container *ngIf="!item.isGbNA && !item.isGbNotGenerated && item.gbNo">
+                                <strong class="text-dark">{{ item.gbNo }}</strong>
+                            </ng-container>
+                            <ng-container *ngIf="!item.isGbNA && !item.isGbNotGenerated && !item.gbNo">
+                                <span class="gb-none">—</span>
+                            </ng-container>
+                        </td>
+                        <td>
+                            <ng-container *ngIf="item.isGdNA"><span class="text-muted">N/A</span></ng-container>
+                            <ng-container *ngIf="!item.isGdNA && item.gdNo">
+                                <a class="gd-link">{{ item.gdNo }}</a>
+                            </ng-container>
+                            <ng-container *ngIf="!item.isGdNA && !item.gdNo">
+                                <span class="gb-none">—</span>
+                            </ng-container>
+                        </td>
+                        <td>
+                            <ng-container *ngIf="item.isGbHccNA"><span class="text-muted">N/A</span></ng-container>
+                            <ng-container *ngIf="!item.isGbHccNA && item.gbHccNo">
+                                <div><a class="gb-link">{{ item.gbHccNo }}</a></div>
+                                <div *ngIf="item.hccPendingApproval" style="color: #ea580c; font-size: 10px; font-weight: 600;">Pending for Approval</div>
+                            </ng-container>
+                            <ng-container *ngIf="!item.isGbHccNA && !item.gbHccNo">
+                                <span class="gb-none">—</span>
+                            </ng-container>
+                        </td>
+                        <td>
+                            <ng-container *ngIf="item.isGdHccNA"><span class="text-muted">N/A</span></ng-container>
+                            <ng-container *ngIf="!item.isGdHccNA && item.gdHccNo">
+                                <div><a class="gd-link">{{ item.gdHccNo }}</a></div>
+                                <div *ngIf="item.hccPendingApproval" style="color: #ea580c; font-size: 10px; font-weight: 600;">Pending for Approval</div>
+                            </ng-container>
+                            <ng-container *ngIf="!item.isGdHccNA && !item.gdHccNo">
+                                <span class="gb-none">—</span>
+                            </ng-container>
+                        </td>
+                        <td class="text-center">
+                            <ng-container *ngIf="item.depsCount > 0">
+                                <a class="text-primary text-decoration-none fw-bold" style="font-size: 11px; cursor: pointer;">
+                                    {{ item.depsText }} <span class="badge bg-danger rounded-pill ms-1" style="font-size: 9px; padding: 2px 6px;">{{ item.depsCount }}</span>
+                                </a>
+                            </ng-container>
+                            <ng-container *ngIf="item.depsCount === 0">
+                                <span class="text-muted" style="font-size: 11px;">{{ item.depsText }}</span>
+                            </ng-container>
+                        </td>
+                        <td class="text-center">
+                            <span class="status-chip" [ngClass]="item.statusClass">{{ item.status }}</span>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+            <!-- Bottom Action Footer Toolbar -->
+            <div class="table-action-footer d-flex justify-content-between align-items-center">
+                <div class="action-note">
+                    Select dockets, then choose an action — one GD No. / one HCC is generated for all selected LRs
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <button type="button" class="btn btn-action-clear">Clear</button>
+                    <button type="button" class="btn btn-action-gbhcc">GB HCC</button>
+                    <button type="button" class="btn btn-action-updategd">Update Godown Delivery</button>
+                    <button type="button" class="btn btn-action-gdhcc">GD HCC</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <app-pagination [page]="1" [pageSize]="15" [totalRecords]="godownDeliveryList.length" [totalPages]="1">
+        </app-pagination>
+    </div>
+</div>
+
+<app-lr-view #LrViewComponent></app-lr-view>
+<app-ewaybill-invoice-modal #EwaybillInvoiceModalComponent></app-ewaybill-invoice-modal>
+<app-gb-view #GbViewComponent></app-gb-view>
+<app-gd-view #GdViewComponent></app-gd-view>
+<app-sticker-print #StickerPrintComponent></app-sticker-print>
+<app-lr-print #LrPrintComponent></app-lr-print>

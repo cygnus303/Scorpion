@@ -133,6 +133,9 @@ export const ChallanRoutes: Routes = [
     loadComponent: () => import('../bill-collection/bill-collection.component').then(m => m.BillCollectionComponent),
     canActivate: [DocketGuard]
   },
-
-
+  {
+    path: 'GodownDelivery',
+    loadComponent: () => import('../godown-delivery-list/godown-delivery-list.component').then(m => m.GodownDeliveryListComponent),
+    // canActivate: [DocketGuard]
+  },
 ];
