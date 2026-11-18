@@ -1,94 +1,289 @@
-/* Godown Delivery List - Standard Module Styles */
+/* ── Godown Delivery List (Matching lr-list styling & Typography) ── */
 
-.gb-link, .gd-link {
-    color: var(--primary, #2563eb);
-    text-decoration: underline;
-    font-weight: 600;
-    cursor: pointer;
+/* ── Table & Layout Resets (Compact & Premium) ── */
+.table-wrap {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin-top: 12px;
 }
 
-.reassigned-chip {
-    color: #c8102e;
+.data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+
+    thead th {
+        background: #f8fafc;
+        color: #475569;
+        font-size: 10.5px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 8px 10px;
+        border-bottom: 2px solid #e2e8f0;
+        white-space: nowrap;
+    }
+
+    tbody td {
+        padding: 6px 10px;
+        border-bottom: 1px solid #cbd5e1;
+        vertical-align: middle;
+        font-size: 11.5px;
+        color: #334155;
+        background: #ffffff;
+        transition: background 0.15s ease;
+    }
+
+    tbody tr:hover td {
+        background: #f8fafc;
+    }
+
+    tbody tr:last-child td {
+        border-bottom: none;
+    }
+}
+
+/* ── Typography & Cell Styles ── */
+.lr-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.lr-no {
     font-weight: 700;
+    color: #2563eb;
+    font-size: 12px;
+    text-decoration: underline !important;
+    cursor: pointer;
+    transition: color 0.15s;
+
+    &:hover {
+        color: #1d4ed8;
+    }
+}
+
+.lr-date {
+    font-size: 10px;
+    color: #64748b;
+    font-weight: 600;
+    text-transform: uppercase;
 }
 
 .billing-party {
-    font-size: 11px;
-    line-height: 1.3;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 100%;
+    max-width: 100%;
+    white-space: normal;
+    line-height: 1.25;
 
     .party-code {
-        color: #64748b;
-        font-weight: 600;
+        font-weight: 700;
+        color: #1d4ed8;
+        font-size: 11.5px;
+        white-space: nowrap;
     }
 
     .party-name {
-        color: #1e293b;
-        font-weight: 600;
+        font-size: 11px;
+        color: #334155;
+        font-weight: 500;
+        word-break: break-word;
     }
 }
 
-.status-chip {
+/* ── Reassigned Location Highlight Chip (Image 2 style) ── */
+.reassigned-chip {
     display: inline-block;
-    padding: 3px 8px;
-    border-radius: 12px;
+    background: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+    padding: 2px 8px;
+    border-radius: 4px;
     font-size: 11px;
+    font-weight: 700;
+}
+
+/* ── Pickup / Delivery Badges (Image 2 style) ── */
+.badge-pd,
+.badge-door-godown,
+.badge-godown-godown,
+.badge-godown-door,
+.badge-door-door,
+.badge-pd-default {
+    display: inline-block;
+    border-radius: 3px;
+    padding: 3px 8px;
+    font-size: 10px;
     font-weight: 600;
-    text-align: center;
+    white-space: nowrap;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    color: #475569;
+}
 
-    &.status-pending {
-        background: #fef3c7;
-        color: #92400e;
-    }
+/* ── GB / GD Links & Codes ── */
+.gb-code {
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 11.5px;
+}
 
-    &.status-delivered {
-        background: #dcfce7;
-        color: #166534;
+.gb-link {
+    font-weight: 700;
+    color: #2563eb;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 11.5px;
+
+    &:hover {
+        color: #1d4ed8;
     }
 }
 
+.gd-link {
+    font-weight: 700;
+    color: #2563eb;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 11.5px;
+
+    &:hover {
+        color: #1d4ed8;
+    }
+}
+
+.gb-none {
+    color: #cbd5e1;
+    font-size: 11.5px;
+}
+
+/* ── Status Chip (Exact Match to Image 2) ── */
+.status-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    padding: 3px 10px;
+    font-size: 10.5px;
+    font-weight: 700;
+    white-space: nowrap;
+    border: 1px solid transparent;
+    line-height: 1.2;
+}
+
+.chip-pending,
+.status-pending {
+    background: #fef3c7 !important;
+    color: #d97706 !important;
+    border-color: #fde68a !important;
+}
+
+.chip-delivery,
+.status-delivered {
+    background: #dcfce7 !important;
+    color: #15803d !important;
+    border-color: #86efac !important;
+}
+
+.chip-part,
+.chip-booking,
+.status-part {
+    background: #f5f3ff !important;
+    color: #7c3aed !important;
+    border-color: #ddd6fe !important;
+}
+
+.chip-transit,
+.status-transit {
+    background: #eff6ff !important;
+    color: #1d4ed8 !important;
+    border-color: #bfdbfe !important;
+}
+
+.chip-danger,
+.status-danger {
+    background: #fef2f2 !important;
+    color: #dc2626 !important;
+    border-color: #fecaca !important;
+}
+
+/* ── Bottom Action Footer Toolbar ── */
 .table-action-footer {
-    padding: 10px 14px;
-    background: #f8fafc;
+    padding: 10px 16px;
+    background: #ffffff;
     border-top: 1px solid #e2e8f0;
 
     .action-note {
-        font-size: 11px;
+        font-size: 12px;
         color: #64748b;
     }
 
     .btn-action-clear {
-        background: #fff;
+        background: #ffffff;
         border: 1px solid #cbd5e1;
-        color: #475569;
+        color: #64748b;
         font-size: 12px;
         font-weight: 600;
-        padding: 5px 14px;
+        padding: 6px 16px;
+        border-radius: 4px;
+        transition: all 0.15s;
+
+        &:hover {
+            background: #f8fafc;
+            color: #334155;
+            border-color: #94a3b8;
+        }
     }
 
     .btn-action-gbhcc {
         background: #0284c7;
         border: 1px solid #0284c7;
-        color: #fff;
+        color: #ffffff;
         font-size: 12px;
         font-weight: 600;
-        padding: 5px 14px;
+        padding: 6px 18px;
+        border-radius: 4px;
+        transition: all 0.15s;
+
+        &:hover {
+            background: #0369a1;
+        }
     }
 
     .btn-action-updategd {
         background: #16a34a;
         border: 1px solid #16a34a;
-        color: #fff;
+        color: #ffffff;
         font-size: 12px;
         font-weight: 600;
-        padding: 5px 14px;
+        padding: 6px 18px;
+        border-radius: 4px;
+        transition: all 0.15s;
+
+        &:hover {
+            background: #15803d;
+        }
     }
 
     .btn-action-gdhcc {
         background: #7c3aed;
         border: 1px solid #7c3aed;
-        color: #fff;
+        color: #ffffff;
         font-size: 12px;
         font-weight: 600;
-        padding: 5px 14px;
+        padding: 6px 18px;
+        border-radius: 4px;
+        transition: all 0.15s;
+
+        &:hover {
+            background: #6d28d9;
+        }
     }
 }

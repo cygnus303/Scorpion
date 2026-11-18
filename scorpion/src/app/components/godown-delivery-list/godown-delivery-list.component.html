@@ -5,40 +5,49 @@
                 <span class="icon">📦</span>
                 Godown Delivery
             </div>
+            <div class="text-muted" style="font-size: 12px; margin-top: 2px;">
+                Operations &gt; Delivery &gt; Godown Delivery <span class="mx-1 text-secondary">|</span> 
+                Pickup/Delivery Type: <strong>Godown-Door</strong>, <strong>Door-Godown</strong> and <strong>Godown to Godown</strong> — showing dockets where <strong>{{ docketService.Location || 'Origin/Delivery' }}</strong> is the origin or delivery branch
+            </div>
         </div>
         <div class="btn-group gap-3 ms-auto">
             <button class="btn btn-success px-4 py-2 rounded fw-bold">
-                <span> <span class="fs-5 me-1">📥</span> Download XLS</span>
+                <span *ngIf="!isCSVLoading" (click)="onExcelDownload()"> <span class="fs-5 me-1">📥</span> Download XLS</span>
+                <span *ngIf="isCSVLoading" class="spinner-border spinner-border-sm me-2"></span>
+                <span *ngIf="isCSVLoading">Downloading...</span>
             </button>
         </div>
     </div>
 
     <!-- Summary Strip -->
     <div class="summary-strip mt-3">
-        <div class="summary-card c-blue cursor-pointer px-3 py-3 active-card">
+        <div class="summary-card c-blue cursor-pointer px-3 py-3" [class.active-card]="config.statusFilter === 'T'"
+            (click)="filterByStatus('T')">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="card-content">
                     <div class="s-label">Total LR</div>
-                    <div class="s-val fs-2 fw-bold lh-1">{{ godownDeliveryList.length }}</div>
+                    <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.TotalLR || 0 }}</div>
                     <div class="small text-body-tertiary">Godown-Door, Door-Godown & Godown to Godown</div>
                 </div>
                 <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">📋</div>
             </div>
         </div>
 
-        <div class="summary-card px-3 py-3 c-orange cursor-pointer">
+        <div class="summary-card px-3 py-3 c-orange cursor-pointer" [class.active-card]="config.statusFilter === 'P'"
+            (click)="filterByStatus('P')">
             <div class="card-content">
                 <div class="s-label">Pending for Delivery</div>
-                <div class="s-val fs-2 fw-bold lh-1">9</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.PendingForDelivery || 0 }}</div>
                 <div class="small text-body-tertiary">Yet to be delivered</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">⏳</div>
         </div>
 
-        <div class="summary-card px-3 py-3 c-green cursor-pointer">
+        <div class="summary-card px-3 py-3 c-green cursor-pointer" [class.active-card]="config.statusFilter === 'D'"
+            (click)="filterByStatus('D')">
             <div class="card-content">
                 <div class="s-label">Delivered</div>
-                <div class="s-val fs-2 fw-bold lh-1">4</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.Delivered || 0 }}</div>
                 <div class="small text-body-tertiary">Delivery updated</div>
             </div>
             <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">✅</div>
@@ -46,18 +55,19 @@
     </div>
 
     <!-- Table Panel -->
-    <div >
-          <div class="table-panel rounded-top border-0 d-flex align-items-center justify-content-between gap-2">
+    <div class="mt-3">
+        <div class="table-panel rounded-top border-0 d-flex align-items-center justify-content-between gap-2">
             <div class="control-bar border-0 shadow-none mb-0">
                 <app-date-range-picker [initialFromDate]="config.fromDateStr" [initialToDate]="config.toDateStr"
-                   >
+                    (onRangeSelect)="onDateRangeSelected($event)">
                 </app-date-range-picker>
             </div>
             <div class="table-toolbar">
-                <div class="search-box d-flex align-items-center"><span class="text-muted">🔍</span>
+                <div class="search-box d-flex align-items-center">
+                    <span class="text-muted">🔍</span>
                     <input type="text" placeholder="Search LR..."
                         class="form-control border-0 shadow-none" style="min-width: 380px;"
-                       >
+                        [(ngModel)]="config.searchText" (keyup)="onSearchChange()">
                 </div>
             </div>
         </div>
@@ -66,14 +76,16 @@
             <table class="table align-middle data-table mb-0">
                 <thead>
                     <tr>
-                        <th class="text-center" style="width: 40px;"><input type="checkbox" style="cursor: pointer;"></th>
+                        <th class="text-center" style="width: 40px;">
+                            <input type="checkbox" style="cursor: pointer;" [checked]="isAllSelected" >
+                        </th>
                         <th class="text-center" style="width: 45px;">#</th>
                         <th class="text-center">LR NUMBER</th>
                         <th class="text-center">LR DATE</th>
                         <th class="text-center">ORG / DEST</th>
-                        <th class="text-center">REASSIGNED LOCATION</th>
+                        <th class="text-center" style="white-space: normal; line-height: 1.2;">REASSIGNED<br>LOCATION</th>
                         <th class="text-center" style="width: 190px; min-width: 170px; max-width: 210px;">BILLING PARTY</th>
-                        <th class="text-center" style="white-space: normal; line-height: 1.2; width: 120px;">PICKUP / DELI TYPE</th>
+                        <th class="text-center" style="white-space: normal; line-height: 1.2; width: 110px;">PICKUP /<br>DELIVERY TYPE</th>
                         <th class="text-center">GB NO.</th>
                         <th class="text-center">GD NO.</th>
                         <th class="text-center" style="white-space: normal; line-height: 1.2;">GB HCC NO.</th>
@@ -83,85 +95,111 @@
                     </tr>
                 </thead>
 
-                <tbody>
+                <tbody *ngIf="isLoading">
+                    <tr>
+                        <td colspan="14" class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <div class="mt-2 text-muted fw-bold">Fetching Data...</div>
+                        </td>
+                    </tr>
+                </tbody>
+
+                <tbody *ngIf="!isLoading && godownDeliveryList.length === 0">
+                    <tr>
+                        <td colspan="14" class="text-center py-4 text-muted fs-5">
+                            No records found.
+                        </td>
+                    </tr>
+                </tbody>
+
+                <tbody *ngIf="!isLoading && godownDeliveryList.length > 0">
                     <tr *ngFor="let item of godownDeliveryList; let i = index">
                         <td class="text-center">
-                            <input type="checkbox" style="cursor: pointer;">
+                            <input type="checkbox" style="cursor: pointer;" [(ngModel)]="item.isSelected" >
                         </td>
-                        <td style="color:#9e9e9e;text-align:center">{{ i + 1 }}</td>
+                        <td style="color:#9e9e9e;text-align:center">
+                            {{ item.SrNo || ((config.page - 1) * config.pageSize + i + 1) }}
+                        </td>
                         <td>
-                            <a class="lr-no cursor-pointer">{{ item.lrNumber }}</a>
+                            <a class="lr-no cursor-pointer" (click)="onView(item.LRNumber)">{{ item.LRNumber }}</a>
                         </td>
                         <td class="text-center text-nowrap">
-                            <span class="lr-date">{{ item.lrDate }}</span>
+                            <span class="lr-date">{{ item.LRDateText || (item.LRDate | date:'dd-MMM-yyyy') }}</span>
                         </td>
                         <td class="text-center">
-                            {{ item.orgDest }}
+                            {{ item.OrgDest || (item.OrgCode + ' / ' + item.DestCode) }}
                         </td>
-                        <td class="text-center fw-bold">
-                            <span *ngIf="item.isReassigned" class="reassigned-chip">{{ item.reassignedLocation }}</span>
-                            <span *ngIf="!item.isReassigned">{{ item.reassignedLocation }}</span>
+                        <td class="text-center">
+                            <span *ngIf="item.IsReassigned" class="reassigned-chip">{{ item.ReassignedLocation }}</span>
+                            <span *ngIf="!item.IsReassigned" class="fw-bold" style="color: #1e293b;">{{ item.ReassignedLocation || item.DestCode || '—' }}</span>
                         </td>
                         <td style="width: 190px; min-width: 170px; max-width: 210px;">
                             <div class="billing-party">
-                                <span class="party-code">{{ item.billingPartyCode }} : </span>
-                                <span class="party-name">{{ item.billingPartyName }}</span>
+                                <span class="party-code" *ngIf="item.BillingPartyCode">{{ item.BillingPartyCode }}</span>
+                                <span class="party-name" *ngIf="item.BillingPartyName">{{ item.BillingPartyName }}</span>
+                                <span *ngIf="!item.BillingPartyCode && !item.BillingPartyName" class="text-muted">{{ item.BillingParty || '—' }}</span>
                             </div>
                         </td>
                         <td class="text-center">
-                            <span class="badge" [ngClass]="item.pickupDeliveryTypeClass">{{ item.pickupDeliveryType }}</span>
+                            <span *ngIf="item.PkpDelType" class="badge-pd" [ngClass]="getPickupDeliveryTypeClass(item.PkpDelType)">
+                                {{ item.PkpDelType }}
+                            </span>
+                            <span *ngIf="!item.PkpDelType" class="text-muted">—</span>
                         </td>
                         <td>
-                            <ng-container *ngIf="item.isGbNA"><span class="text-muted">N/A</span></ng-container>
-                            <ng-container *ngIf="item.isGbNotGenerated"><span class="text-muted fst-italic">Not Generated</span></ng-container>
-                            <ng-container *ngIf="!item.isGbNA && !item.isGbNotGenerated && item.gbNo">
-                                <strong class="text-dark">{{ item.gbNo }}</strong>
+                            <ng-container *ngIf="item.IsGBApplicable === false"><span class="text-muted">—</span></ng-container>
+                            <ng-container *ngIf="item.IsGBApplicable !== false && item.GBNo">
+                                <strong class="text-dark">{{ item.GBNo }}</strong>
                             </ng-container>
-                            <ng-container *ngIf="!item.isGbNA && !item.isGbNotGenerated && !item.gbNo">
+                            <ng-container *ngIf="item.IsGBApplicable !== false && !item.GBNo">
                                 <span class="gb-none">—</span>
                             </ng-container>
                         </td>
                         <td>
-                            <ng-container *ngIf="item.isGdNA"><span class="text-muted">N/A</span></ng-container>
-                            <ng-container *ngIf="!item.isGdNA && item.gdNo">
-                                <a class="gd-link">{{ item.gdNo }}</a>
+                            <ng-container *ngIf="item.IsGDApplicable === false"><span class="text-muted">—</span></ng-container>
+                            <ng-container *ngIf="item.IsGDApplicable !== false && item.GDNo">
+                                <a class="gd-link" (click)="onGDNo(item)">{{ item.GDNo }}</a>
                             </ng-container>
-                            <ng-container *ngIf="!item.isGdNA && !item.gdNo">
+                            <ng-container *ngIf="item.IsGDApplicable !== false && !item.GDNo">
                                 <span class="gb-none">—</span>
                             </ng-container>
                         </td>
                         <td>
-                            <ng-container *ngIf="item.isGbHccNA"><span class="text-muted">N/A</span></ng-container>
-                            <ng-container *ngIf="!item.isGbHccNA && item.gbHccNo">
-                                <div><a class="gb-link">{{ item.gbHccNo }}</a></div>
-                                <div *ngIf="item.hccPendingApproval" style="color: #ea580c; font-size: 10px; font-weight: 600;">Pending for Approval</div>
+                            <ng-container *ngIf="item.IsGBApplicable === false"><span class="text-muted">—</span></ng-container>
+                            <ng-container *ngIf="item.IsGBApplicable !== false && item.GBHCCNo">
+                                <div><a class="gb-link" (click)="onViewHCC(item.GBNo, item.GBHCCNo)">{{ item.GBHCCNo }}</a></div>
+                                <div *ngIf="item.GBHCCStatus" style="color: #ea580c; font-size: 10px; font-weight: 600;">{{ item.GBHCCStatus }}</div>
                             </ng-container>
-                            <ng-container *ngIf="!item.isGbHccNA && !item.gbHccNo">
+                            <ng-container *ngIf="item.IsGBApplicable !== false && !item.GBHCCNo">
                                 <span class="gb-none">—</span>
                             </ng-container>
                         </td>
                         <td>
-                            <ng-container *ngIf="item.isGdHccNA"><span class="text-muted">N/A</span></ng-container>
-                            <ng-container *ngIf="!item.isGdHccNA && item.gdHccNo">
-                                <div><a class="gd-link">{{ item.gdHccNo }}</a></div>
-                                <div *ngIf="item.hccPendingApproval" style="color: #ea580c; font-size: 10px; font-weight: 600;">Pending for Approval</div>
+                            <ng-container *ngIf="item.IsGDApplicable === false"><span class="text-muted">—</span></ng-container>
+                            <ng-container *ngIf="item.IsGDApplicable !== false && item.GDHCCNo">
+                                <div><a class="gd-link" (click)="onViewHCC(item.GDNo, item.GDHCCNo)">{{ item.GDHCCNo }}</a></div>
+                                <div *ngIf="item.GDHCCStatus" style="color: #ea580c; font-size: 10px; font-weight: 600;">{{ item.GDHCCStatus }}</div>
                             </ng-container>
-                            <ng-container *ngIf="!item.isGdHccNA && !item.gdHccNo">
+                            <ng-container *ngIf="item.IsGDApplicable !== false && !item.GDHCCNo">
                                 <span class="gb-none">—</span>
                             </ng-container>
                         </td>
                         <td class="text-center">
-                            <ng-container *ngIf="item.depsCount > 0">
+                            <ng-container *ngIf="item.DepsCount > 0">
                                 <a class="text-primary text-decoration-none fw-bold" style="font-size: 11px; cursor: pointer;">
-                                    {{ item.depsText }} <span class="badge bg-danger rounded-pill ms-1" style="font-size: 9px; padding: 2px 6px;">{{ item.depsCount }}</span>
+                                    {{ item.DepsText || 'DEPS View' }} <span class="badge bg-danger rounded-pill ms-1" style="font-size: 9px; padding: 2px 6px;">{{ item.DepsCount }}</span>
                                 </a>
                             </ng-container>
-                            <ng-container *ngIf="item.depsCount === 0">
-                                <span class="text-muted" style="font-size: 11px;">{{ item.depsText }}</span>
+                            <ng-container *ngIf="!item.DepsCount || item.DepsCount === 0">
+                                <span class="text-muted" style="font-size: 11px;">{{ item.DepsText || 'No DEPS' }}</span>
                             </ng-container>
                         </td>
                         <td class="text-center">
-                            <span class="status-chip" [ngClass]="item.statusClass">{{ item.status }}</span>
+                            <span class="status-chip" [ngClass]="getStatusClass(item.StatusText || item.StatusCode)">
+                                {{ item.StatusText || item.StatusCode }}
+                            </span>
                         </td>
                     </tr>
                 </tbody>
@@ -175,15 +213,16 @@
                 </div>
                 <div class="d-flex align-items-center gap-2">
                     <button type="button" class="btn btn-action-clear">Clear</button>
-                    <button type="button" class="btn btn-action-gbhcc">GB HCC</button>
-                    <button type="button" class="btn btn-action-updategd">Update Godown Delivery</button>
-                    <button type="button" class="btn btn-action-gdhcc">GD HCC</button>
+                    <button type="button" class="btn btn-action-gbhcc" >GB HCC</button>
+                    <button type="button" class="btn btn-action-updategd" >Update Godown Delivery</button>
+                    <button type="button" class="btn btn-action-gdhcc" >GD HCC</button>
                 </div>
             </div>
         </div>
 
         <!-- Pagination -->
-        <app-pagination [page]="1" [pageSize]="15" [totalRecords]="godownDeliveryList.length" [totalPages]="1">
+        <app-pagination [page]="config.page" [pageSize]="config.pageSize" [totalRecords]="config.totalRecords"
+            [totalPages]="config.totalPages" (pageChange)="setPage($event)">
         </app-pagination>
     </div>
 </div>
