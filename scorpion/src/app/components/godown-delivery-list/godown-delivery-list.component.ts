@@ -17,6 +17,10 @@ import { EwaybillInvoiceModalComponent } from 'app/shared/components/ewaybill-in
 import { debounceTime, Subject, Subscription } from 'rxjs';
 import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 import { ExportService } from 'app/shared/services/export.service';
+import { environment } from 'environments/environment';
+import { DepsDetailsComponent } from '../drs-generation-list/deps-details/deps-details.component';
+import { UpdateGodownDeliveryComponent } from './update-godown-delivery/update-godown-delivery.component';
+import { GodownDeliveryViewComponent } from './godown-delivery-view/godown-delivery-view.component';
 
 @Component({
   selector: 'app-godown-delivery-list',
@@ -34,7 +38,10 @@ import { ExportService } from 'app/shared/services/export.service';
     LrPrintComponent,
     EwaybillInvoiceModalComponent,
     DateRangePickerComponent,
-    GdViewComponent
+    GdViewComponent,
+    DepsDetailsComponent,
+    UpdateGodownDeliveryComponent,
+    GodownDeliveryViewComponent
   ],
   templateUrl: './godown-delivery-list.component.html',
   styleUrl: './godown-delivery-list.component.scss',
@@ -45,7 +52,11 @@ export class GodownDeliveryListComponent {
   @ViewChild('GbViewComponent') gbViewComponent!: GbViewComponent;
   @ViewChild('GdViewComponent') gdViewComponent!: GdViewComponent;
   @ViewChild('HCCDetailsComponent') HCCDetailsComponent!: HCCDetailsComponent;
-
+    @ViewChild('DepsDetailsComponent') depsDetailsComponent!: DepsDetailsComponent;
+  @ViewChild('UpdateGodownDeliveryComponent') updateGodownDeliveryComponent!: UpdateGodownDeliveryComponent;
+  @ViewChild('GodownDeliveryViewComponent') godownDeliveryViewComponent!: GodownDeliveryViewComponent;
+  
+  public env = environment;
   public isLoading: boolean = false;
   public isCSVLoading: boolean = false;
   openTrackIndex: number | null = null;
@@ -104,7 +115,7 @@ export class GodownDeliveryListComponent {
         "FromDate": this.formatDateToISO(this.config.fromDateStr),
         "ToDate": this.formatDateToISO(this.config.toDateStr),
         "BRCD": this.docketService.loginUserList?.LocationCode || null,
-        // "Status": this.config.statusFilter || 'T',
+        "Status": this.config.statusFilter || 'T',
         "PageNo": this.config.page,
         "PageSize": this.config.pageSize,
         "IsDownload": false,
@@ -201,11 +212,89 @@ export class GodownDeliveryListComponent {
     this.fetchLRList();
   }
 
+  // Selection Checkbox helpers
+  toggleSelectAll() {
+    this.isAllSelected = !this.isAllSelected;
+    this.godownDeliveryList.forEach(item => item.isSelected = this.isAllSelected);
+  }
+
+  checkIfAllSelected() {
+    this.isAllSelected = this.godownDeliveryList.length > 0 && this.godownDeliveryList.every(item => item.isSelected);
+  }
+
+  clearSelection() {
+    this.isAllSelected = false;
+    this.godownDeliveryList.forEach(item => item.isSelected = false);
+  }
+
+  getSelectedItems(): any[] {
+    return this.godownDeliveryList.filter(item => item.isSelected);
+  }
+
+  // Update Godown Delivery Modal
+  openUpdateGodownDelivery() {
+    const selected = this.getSelectedItems();
+    if (selected.length === 0) {
+      if (this.godownDeliveryList.length > 0) {
+        if (this.updateGodownDeliveryComponent) {
+          this.updateGodownDeliveryComponent.showPopup([this.godownDeliveryList[0]]);
+        }
+      } else {
+        alert('Please select at least one docket.');
+        return;
+      }
+    } else {
+      if (this.updateGodownDeliveryComponent) {
+        this.updateGodownDeliveryComponent.showPopup(selected);
+      }
+    }
+  }
+
+  onDeliveryUpdated(updatedDockets: any) {
+    console.log('Godown Delivery updated:', updatedDockets);
+    this.fetchData();
+  }
+
+  openDepsDetails(data: any) {
+    if (this.depsDetailsComponent) {
+      this.depsDetailsComponent.showPopup(data);
+    }
+  } 
+
+  openSelectedGBHCC() {
+    const selected = this.getSelectedItems();
+    if (selected.length === 0) {
+      alert('Please select at least one docket.');
+      return;
+    }
+    this.openHCCModal(selected[0]);
+  }
+
+  openSelectedGDHCC() {
+    const selected = this.getSelectedItems();
+    if (selected.length === 0) {
+      alert('Please select at least one docket.');
+      return;
+    }
+    this.openGDHCCModal(selected[0]);
+  }
+
 
   // View Modals
   onView(dockno: string) {
-    if (this.lrViewComponent && dockno) {
-      // this.lrViewComponent.openModal(dockno);
+    if (dockno && this.lrViewComponent) {
+      this.lrViewComponent.showPopup(dockno);
+    }
+  }
+
+   onViewHCC(documentNo: any, hccNo: any) {
+    const url = `${this.env.liveUrl}ViewPrint/ViewHCC?DocumentNo=${documentNo}&HCNo=${hccNo}&src=angular`;
+    const popup = window.open('', 'popupWindow',
+      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
+    );
+
+    if (popup) {
+      popup.location.href = url;
     }
   }
 
@@ -217,24 +306,21 @@ export class GodownDeliveryListComponent {
   }
 
   onGDNo(item: any) {
-    const gd = item.GDNo || item.gdNo;
-    if (this.gdViewComponent && gd) {
-      this.gdViewComponent.openModal(gd);
-    }
-  }
-
-  onViewHCC(docNo: string, hccNo: string) {
-    if (this.HCCDetailsComponent && docNo && hccNo) {
-      this.HCCDetailsComponent.showPopup({ dockno: docNo, hcNumber: hccNo }, 'G', 'GB');
+    if (this.godownDeliveryViewComponent) {
+      this.godownDeliveryViewComponent.openModal(item);
     }
   }
 
   openHCCModal(lr: any) {
-    this.HCCDetailsComponent.showPopup(lr, 'G', 'GB');
+    if (this.HCCDetailsComponent) {
+      this.HCCDetailsComponent.showPopup(lr, 'G', 'GB');
+    }
   }
 
   openGDHCCModal(lr: any) {
-    this.HCCDetailsComponent.showPopup(lr, 'G', 'GD');
+    if (this.HCCDetailsComponent) {
+      this.HCCDetailsComponent.showPopup(lr, 'G', 'GD');
+    }
   }
 
   getPickupDeliveryTypeClass(type: string): string {
@@ -267,7 +353,7 @@ export class GodownDeliveryListComponent {
         "FromDate": this.formatDateToISO(this.config.fromDateStr),
         "ToDate": this.formatDateToISO(this.config.toDateStr),
         "BRCD": this.docketService.loginUserList?.LocationCode || null,
-        // "Status": this.config.statusFilter || 'T',
+        "Status": this.config.statusFilter || 'T',
         "PageNo": this.config.page,
         "PageSize": this.config.pageSize,
         "IsDownload": true,

@@ -1,0 +1,160 @@
+<div class="godown-modal-backdrop" *ngIf="showModal">
+    <div class="godown-modal-dialog">
+        <!-- Modal Header -->
+        <div class="godown-modal-header d-flex align-items-center justify-content-between">
+            <div class="modal-title-text">
+                Update Godown Delivery — {{ selectedDockets.length }} Docket(s) · Delivery Branch {{ docketService.Location || 'PIM' }}
+            </div>
+            <button type="button" class="btn-close-custom" (click)="closeModal()">&times;</button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="godown-modal-body">
+            <!-- Apply to All Section -->
+            <div class="bulk-apply-card">
+                <div class="bulk-title">
+                    Apply to all dockets (optional — each row stays editable)
+                </div>
+                <div class="d-flex align-items-end gap-2 flex-wrap">
+                    <div style="flex: 1; min-width: 140px;">
+                        <label class="field-label">DELIVERED TO</label>
+                        <select class="form-select form-select-sm" [(ngModel)]="bulkUpdate.deliveredTo">
+                            <option value="">-- Select --</option>
+                            <option value="Consignee">Consignee</option>
+                            <option value="Driver">Driver</option>
+                            <option value="Transporter">Transporter</option>
+                            <option value="Self">Self</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1; min-width: 140px;">
+                        <label class="field-label">PERSON NAME</label>
+                        <input type="text" class="form-control form-control-sm" placeholder="Receiver name" [(ngModel)]="bulkUpdate.personName">
+                    </div>
+                    <div style="flex: 1; min-width: 140px;">
+                        <label class="field-label">CONTACT NO</label>
+                        <input type="text" class="form-control form-control-sm" placeholder="10-digit mobile" maxlength="10" [(ngModel)]="bulkUpdate.contactNo">
+                    </div>
+                    <div style="flex: 1; min-width: 140px;">
+                        <label class="field-label">DELIVERY DATE</label>
+                        <div class="custom-datepicker-wrap">
+                            <input type="text" class="form-control form-control-sm" bsDatepicker [bsConfig]="datePickerConfig" [(ngModel)]="bulkUpdate.deliveryDate" placeholder="DD-MMM-YYYY">
+                            <span class="cal-icon">📅</span>
+                        </div>
+                    </div>
+                    <div style="flex: 1; min-width: 110px;">
+                        <label class="field-label">POD RECEIVED</label>
+                        <select class="form-select form-select-sm" [(ngModel)]="bulkUpdate.podReceived">
+                            <option value="">--</option>
+                            <option value="Y">Yes</option>
+                            <option value="N">No</option>
+                        </select>
+                    </div>
+                    <div style="width: 110px;">
+                        <button type="button" class="btn btn-outline-secondary btn-sm w-100 fw-semibold btn-apply-all" (click)="applyBulkToAll()">
+                            Apply to All
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table Section -->
+            <div class="modal-table-wrap">
+                <table class="table modal-data-table mb-0 align-middle">
+                    <thead>
+                        <tr>
+                            <th class="text-center" style="width: 40px;">#</th>
+                            <th style="min-width: 120px;">LR NO / DATE</th>
+                            <th style="min-width: 100px;">ORG / DEST</th>
+                            <th style="min-width: 130px;">TOTAL PKGS / WT</th>
+                            <th style="min-width: 100px;">DELIVERED PKGS *</th>
+                            <th style="min-width: 100px;">DELIVERED WT</th>
+                            <th style="min-width: 150px;">PART DELIVERED REASON</th>
+                            <th style="min-width: 140px;">DELIVERED TO *</th>
+                            <th style="min-width: 140px;">PERSON NAME *</th>
+                            <th style="min-width: 120px;">CONTACT NO *</th>
+                            <th style="min-width: 140px;">DELIVERY DATE *</th>
+                            <th style="min-width: 110px;">POD RECEIVED *</th>
+                            <th class="text-center" style="min-width: 90px;">POD UPLOAD</th>
+                            <th class="text-center" style="min-width: 90px;">POD QUALITY</th>
+                            <th class="text-center" style="min-width: 60px;">DEPS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let row of selectedDockets; let i = index">
+                            <td class="text-center text-muted">{{ i + 1 }}</td>
+                            <td>
+                                <div class="fw-bold text-dark" style="font-size: 11.5px;">{{ row.LRNumber }}</div>
+                                <div class="text-muted" style="font-size: 10.5px;">{{ row.LRDateText || (row.LRDate | date:'dd-MMM-yyyy') }}</div>
+                            </td>
+                            <td>
+                                <span class="fw-semibold text-secondary">{{ row.OrgDest || (row.OrgCode + ' / ' + row.DestCode) }}</span>
+                            </td>
+                            <td>
+                                <div class="fw-bold text-dark" style="font-size: 11.5px;">{{ row.Pkgs || 40 }} / {{ row.ActualWt || 986.8 }} Kg</div>
+                                <div class="text-muted" style="font-size: 10.5px;">DRS {{ row.DRSDate || '06-Oct-2026' }}</div>
+                            </td>
+                            <td>
+                                <input type="number" class="form-control form-control-sm" [(ngModel)]="row.deliveredPkgs" style="width: 80px;">
+                            </td>
+                            <td>
+                                <input type="number" class="form-control form-control-sm" [(ngModel)]="row.deliveredWt" style="width: 90px;">
+                            </td>
+                            <td>
+                                <select class="form-select form-select-sm" [(ngModel)]="row.partDeliveredReason">
+                                    <option value="N/A">N/A</option>
+                                    <option value="Shortage">Shortage</option>
+                                    <option value="Damage">Damage</option>
+                                    <option value="Customer Refused">Customer Refused</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-select form-select-sm" [(ngModel)]="row.deliveredTo">
+                                    <option value="">Select</option>
+                                    <option value="Consignee">Consignee</option>
+                                    <option value="Driver">Driver</option>
+                                    <option value="Transporter">Transporter</option>
+                                    <option value="Self">Self</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm" [(ngModel)]="row.personName">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm" maxlength="10" [(ngModel)]="row.contactNo">
+                            </td>
+                            <td>
+                                <div class="custom-datepicker-wrap" style="min-width: 130px;">
+                                    <input type="text" class="form-control form-control-sm" bsDatepicker [bsConfig]="datePickerConfig" [(ngModel)]="row.deliveryDate" placeholder="DD-MMM-YYYY">
+                                    <span class="cal-icon">📅</span>
+                                </div>
+                            </td>
+                            <td>
+                                <select class="form-select form-select-sm" [(ngModel)]="row.podReceived">
+                                    <option value="">Select</option>
+                                    <option value="Y">Yes</option>
+                                    <option value="N">No</option>
+                                </select>
+                            </td>
+                            <td class="text-center text-muted fst-italic">N/A</td>
+                            <td class="text-center text-muted fst-italic">N/A</td>
+                            <td class="text-center text-muted">—</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Information text under table -->
+            <div class="text-muted" style="font-size: 11px;">
+                On submit, all listed dockets are marked Delivered and <strong>one Godown Delivery No.</strong> is generated for all of them. Delivery date must be between each docket's DRS date and today.
+            </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="godown-modal-footer">
+            <button type="button" class="btn btn-modal-cancel" (click)="closeModal()">Cancel</button>
+            <button type="button" class="btn btn-modal-submit" (click)="submitGodownDelivery()">
+                Submit — Update Godown Delivery
+            </button>
+        </div>
+    </div>
+</div>
