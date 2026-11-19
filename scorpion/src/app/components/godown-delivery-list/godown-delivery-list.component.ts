@@ -231,6 +231,50 @@ export class GodownDeliveryListComponent {
     return this.godownDeliveryList.filter(item => item.isSelected);
   }
 
+  get selectedItem(): any {
+    const selected = this.getSelectedItems();
+    return selected.length > 0 ? selected[0] : null;
+  }
+
+  get item(): any {
+    return this.selectedItem || {};
+  }
+
+isGBHCCDisabled(): boolean {
+  const item = this.selectedItem;
+  if (!item) return true;
+  const currentLocation = this.docketService.loginUserList?.LocationCode;
+  return (
+    !item.GBNo || 
+    (item.GBHCCNo !== '' && item.GBHCCNo !== null && item.GBHCCNo !== undefined) || 
+    item.OrgCode !== currentLocation
+  );
+}
+
+isUpdateDeliveryDisabled(): boolean {
+  const item = this.selectedItem;
+  if (!item) return true; 
+  const currentLocation = this.docketService.loginUserList?.LocationCode;
+  return (
+    item.StatusCode !== 'P' ||
+    item.ReassignedLocation !== currentLocation ||
+    item.PkpDelTypeCode === '2'
+  );
+}
+
+isGDHCCDisabled(): boolean {
+  const item = this.selectedItem;
+  if (!item) return true; 
+  const currentLocation = this.docketService.loginUserList?.LocationCode;
+
+  return (
+    !item.GDNo ||
+    (item.GDHCCNo !== '' && item.GDHCCNo !== null && item.GDHCCNo !== undefined) ||
+    item.DestCode !== currentLocation
+  );
+}
+
+
   // Update Godown Delivery Modal
   openUpdateGodownDelivery() {
     const selected = this.getSelectedItems();
@@ -267,7 +311,16 @@ export class GodownDeliveryListComponent {
       alert('Please select at least one docket.');
       return;
     }
-    this.openHCCModal(selected[0]);
+    const item = selected[0];
+    item.dockno = item.dockno || item.LRNumber;
+    item.dockdt = item.dockdt || item.LRDate;
+    item.orgncd = item.orgncd || item.OrgCode;
+    item.destcd = item.destcd || item.DestCode;
+    item.pkgsno = item.pkgsno !== undefined ? item.pkgsno : item.Pkgs;
+    item.actuwt = item.actuwt !== undefined ? item.actuwt : item.ActualWt;
+    item.gbNo = item.gbNo || item.GBNo;
+    item.gdNo = item.gdNo || item.GDNo;
+    this.openHCCModal(item);
   }
 
   openSelectedGDHCC() {
@@ -276,7 +329,16 @@ export class GodownDeliveryListComponent {
       alert('Please select at least one docket.');
       return;
     }
-    this.openGDHCCModal(selected[0]);
+    const item = selected[0];
+    item.dockno = item.dockno || item.LRNumber;
+    item.dockdt = item.dockdt || item.LRDate;
+    item.orgncd = item.orgncd || item.OrgCode;
+    item.destcd = item.destcd || item.DestCode;
+    item.pkgsno = item.pkgsno !== undefined ? item.pkgsno : item.Pkgs;
+    item.actuwt = item.actuwt !== undefined ? item.actuwt : item.ActualWt;
+    item.gbNo = item.gbNo || item.GBNo;
+    item.gdNo = item.gdNo || item.GDNo;
+    this.openGDHCCModal(item);
   }
 
 

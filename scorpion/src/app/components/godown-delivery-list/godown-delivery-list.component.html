@@ -199,24 +199,28 @@
                                 {{ item.StatusText || item.StatusCode }}
                             </span>
                         </td>
+                       
                     </tr>
                 </tbody>
 
             </table>
 
-            <!-- Bottom Action Footer Toolbar -->
-            <div class="table-action-footer d-flex justify-content-between align-items-center">
-                <div class="action-note">
-                    Select dockets, then choose an action — one GD No. / one HCC is generated for all selected LRs
-                </div>
-                <div class="d-flex align-items-center gap-2">
-                    <button type="button" class="btn btn-action-clear" (click)="clearSelection()">Clear</button>
-                    <button type="button" class="btn btn-action-gbhcc" (click)="openSelectedGBHCC()">GB HCC</button>
-                    <button type="button" class="btn btn-action-updategd" (click)="openUpdateGodownDelivery()">Update Godown Delivery</button>
-                    <button type="button" class="btn btn-action-gdhcc" (click)="openSelectedGDHCC()">GD HCC</button>
-                </div>
-            </div>
         </div>
+         <!-- Bottom Action Footer Toolbar -->
+                        <div class="table-action-footer d-flex justify-content-between align-items-center">
+                            <div class="action-note">
+                                Select dockets, then choose an action — one GD No. / one HCC is generated for all selected LRs
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <button type="button" class="btn btn-action-clear" (click)="clearSelection()">Clear</button>
+                                <button type="button" class="btn btn-action-gbhcc" [disabled]="isGBHCCDisabled()"
+                                (click)="openSelectedGBHCC()">GB HCC</button>
+                                <button type="button" class="btn btn-action-updategd" 
+                                 [disabled]="isUpdateDeliveryDisabled()" (click)="openUpdateGodownDelivery()">Update Godown Delivery</button>
+                                <button type="button" class="btn btn-action-gdhcc" 
+                                [disabled]="isGDHCCDisabled()" (click)="openSelectedGDHCC()">GD HCC</button>
+                            </div>
+                        </div>
 
         <!-- Pagination -->
         <app-pagination [page]="config.page" [pageSize]="config.pageSize" [totalRecords]="config.totalRecords"
