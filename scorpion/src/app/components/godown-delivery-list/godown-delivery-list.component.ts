@@ -76,7 +76,7 @@ export class GodownDeliveryListComponent {
   public config = {
     fromDateStr: new Date(new Date().setDate(new Date().getDate() - 30)),
     toDateStr: new Date(),
-    statusFilter: 'T',
+    statusFilter: 'A',
     page: 1,
     pageSize: 15,
     totalRecords: 0,
@@ -115,7 +115,7 @@ export class GodownDeliveryListComponent {
         "FromDate": this.formatDateToISO(this.config.fromDateStr),
         "ToDate": this.formatDateToISO(this.config.toDateStr),
         "BRCD": this.docketService.loginUserList?.LocationCode || null,
-        "Status": this.config.statusFilter || 'T',
+        "Status": this.config.statusFilter || 'A',
         "PageNo": this.config.page,
         "PageSize": this.config.pageSize,
         "IsDownload": false,
@@ -337,11 +337,10 @@ export class GodownDeliveryListComponent {
 
   getStatusClass(status: string): string {
     if (!status) return 'chip-pending';
-    const s = status.toLowerCase();
     // if (s.includes('part')) return 'chip-part';
-    if (s === 'p') return 'chip-pending';
-    if (s === 'd') return 'chip-delivery';
-    if ( s === 't') return 'chip-transit';
+    if (status === 'P') return 'chip-pending';
+    if (status === 'D') return 'chip-delivery';
+    if ( status === 'T') return 'chip-transit';
     return 'chip-pending';
   }
 
@@ -353,7 +352,7 @@ export class GodownDeliveryListComponent {
         "FromDate": this.formatDateToISO(this.config.fromDateStr),
         "ToDate": this.formatDateToISO(this.config.toDateStr),
         "BRCD": this.docketService.loginUserList?.LocationCode || null,
-        "Status": this.config.statusFilter || 'T',
+        "Status": this.config.statusFilter || 'A',
         "PageNo": this.config.page,
         "PageSize": this.config.pageSize,
         "IsDownload": true,
