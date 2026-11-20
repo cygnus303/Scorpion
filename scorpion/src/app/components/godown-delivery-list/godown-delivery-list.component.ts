@@ -223,11 +223,25 @@ export class GodownDeliveryListComponent {
     const hasGD = !!(item.GDNo && item.GDNo !== '—' && item.GDNo !== '-');
     const hasGBHCC = !!(item.GBHCCNo && item.GBHCCNo !== '—' && item.GBHCCNo !== '-');
     const hasGDHCC = !!(item.GDHCCNo && item.GDHCCNo !== '—' && item.GDHCCNo !== '-');
-    const isDelivered = item.StatusCode === 'D';
+
+    // 1. Status must be Pending ('P')
+    const statusCode = (item.StatusCode || item.statusCode || item.Status || item.status || '').toString().trim().toUpperCase();
+    const isPending = statusCode === 'P';
+
+    // 2. ReassignedLocation and Login Location must match
+    const loginLoc = (this.docketService.loginUserList?.LocationCode || this.docketService.Location || '').toString().trim().toUpperCase();
+    const reassignedLoc = (item.ReassignedLocation || item.reassignedLocation || item.DestCode || item.destcd || '').toString().trim().toUpperCase();
+    const isLocationMatch = !loginLoc || (reassignedLoc === loginLoc);
+
+    // 3. PkpDelTypeCode must NOT be "2" (and PkpDelType is not Godown-Door)
+    const pkpCode = (item.PkpDelTypeCode !== undefined ? item.PkpDelTypeCode :
+                    (item.pkpDelTypeCode !== undefined ? item.pkpDelTypeCode :
+                    (item.pkpdeltypecode !== undefined ? item.pkpdeltypecode : ''))).toString().trim();
+    const isNotCode2 = pkpCode !== '2' && item.PkpDelType !== 'Godown-Door';
 
     return {
-      // Rule 1 & 2: Update Godown Delivery (No GD No and delivery is pending)
-      canUpdate: !hasGD && !isDelivered && item.PkpDelType !== 'Godown-Door',
+      // Update Godown Delivery: No GD No, Status is 'P', ReassignedLocation == Login Location, PkpDelTypeCode != '2'
+      canUpdate: !hasGD && isPending && isLocationMatch && isNotCode2,
 
       // Rule 2, 3 & 5: GB HCC (GB No exists and GB HCC No is not yet generated)
       canGBHCC: hasGB && !hasGBHCC,
@@ -341,20 +355,6 @@ export class GodownDeliveryListComponent {
   get isHeaderCheckboxDisabled(): boolean {
     return !this.godownDeliveryList || this.godownDeliveryList.length === 0;
   }
-
-  // Compatibility helpers
-  isGBHCCDisabled(): boolean {
-    return !this.isGBHCCEnabled;
-  }
-
-  isUpdateDeliveryDisabled(): boolean {
-    return !this.isUpdateGDEnabled;
-  }
-
-  isGDHCCDisabled(): boolean {
-    return !this.isGDHCCEnabled;
-  }
-
 
   // Update Godown Delivery Modal
   openUpdateGodownDelivery() {
