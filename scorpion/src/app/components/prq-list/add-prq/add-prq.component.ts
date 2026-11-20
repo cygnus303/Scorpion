@@ -577,7 +577,7 @@ export class AddPrqComponent {
           }
         } else {
           const errorMsg = paybasValue
-            ? `Contract is not available for this customer in selected PayBasis (${paybasValue}).`
+            ? `Contract is not available for this customer paybasis.`
             : 'Contract details are not available for this customer. Cannot proceed with PRQ generation.';
           this.contractErrorMsg = errorMsg;
           this.sweetAlertService.error(errorMsg);
