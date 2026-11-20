@@ -64,6 +64,10 @@ export class AddPrqComponent {
   public isSubmitting: boolean = false;
   public branchSearchSubject: Subject<string> = new Subject<string>();
   public isBranchLoading: boolean = false;
+  public allPaybaseData: any[] = [];
+  public paybaseData: any[] = [];
+  public allowedPaybasList: any = null;
+  public contractErrorMsg: string = '';
   @Output() dataEmitter: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(
@@ -92,6 +96,7 @@ export class AddPrqComponent {
         this.getLocations(term);
       }
     });
+      this.getBillingTypeData();
 
     // Customer Search Subscription
     this.customerSearchSubject.pipe(debounceTime(400)).subscribe((term: string) => {
@@ -240,6 +245,21 @@ export class AddPrqComponent {
     });
   }
 
+  getBillingTypeData() {
+    this.basicDetailService.getGeneralMasterList('PAYTYP', null, null).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.allPaybaseData = response.data || [];
+          if (this.allowedPaybasList) {
+            this.filterPaybase(this.allowedPaybasList);
+          } else {
+            this.paybaseData = response.data || [];
+          }
+        }
+      }
+    });
+  }
+
   showPopup(prqNo?: string) {
     this.PRQNo = prqNo;
     this.initForm();
@@ -268,6 +288,9 @@ export class AddPrqComponent {
     this.customerData = [];
     this.pincodeData = [];
     this.destPincodeData = [];
+    this.allowedPaybasList = null;
+    this.contractErrorMsg = '';
+    this.paybaseData = [...this.allPaybaseData];
   }
 
   initForm() {
@@ -311,6 +334,8 @@ export class AddPrqComponent {
       consigneePin: new FormControl(null),
       consigneeContactNo:new FormControl(null),
       PickupBranch:new FormControl(null, Validators.required),
+      payBase:new FormControl(null,Validators.required),
+      contractID:new FormControl(null),
       consignorContactNo:new FormControl(null,[Validators.required, Validators.pattern('^[0-9]{10}$')])
     });
 
@@ -349,6 +374,9 @@ export class AddPrqComponent {
     this.destPincodeData = [];
     this.pincodeNotFoundText = 'Please enter 3 more characters';
     this.destPincodeNotFoundText = 'Please enter 3 more characters';
+    this.allowedPaybasList = null;
+    this.contractErrorMsg = '';
+    this.paybaseData = [...this.allPaybaseData];
   }
 
   onChangePincode(event: any) {
@@ -384,16 +412,76 @@ export class AddPrqComponent {
   }
 
   onCustomerSelect(event: any) {
+    this.contractErrorMsg = '';
     if (event && event.text) {
       this.prqForm.patchValue({
-        customer_Name: event.text
+        customer_Name: event.text,
+        payBase: null
       });
     } else {
       this.prqForm.patchValue({
-        customer_Name: ''
+        customer_Name: '',
+        payBase: null
+      });
+      this.allowedPaybasList = null;
+      this.paybaseData = [...this.allPaybaseData];
+      return;
+    }
+    this.allowedPaybasList = null;
+    this.getContract(event?.id, '');
+  }
+
+  filterPaybase(paybasSource: any) {
+    if (!paybasSource) return;
+
+    let allowedList: string[] = [];
+    if (typeof paybasSource === 'string') {
+      allowedList = paybasSource.split(',').map(s => s.trim().toUpperCase()).filter(Boolean);
+    } else if (Array.isArray(paybasSource)) {
+      paybasSource.forEach(item => {
+        if (typeof item === 'string') {
+          allowedList.push(...item.split(',').map(s => s.trim().toUpperCase()).filter(Boolean));
+        } else if (item) {
+          const val = (item.codeId || item.codeDesc || item.paybas || item.PayBas || '').toString().trim().toUpperCase();
+          if (val) allowedList.push(val);
+        }
       });
     }
-    this.getContract(event?.id);
+
+    if (this.allPaybaseData && this.allPaybaseData.length > 0) {
+      const filtered = this.allPaybaseData.filter((item: any) => {
+        const id = (item.codeId || '').toString().trim().toUpperCase();
+        const desc = (item.codeDesc || '').toString().trim().toUpperCase();
+        return allowedList.some(a => a === id || a === desc || desc.includes(a) || id.includes(a));
+      });
+
+      if (filtered.length > 0) {
+        this.paybaseData = filtered;
+      } else {
+        this.paybaseData = allowedList.map(a => ({ codeId: a, codeDesc: a }));
+      }
+    } else {
+      this.paybaseData = allowedList.map(a => ({ codeId: a, codeDesc: a }));
+    }
+
+    // Auto-select if only 1 option
+    if (this.paybaseData.length === 1) {
+      this.prqForm.patchValue({ payBase: this.paybaseData[0].codeId });
+    } else {
+      const current = this.prqForm.get('payBase')?.value;
+      if (current && !this.paybaseData.some(p => p.codeId === current)) {
+        this.prqForm.patchValue({ payBase: null });
+      }
+    }
+  }
+
+  onPayBasChange(event: any) {
+    this.contractErrorMsg = '';
+    const paybas = event?.codeId || (typeof event === 'string' ? event : null) || this.prqForm.get('payBase')?.value || '';
+    const customerId = this.prqForm.get('customerCode')?.value;
+    if (customerId) {
+      this.getContract(customerId, paybas);
+    }
   }
 
   onColdChainCategoryChange(event?: any) {
@@ -420,28 +508,85 @@ export class AddPrqComponent {
     });
   }
 
-  getContract(customerId?: any) {
-    const custCode = 'C00120010';
-    // const custCode = this.docketService.baseUsername;
-    this.prqService.getContractDetail(customerId).subscribe({
+  getContract(customerId?: any, paybas?: any) {
+    const custCode = customerId || this.prqForm.get('customerCode')?.value;
+    const paybasValue = paybas !== undefined && paybas !== null ? paybas : (this.prqForm.get('payBase')?.value || '');
+    if (!custCode) {
+      return;
+    }
+
+    const isPaybasBlank = !paybasValue || paybasValue.toString().trim() === '';
+
+    this.prqService.getContractDetail(custCode, paybasValue).subscribe({
       next: (response: any) => {
         if (response && response.data && response.data.length > 0) {
-          const serviceTypesStr = response.data[0].serviceTypes || '';
-          const transportTypesStr = response.data[0].transportTypes || '';
+          const item = response.data[0];
+          const serviceTypesStr = item.serviceTypes || '';
+          const transportTypesStr = item.transportTypes || '';
+            this.prqForm.patchValue({
+            contractID:item.contractId
+          })
 
           if (serviceTypesStr.trim() === '' && transportTypesStr.trim() === '') {
-            this.sweetAlertService.info('Contract details are not available for this customer. Cannot proceed with PRQ generation.');
-              this.prqForm.patchValue({
-              customerCode: null,
-              })
+            const errorMsg = paybasValue
+              ? `Contract is not available for this customer in selected PayBasis (${paybasValue}).`
+              : 'Contract details are not available for this customer. Cannot proceed with PRQ generation.';
+            this.contractErrorMsg = errorMsg;
+            this.sweetAlertService.error(errorMsg);
+            this.prqForm.patchValue({
+              payBase: null
+            });
+            this.serviceData = [];
+            this.transportModes = [];
+            if (isPaybasBlank) {
+              this.paybaseData = [];
+            }
             return;
           }
 
-          this.getTransportModes('', transportTypesStr)
+          this.contractErrorMsg = '';
+
+          // Only filter PayBas dropdown if paybas in request was null or blank!
+          if (isPaybasBlank) {
+            let paybasDataFromApi = item.custcat || item.custCat || item.CustCat || item.custcode || item.custCode || '';
+
+            if (!paybasDataFromApi) {
+              paybasDataFromApi = item.paybas || item.payBas || item.payBase || item.paybase || 
+                                  item.PayBas || item.PayBase || item.paymentTypes || item.paymentType || 
+                                  item.payTypes || item.payType || item.payBasis || item.PayBasis || '';
+            }
+
+            if (!paybasDataFromApi && response.data.length > 1) {
+              const allPay = response.data.map((d: any) => d.custcat || d.custCat || d.CustCat || d.paybas || d.payBas || d.PayBas || d.payBase || d.PayBase).filter(Boolean);
+              if (allPay.length > 0) {
+                paybasDataFromApi = allPay;
+              }
+            }
+
+            if (paybasDataFromApi) {
+              this.allowedPaybasList = paybasDataFromApi;
+              this.filterPaybase(paybasDataFromApi);
+            }
+          }
+
+          this.getTransportModes('', transportTypesStr);
 
           this.serviceData = serviceTypesStr.split(',').map((s: string) => ({ name: s.trim(), value: s.trim() })).filter((s: any) => s.value !== '');
           if (this.serviceData.length === 1) {
             this.prqForm.patchValue({ service_Type: this.serviceData[0].value });
+          }
+        } else {
+          const errorMsg = paybasValue
+            ? `Contract is not available for this customer paybasis.`
+            : 'Contract details are not available for this customer. Cannot proceed with PRQ generation.';
+          this.contractErrorMsg = errorMsg;
+          this.sweetAlertService.error(errorMsg);
+          this.serviceData = [];
+          this.transportModes = [];
+          if (paybasValue) {
+            this.prqForm.patchValue({ payBase: null });
+          } else if (isPaybasBlank) {
+            this.paybaseData = [];
           }
         }
       },
@@ -739,6 +884,8 @@ export class AddPrqComponent {
         consignorContactno:formData.consignorContactNo,
         consigneeContactno:formData.consigneeContactNo,
         PickupBranch:formData.PickupBranch || '',
+        payBas:formData.payBase || '',
+        contractId:formData.contractID
       };
 
       this.prqService.submitPRQ(payload).subscribe({

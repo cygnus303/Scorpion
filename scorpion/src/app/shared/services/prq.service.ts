@@ -10,8 +10,8 @@ export class PrqService {
 
   constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerService) { }
 
-    getContractDetail(custCode:string){
-     return this.apiHandlerService.Get(`Master/GetContractForPRQ?custCode=${custCode}`)
+    getContractDetail(custCode:string,paybas:string){
+     return this.apiHandlerService.Get(`Master/GetContractForPRQ?custCode=${custCode}&PayBas=${paybas}`)
   }
 
   submitPRQ(payload:any){
