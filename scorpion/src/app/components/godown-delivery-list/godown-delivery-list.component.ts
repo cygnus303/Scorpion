@@ -392,16 +392,21 @@ export class GodownDeliveryListComponent {
       alert('Please select at least one docket.');
       return;
     }
-    const item = selected[0];
-    item.dockno = item.dockno || item.LRNumber;
-    item.dockdt = item.dockdt || item.LRDate;
-    item.orgncd = item.orgncd || item.OrgCode;
-    item.destcd = item.destcd || item.DestCode;
-    item.pkgsno = item.pkgsno !== undefined ? item.pkgsno : item.Pkgs;
-    item.actuwt = item.actuwt !== undefined ? item.actuwt : item.ActualWt;
-    item.gbNo = item.gbNo || item.GBNo;
-    item.gdNo = item.gdNo || item.GDNo;
-    this.openHCCModal(item);
+    const dockets = selected.map(item => ({
+      ...item,
+      dockno: item.dockno || item.LRNumber,
+      dockdt: item.dockdt || item.LRDate,
+      LRDateText: item.LRDateText,
+      lrdate: item.LRDateText || item.LRDate,
+      orgncd: item.orgncd || item.OrgCode,
+      destcd: item.destcd || item.DestCode,
+      pkgsno: item.pkgsno !== undefined ? item.pkgsno : item.Pkgs,
+      actuwt: item.actuwt !== undefined ? item.actuwt : item.ActualWt,
+      gbNo: item.gbNo || item.GBNo,
+      gdNo: item.gdNo || item.GDNo,
+      documentNo: item.gbNo || item.GBNo
+    }));
+    this.openHCCModal(dockets);
   }
 
   openSelectedGDHCC() {
@@ -410,16 +415,21 @@ export class GodownDeliveryListComponent {
       alert('Please select at least one docket.');
       return;
     }
-    const item = selected[0];
-    item.dockno = item.dockno || item.LRNumber;
-    item.dockdt = item.dockdt || item.LRDate;
-    item.orgncd = item.orgncd || item.OrgCode;
-    item.destcd = item.destcd || item.DestCode;
-    item.pkgsno = item.pkgsno !== undefined ? item.pkgsno : item.Pkgs;
-    item.actuwt = item.actuwt !== undefined ? item.actuwt : item.ActualWt;
-    item.gbNo = item.gbNo || item.GBNo;
-    item.gdNo = item.gdNo || item.GDNo;
-    this.openGDHCCModal(item);
+    const dockets = selected.map(item => ({
+      ...item,
+      dockno: item.dockno || item.LRNumber,
+      dockdt: item.dockdt || item.LRDate,
+      LRDateText: item.LRDateText,
+      lrdate: item.LRDateText || item.LRDate,
+      orgncd: item.orgncd || item.OrgCode,
+      destcd: item.destcd || item.DestCode,
+      pkgsno: item.pkgsno !== undefined ? item.pkgsno : item.Pkgs,
+      actuwt: item.actuwt !== undefined ? item.actuwt : item.ActualWt,
+      gbNo: item.gbNo || item.GBNo,
+      gdNo: item.gdNo || item.GDNo,
+      documentNo: item.gdNo || item.GDNo
+    }));
+    this.openGDHCCModal(dockets);
   }
 
 

@@ -111,11 +111,12 @@
                                 <span class="fw-semibold text-secondary">{{ row.OrgDest || (row.OrgCode + ' / ' + row.DestCode) }}</span>
                             </td>
                             <td>
-                                <div class="fw-bold text-dark" style="font-size: 11.5px;">{{ row.Pkgs || 40 }} / {{ row.ActualWt || 986.8 }} Kg</div>
-                                <div class="text-muted" style="font-size: 10.5px;">DRS {{ row.DRSDate || '06-Oct-2026' }}</div>
+                                <div class="fw-bold text-dark" style="font-size: 11.5px;">{{ row.Pkgs }} / {{ row.ActualWt  }} Kg</div>
+                                <div class="text-muted" style="font-size: 10.5px;">DRS {{ row.DRSDate }}</div>
                             </td>
                             <td>
-                                <input type="number" class="form-control form-control-sm" [(ngModel)]="row.deliveredPkgs" style="width: 80px;" [class.is-invalid]="isSubmitted && isDeliveredPkgsInvalid(row)">
+                                <input type="number" class="form-control form-control-sm" [(ngModel)]="row.deliveredPkgs" style="width: 80px;" [class.is-invalid]="row.deliveredPkgs <= 0">
+                                <div class="text-danger" style="font-size: 11px; margin-top: 2px;" *ngIf="row.deliveredPkgs <= 0">Cannot be 0</div>
                             </td>
                             <td>
                                 <input type="number" class="form-control form-control-sm" [(ngModel)]="row.deliveredWt" style="width: 90px;" readonly>

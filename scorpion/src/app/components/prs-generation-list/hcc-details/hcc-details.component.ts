@@ -161,6 +161,7 @@ export class HCCDetailsComponent {
   createLRGroup(item: any): FormGroup {
     const group = this.fb.group({
       lr: [item.lr],
+      documentNo: [item.documentNo || ''],
       origin: [item.origin],
       destination: [item.destination],
       pkgsno: [item.pkgsno],
@@ -189,28 +190,27 @@ export class HCCDetailsComponent {
 
   populateFromLRData(data: any) {
     this.isLoading = false;
-    this.hccForm.patchValue({ 
-      documentNo: this.isType === 'GB' ? data.gbNo : data.gdNo ,
-      chargesType:this.selectedHccType
-    });
     this.lrList.clear();
-    
-    const item = {
-      lr: data.dockno,
-      lrdate: new DatePipe('en-US').transform(data.dockdt, 'dd MMM yyyy'),
-      origin: data.orgncd,
-      destination: data.destcd,
-      pkgsno: data.pkgsno || 0,
-      weight: data.actuwt || 0,
-      chargedBy: null,
-      vendorCode: null,
-      rateType: null,
-      chargeRate: null,
-      lrWiseHCCAmount: 0.00
-    };
 
-    this.lrList.push(this.createLRGroup(item));
-    
+    const list = Array.isArray(data) ? data : [data];
+
+    list.forEach((item: any) => {
+      this.lrList.push(this.createLRGroup({
+        lr: item.dockno,
+        documentNo: this.isType === 'GB' ? item.gbNo : item.gdNo,
+        lrdate: item.lrdate || new DatePipe('en-US').transform(item.dockdt, 'dd MMM yyyy'),
+        origin: item.orgncd,
+        destination: item.destcd,
+        pkgsno: item.pkgsno || 0,
+        weight: item.actuwt || 0,
+        chargedBy: null,
+        vendorCode: null,
+        rateType: null,
+        chargeRate: null,
+        lrWiseHCCAmount: 0.00
+      }));
+    });
+
     this.calculateTotals();
   }
 
@@ -425,6 +425,7 @@ export class HCCDetailsComponent {
     // Build the list of LRs according to API specifications
     const clullrdList = formValue.lrList.map((item: any) => ({
       lr: item.lr || '',
+      // documentNo: item.documentNo || '',
       isAllowZero: false,
       origin: item.origin || '',
       destination: item.destination || '',
