@@ -19,13 +19,13 @@
                     <div style="flex: 1.2; min-width: 140px;">
                         <label class="field-label">DELIVERED TO</label>
                         <ng-select
-                            class="noFoundTextColor clear-icon mselect"
+                            class="noFoundTextColor clear-icon remove-white-space mselect"
                             [(ngModel)]="bulkUpdate.deliveredTo"
                             bindLabel="codeDesc"
                             bindValue="codeId"
                             [items]="generalMasterService.deliveredToData"
                             placeholder="Select"
-                            panelClass="delivered-to-dropdown"
+                            [dropdownPosition]="'auto'"
                             appendTo="body">
                         </ng-select>
                     </div>
@@ -156,26 +156,29 @@
                                     readonly>
                             </td>
                             <td class="col-reason">
-                                <select class="form-select form-select-sm cell-input"
+                                <ng-select
+                                    class="noFoundTextColor clear-icon remove-white-space mselect cell-input"
+                                    [class.is-invalid]="isSubmitted && isReasonInvalid(row)"
                                     [(ngModel)]="row.partDeliveredReason"
-                                    [disabled]="row.deliveredPkgs >= row.Pkgs"
-                                    [class.is-invalid]="isSubmitted && isReasonInvalid(row)">
-                                    <option value="N/A">N/A</option>
-                                    <option value="Shortage">Shortage</option>
-                                    <option value="Damage">Damage</option>
-                                    <option value="Customer Refused">Customer Refused</option>
-                                </select>
+                                    bindLabel="codeDesc"
+                                    bindValue="codeId"
+                                    [items]="generalMasterService.partDeliveredReasonData"
+                                    placeholder="Select"
+                                    [readonly]="row.deliveredPkgs >= row.Pkgs"
+                                    [dropdownPosition]="'auto'"
+                                    appendTo="body">
+                                </ng-select>
                             </td>
                             <td class="col-delto">
                                 <ng-select
-                                    class="noFoundTextColor clear-icon mselect cell-input"
+                                    class="noFoundTextColor clear-icon remove-white-space mselect cell-input"
                                     [class.is-invalid]="isSubmitted && isDeliveredToInvalid(row)"
                                     [(ngModel)]="row.deliveredTo"
                                     bindLabel="codeDesc"
                                     bindValue="codeId"
                                     [items]="generalMasterService.deliveredToData"
                                     placeholder="Select"
-                                    panelClass="delivered-to-dropdown"
+                                    [dropdownPosition]="'auto'"
                                     appendTo="body">
                                 </ng-select>
                             </td>

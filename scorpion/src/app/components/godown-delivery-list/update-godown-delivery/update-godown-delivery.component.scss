@@ -234,7 +234,7 @@ svg {
     .col-pkgs      { width: 75px; }
     .col-wt        { width: 62px; }
     .col-reason    { width: 92px; }
-    .col-delto     { width: 122px; }
+    .col-delto     { width: 140px; }
     .col-person    { width: 92px; }
     .col-contact   { width: 95px; }
     .col-date      { width: 105px; }
@@ -311,9 +311,18 @@ svg {
     }
 
     ng-select.mselect {
+        .ng-select-container,
+        .ng-value-container,
+        .ng-value {
+            white-space: normal !important;
+            height: auto !important;
+            flex-wrap: wrap !important;
+            word-break: break-word !important;
+        }
+
         ::ng-deep .ng-select-container {
             min-height: 28px !important;
-            height: 28px !important;
+            height: auto !important;
             border-radius: 4px !important;
             border: 1px solid #cbd5e1 !important;
             font-size: 11px !important;
@@ -332,7 +341,7 @@ svg {
         }
 
         ::ng-deep .ng-value-container {
-            padding: 0 2px !important;
+            padding: 0 4px !important;
             font-size: 11px !important;
         }
     }
@@ -498,6 +507,46 @@ svg {
 ::ng-deep bs-datepicker-container,
 ::ng-deep .bs-datepicker {
     z-index: 999999 !important;
+}
+
+::ng-deep .ng-dropdown-panel {
+    z-index: 999999 !important;
+
+    .ng-dropdown-panel-items {
+        .ng-option {
+            white-space: normal !important;
+            word-break: break-word !important;
+            overflow: visible !important;
+            text-overflow: unset !important;
+
+            .ng-option-label,
+            span,
+            div {
+                white-space: normal !important;
+                word-break: break-word !important;
+                overflow: visible !important;
+                text-overflow: unset !important;
+            }
+        }
+    }
+}
+
+::ng-deep ng-select.remove-white-space {
+    .ng-value-container {
+        .ng-value {
+            white-space: normal !important;
+            word-break: break-word !important;
+
+            .ng-value-label,
+            span,
+            div {
+                white-space: normal !important;
+                word-break: break-word !important;
+                overflow: visible !important;
+                text-overflow: unset !important;
+            }
+        }
+    }
 }
 
 .godown-modal-footer {

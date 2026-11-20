@@ -67,11 +67,15 @@ export class UpdateGodownDeliveryComponent implements OnInit {
 
   ngOnInit() {
     this.generalMasterService.getDeliveredToData();
+    this.generalMasterService.getPartDeliveredReason()
   }
 
   showPopup(dockets: any[]) {
     if (!this.generalMasterService.deliveredToData || this.generalMasterService.deliveredToData.length === 0) {
       this.generalMasterService.getDeliveredToData();
+    }
+    if (!this.generalMasterService.partDeliveredReasonData || this.generalMasterService.partDeliveredReasonData.length === 0) {
+      this.generalMasterService.getPartDeliveredReason();
     }
 
     this.isSubmitted = false;
@@ -90,7 +94,7 @@ export class UpdateGodownDeliveryComponent implements OnInit {
       // Default deliveredPkgs to total docket packages if not set or <= 0
       row.deliveredPkgs = (Number(row.deliveredPkgs) > 0) ? Number(row.deliveredPkgs) : totalPkgs;
       row.deliveredWt = (Number(row.deliveredWt) > 0) ? Number(row.deliveredWt) : totalWt;
-      row.partDeliveredReason = row.partDeliveredReason || 'N/A';
+      row.partDeliveredReason = (row.deliveredPkgs < totalPkgs && row.partDeliveredReason && row.partDeliveredReason !== 'N/A') ? row.partDeliveredReason : null;
       row.deliveredTo = row.deliveredTo || null;
       row.personName = row.personName || '';
       row.contactNo = (row.contactNo || '').toString().replace(/[^0-9]/g, '').slice(0, 10);
@@ -162,15 +166,15 @@ export class UpdateGodownDeliveryComponent implements OnInit {
 
     if (isNaN(pkgs) || pkgs <= 0) {
       row.deliveredWt = 0;
-      row.partDeliveredReason = 'N/A';
+      row.partDeliveredReason = null;
     } else if (pkgs >= totalPkgs) {
       row.deliveredPkgs = totalPkgs;
       row.deliveredWt = totalWt;
-      row.partDeliveredReason = 'N/A';
+      row.partDeliveredReason = null;
     } else {
       row.deliveredWt = totalPkgs > 0 ? parseFloat(((totalWt * pkgs) / totalPkgs).toFixed(2)) : 0;
-      if (!row.partDeliveredReason || row.partDeliveredReason === 'N/A') {
-        row.partDeliveredReason = 'Shortage';
+      if (row.partDeliveredReason === 'N/A') {
+        row.partDeliveredReason = null;
       }
     }
 
