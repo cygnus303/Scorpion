@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DocketService } from 'app/shared/services/docket.service';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
+import { GodownUpdateDepsComponent } from '../godown-update-deps/godown-update-deps.component';
 
 @Component({
   selector: 'app-update-godown-delivery',
@@ -13,13 +14,15 @@ import { GeneralMasterService } from 'app/shared/services/general-master.service
     CommonModule,
     FormsModule,
     BsDatepickerModule,
-    NgSelectModule
+    NgSelectModule,
+    GodownUpdateDepsComponent
   ],
   templateUrl: './update-godown-delivery.component.html',
   styleUrl: './update-godown-delivery.component.scss'
 })
 export class UpdateGodownDeliveryComponent implements OnInit {
   @Output() deliveryUpdated = new EventEmitter<any>();
+  @ViewChild('GodownUpdateDepsComponent') depsModalComponent!: GodownUpdateDepsComponent;
 
   public showModal: boolean = false;
   public selectedDockets: any[] = [];
@@ -265,6 +268,10 @@ export class UpdateGodownDeliveryComponent implements OnInit {
         }
         if (!row.podQuality || row.podQuality === '') {
           messages.push(`"POD Quality" selection is mandatory`);
+        } else if (row.podQuality === 'Bad') {
+          if (!row.depsData || (Array.isArray(row.depsData) && row.depsData.length === 0)) {
+            messages.push(`"DEPS Entry" details are required when POD Quality is Bad`);
+          }
         }
       }
 
@@ -283,9 +290,50 @@ export class UpdateGodownDeliveryComponent implements OnInit {
 
   setPodQuality(row: any, val: string) {
     row.podQuality = val;
+    if (val === 'Bad') {
+      this.openDepsPopup(row);
+    } else {
+      row.depsData = null;
+    }
     if (this.isSubmitted) {
       this.validateDockets();
     }
+  }
+
+  openDepsPopup(row: any) {
+    if (this.depsModalComponent) {
+      this.depsModalComponent.openModal(row);
+    }
+  }
+
+  onDepsSaved(event: any) {
+    if (event && event.docket) {
+      event.docket.podQuality = 'Bad';
+      event.docket.depsData = event.depsData || event.depsRows;
+    }
+    if (this.isSubmitted) {
+      this.validateDockets();
+    }
+  }
+
+  onDepsCancelled(event: { docket: any; hasExisting: boolean }) {
+    if (event && event.docket && !event.hasExisting) {
+      event.docket.podQuality = '';
+    }
+    if (this.isSubmitted) {
+      this.validateDockets();
+    }
+  }
+
+  getDepsSummary(row: any): string {
+    if (!row.depsData) return '';
+    const list = Array.isArray(row.depsData) ? row.depsData : [row.depsData];
+    const types = list.map((d: any) => {
+      const t = d.depsTyp || d.depstype || d.depsType || '';
+      return (t === 'D' || t === 'Damage') ? 'Damage' : 'Shortage';
+    });
+    const unique = Array.from(new Set(types));
+    return unique.join(' + ') || 'Bad';
   }
 
   onPodReceivedChange(row: any) {

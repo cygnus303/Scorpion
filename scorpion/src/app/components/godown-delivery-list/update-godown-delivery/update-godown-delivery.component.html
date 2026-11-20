@@ -276,6 +276,12 @@
                                             Bad
                                         </button>
                                     </div>
+                                    <div *ngIf="row.podQuality === 'Bad' && row.depsData && row.depsData.length > 0"
+                                        class="badge bg-danger-subtle text-danger border border-danger-subtle mt-1 cursor-pointer text-nowrap"
+                                        style="font-size: 8.5px; padding: 2px 4px; display: inline-block;"
+                                        (click)="openDepsPopup(row)">
+                                        DEPS ({{ getDepsSummary(row) }}) ✎
+                                    </div>
                                 </ng-container>
                                 <ng-template #noPodQuality>
                                     <span class="text-muted">—</span>
@@ -301,3 +307,6 @@
         </div>
     </div>
 </div>
+
+<!-- DEPS Entry Modal for Bad POD Quality -->
+<app-godown-update-deps #GodownUpdateDepsComponent (depsSaved)="onDepsSaved($event)" (depsCancelled)="onDepsCancelled($event)"></app-godown-update-deps>
