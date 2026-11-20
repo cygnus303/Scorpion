@@ -225,7 +225,7 @@
                             <div class="d-flex align-items-center gap-2">
                                 <button type="button" class="btn btn-action-clear" [disabled]="selectedCount === 0" (click)="clearSelection()">Clear</button>
                                 <button type="button" class="btn btn-action-gbhcc" [disabled]="!isGBHCCEnabled" (click)="openSelectedGBHCC()">GB HCC {{ isGBHCCEnabled && selectedCount > 0 ? '(' + selectedCount + ')' : '' }}</button>
-                                <button type="button" class="btn btn-action-updategd" [disabled]="!isUpdateGDEnabled" (click)="openUpdateGodownDelivery()">Update Godown Delivery {{ isUpdateGDEnabled && selectedCount > 0 ? '(' + selectedCount + ')' : '' }}</button>
+                                <button type="button" class="btn btn-action-updategd"  (click)="openUpdateGodownDelivery()">Update Godown Delivery {{ isUpdateGDEnabled && selectedCount > 0 ? '(' + selectedCount + ')' : '' }}</button>
                                 <button type="button" class="btn btn-action-gdhcc" [disabled]="!isGDHCCEnabled" (click)="openSelectedGDHCC()">GD HCC {{ isGDHCCEnabled && selectedCount > 0 ? '(' + selectedCount + ')' : '' }}</button>
                             </div>
                         </div>

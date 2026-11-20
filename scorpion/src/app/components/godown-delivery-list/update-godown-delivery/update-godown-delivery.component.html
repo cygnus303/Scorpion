@@ -18,13 +18,15 @@
                 <div class="d-flex align-items-end gap-2 flex-wrap">
                     <div style="flex: 1; min-width: 140px;">
                         <label class="field-label">DELIVERED TO</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="bulkUpdate.deliveredTo">
-                            <option value="">-- Select --</option>
-                            <option value="Consignee">Consignee</option>
-                            <option value="Driver">Driver</option>
-                            <option value="Transporter">Transporter</option>
-                            <option value="Self">Self</option>
-                        </select>
+                        <ng-select
+                            class="noFoundTextColor clear-icon remove-white-space mselect"
+                            [(ngModel)]="bulkUpdate.deliveredTo"
+                            bindLabel="codeDesc"
+                            bindValue="codeId"
+                            [items]="generalMasterService.deliveredToData"
+                            placeholder="Select"
+                            appendTo="body">
+                        </ng-select>
                     </div>
                     <div style="flex: 1; min-width: 140px;">
                         <label class="field-label">PERSON NAME</label>
@@ -32,21 +34,30 @@
                     </div>
                     <div style="flex: 1; min-width: 140px;">
                         <label class="field-label">CONTACT NO</label>
-                        <input type="text" class="form-control form-control-sm" placeholder="10-digit mobile" maxlength="10" [(ngModel)]="bulkUpdate.contactNo">
+                        <input type="text" class="form-control form-control-sm" placeholder="10-digit mobile" maxlength="10"
+                            [(ngModel)]="bulkUpdate.contactNo"
+                            (input)="onContactInput($event, bulkUpdate)"
+                            (keypress)="onlyNumbers($event)"
+                            (blur)="bulkUpdate.isContactTouched = true"
+                            [class.is-invalid]="isContactInvalid(bulkUpdate)">
+                        <div class="contact-error-msg" *ngIf="isContactInvalid(bulkUpdate)">
+                            Please enter valid mobile number
+                        </div>
                     </div>
                     <div style="flex: 1; min-width: 140px;">
                         <label class="field-label">DELIVERY DATE</label>
-                        <div class="custom-datepicker-wrap">
-                            <input type="text" class="form-control form-control-sm" bsDatepicker [bsConfig]="datePickerConfig" [(ngModel)]="bulkUpdate.deliveryDate" placeholder="DD-MMM-YYYY">
-                            <span class="cal-icon">📅</span>
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control form-control-sm" #bulkDp="bsDatepicker" bsDatepicker
+                                [maxDate]="maxDate" [bsConfig]="datePickerConfig" [(ngModel)]="bulkUpdate.deliveryDate" placeholder="dd-mmm-yyyy">
+                            <span class="input-group-text cursor-pointer" (click)="bulkDp.toggle()">
+                                <i class="fa fa-calendar"></i>
+                            </span>
                         </div>
                     </div>
                     <div style="flex: 1; min-width: 110px;">
                         <label class="field-label">POD RECEIVED</label>
                         <select class="form-select form-select-sm" [(ngModel)]="bulkUpdate.podReceived">
-                            <option value="">--</option>
-                            <option value="Y">Yes</option>
-                            <option value="N">No</option>
+                            <option *ngFor="let opt of podReceivedList" [value]="opt.value">{{ opt.label }}</option>
                         </select>
                     </div>
                     <div style="width: 110px;">
@@ -55,6 +66,16 @@
                         </button>
                     </div>
                 </div>
+            </div>
+
+            <!-- Validation Error Alert Card -->
+            <div class="validation-alert-card" *ngIf="isSubmitted && validationErrors.length > 0">
+                <div class="alert-title">Please correct the following before submitting:</div>
+                <ul class="alert-list">
+                    <li *ngFor="let err of validationErrors">
+                        <strong>{{ err.lrNo }}:</strong> {{ err.messages.join('; ') }}
+                    </li>
+                </ul>
             </div>
 
             <!-- Table Section -->
@@ -71,11 +92,11 @@
                             <th style="min-width: 150px;">PART DELIVERED REASON</th>
                             <th style="min-width: 140px;">DELIVERED TO *</th>
                             <th style="min-width: 140px;">PERSON NAME *</th>
-                            <th style="min-width: 120px;">CONTACT NO *</th>
+                            <th style="min-width: 140px;">CONTACT NO *</th>
                             <th style="min-width: 140px;">DELIVERY DATE *</th>
                             <th style="min-width: 110px;">POD RECEIVED *</th>
-                            <th class="text-center" style="min-width: 90px;">POD UPLOAD</th>
-                            <th class="text-center" style="min-width: 90px;">POD QUALITY</th>
+                            <th class="text-center" style="min-width: 180px;">POD UPLOAD</th>
+                            <th class="text-center" style="min-width: 110px;">POD QUALITY</th>
                             <th class="text-center" style="min-width: 60px;">DEPS</th>
                         </tr>
                     </thead>
@@ -94,13 +115,13 @@
                                 <div class="text-muted" style="font-size: 10.5px;">DRS {{ row.DRSDate || '06-Oct-2026' }}</div>
                             </td>
                             <td>
-                                <input type="number" class="form-control form-control-sm" [(ngModel)]="row.deliveredPkgs" style="width: 80px;">
+                                <input type="number" class="form-control form-control-sm" [(ngModel)]="row.deliveredPkgs" style="width: 80px;" [class.is-invalid]="isSubmitted && isDeliveredPkgsInvalid(row)">
                             </td>
                             <td>
-                                <input type="number" class="form-control form-control-sm" [(ngModel)]="row.deliveredWt" style="width: 90px;">
+                                <input type="number" class="form-control form-control-sm" [(ngModel)]="row.deliveredWt" style="width: 90px;" readonly>
                             </td>
                             <td>
-                                <select class="form-select form-select-sm" [(ngModel)]="row.partDeliveredReason">
+                                <select class="form-select form-select-sm" [(ngModel)]="row.partDeliveredReason" [class.is-invalid]="isSubmitted && isReasonInvalid(row)">
                                     <option value="N/A">N/A</option>
                                     <option value="Shortage">Shortage</option>
                                     <option value="Damage">Damage</option>
@@ -108,35 +129,75 @@
                                 </select>
                             </td>
                             <td>
-                                <select class="form-select form-select-sm" [(ngModel)]="row.deliveredTo">
-                                    <option value="">Select</option>
-                                    <option value="Consignee">Consignee</option>
-                                    <option value="Driver">Driver</option>
-                                    <option value="Transporter">Transporter</option>
-                                    <option value="Self">Self</option>
-                                </select>
+                                <ng-select
+                                    class="noFoundTextColor clear-icon remove-white-space mselect"
+                                    [class.is-invalid]="isSubmitted && isDeliveredToInvalid(row)"
+                                    [(ngModel)]="row.deliveredTo"
+                                    bindLabel="codeDesc"
+                                    bindValue="codeId"
+                                    [items]="generalMasterService.deliveredToData"
+                                    placeholder="Select"
+                                    appendTo="body"
+                                    [readonly]="(row.deliveredPkgs || 0) == 0">
+                                </ng-select>
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" [(ngModel)]="row.personName">
+                                <input type="text" class="form-control form-control-sm" [(ngModel)]="row.personName" [class.is-invalid]="isSubmitted && isPersonNameInvalid(row)">
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" maxlength="10" [(ngModel)]="row.contactNo">
-                            </td>
-                            <td>
-                                <div class="custom-datepicker-wrap" style="min-width: 130px;">
-                                    <input type="text" class="form-control form-control-sm" bsDatepicker [bsConfig]="datePickerConfig" [(ngModel)]="row.deliveryDate" placeholder="DD-MMM-YYYY">
-                                    <span class="cal-icon">📅</span>
+                                <div style="min-width: 130px;">
+                                    <input type="text" class="form-control form-control-sm" maxlength="10" placeholder="Contact No"
+                                        [(ngModel)]="row.contactNo"
+                                        (input)="onContactInput($event, row)"
+                                        (keypress)="onlyNumbers($event)"
+                                        (blur)="row.isContactTouched = true"
+                                        [class.is-invalid]="isContactInvalid(row)">
+                                    <div class="contact-error-msg" *ngIf="isContactInvalid(row)">
+                                        Please enter valid mobile number
+                                    </div>
                                 </div>
                             </td>
                             <td>
-                                <select class="form-select form-select-sm" [(ngModel)]="row.podReceived">
-                                    <option value="">Select</option>
-                                    <option value="Y">Yes</option>
-                                    <option value="N">No</option>
+                                <div class="input-group input-group-sm" style="min-width: 130px;">
+                                    <input type="text" class="form-control form-control-sm" #dp="bsDatepicker" bsDatepicker
+                                        [maxDate]="maxDate" [minDate]="row.minDeliveryDate" [bsConfig]="datePickerConfig" [(ngModel)]="row.deliveryDate" placeholder="dd-mmm-yyyy">
+                                    <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                <select class="form-select form-select-sm" [(ngModel)]="row.podReceived" (change)="onPodReceivedChange(row)" [class.is-invalid]="isSubmitted && isPodReceivedInvalid(row)">
+                                    <option *ngFor="let opt of podReceivedList" [value]="opt.value">{{ opt.label }}</option>
                                 </select>
                             </td>
-                            <td class="text-center text-muted fst-italic">N/A</td>
-                            <td class="text-center text-muted fst-italic">N/A</td>
+                            <td>
+                                <ng-container *ngIf="row.podReceived === 'Y' || row.podReceived === 'Yes'; else noPodUpload">
+                                    <div class="pod-upload-container d-flex flex-column gap-2" style="min-width: 175px;">
+                                        <div>
+                                            <input type="file" class="form-control form-control-sm" (change)="onFileChange($event, row, 1)">
+                                            <div class="pod-upload-label">POD Upload 1 *</div>
+                                        </div>
+                                        <div>
+                                            <input type="file" class="form-control form-control-sm" (change)="onFileChange($event, row, 2)">
+                                            <div class="pod-upload-label">POD Upload 2</div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <ng-template #noPodUpload>
+                                    <div class="text-center text-muted fst-italic">N/A</div>
+                                </ng-template>
+                            </td>
+                            <td>
+                                <ng-container *ngIf="row.podReceived === 'Y' || row.podReceived === 'Yes'; else noPodQuality">
+                                    <select class="form-select form-select-sm" [(ngModel)]="row.podQuality" style="min-width: 95px;" [class.is-invalid]="isSubmitted && isPodQualityInvalid(row)">
+                                        <option *ngFor="let q of podQualityList" [value]="q.value">{{ q.label }}</option>
+                                    </select>
+                                </ng-container>
+                                <ng-template #noPodQuality>
+                                    <div class="text-center text-muted fst-italic">N/A</div>
+                                </ng-template>
+                            </td>
                             <td class="text-center text-muted">—</td>
                         </tr>
                     </tbody>
