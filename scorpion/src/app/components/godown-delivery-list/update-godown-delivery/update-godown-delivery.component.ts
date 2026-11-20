@@ -5,6 +5,8 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DocketService } from 'app/shared/services/docket.service';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
+import { DeliveryUpdateService } from 'app/shared/services/delivery-update.service';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
 import { GodownUpdateDepsComponent } from '../godown-update-deps/godown-update-deps.component';
 
 @Component({
@@ -28,6 +30,7 @@ export class UpdateGodownDeliveryComponent implements OnInit {
   public selectedDockets: any[] = [];
 
   public isSubmitted: boolean = false;
+  public isSubmit: boolean = false;
   public validationErrors: { lrNo: string; messages: string[] }[] = [];
 
   public bulkUpdate: any = {
@@ -62,12 +65,14 @@ export class UpdateGodownDeliveryComponent implements OnInit {
   constructor(
     public docketService: DocketService,
     public generalMasterService: GeneralMasterService,
+    public deliveryUpdateService: DeliveryUpdateService,
+    public sweetAlertService: SweetAlertService,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     this.generalMasterService.getDeliveredToData();
-    this.generalMasterService.getPartDeliveredReason()
+    this.generalMasterService.getPartDeliveredReason();
   }
 
   showPopup(dockets: any[]) {
@@ -397,14 +402,135 @@ export class UpdateGodownDeliveryComponent implements OnInit {
     }
   }
 
+  formatDeliveryDate(dateVal: any): string {
+    if (!dateVal) return new Date().toISOString();
+    const d = new Date(dateVal);
+    if (isNaN(d.getTime())) return String(dateVal);
+
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+
+    const now = new Date();
+    let hours = d.getHours();
+    let minutes = d.getMinutes();
+    let seconds = d.getSeconds();
+
+    if (hours === 0 && minutes === 0 && seconds === 0) {
+      hours = now.getHours();
+      minutes = now.getMinutes();
+      seconds = now.getSeconds();
+    }
+
+    const hStr = String(hours).padStart(2, '0');
+    const mStr = String(minutes).padStart(2, '0');
+    const sStr = String(seconds).padStart(2, '0');
+
+    return `${year}-${month}-${day}T${hStr}:${mStr}:${sStr}.000Z`;
+  }
+
   submitGodownDelivery() {
     this.isSubmitted = true;
-    const isValid = this.validateDockets();
-    if (!isValid) {
+    if (!this.validateDockets()) {
       return;
     }
-    console.log('Submitting Godown Delivery:', this.selectedDockets);
-    this.deliveryUpdated.emit(this.selectedDockets);
-    this.closeModal();
+
+    const DocketsUpdateList = this.selectedDockets.map((row: any) => ({
+      remark: row.remarks || '',
+      contactNo: row.contactNo || '',
+      delyperson: row.personName || '',
+      origin: row.OrgCode || row.Origin || '',
+      podReceived: row.podReceived || '',
+      dlyPerson: row.personName || '',
+      partY_CODE: row.BillingPartyCode || row.PARTY_CODE || '',
+      docksf: row.docksf || '.',
+      delWts: Number(row.deliveredWt) || 0,
+      isEnabledBadPodoption: row.podQuality === 'Bad',
+      pen_DelPkgs: Number(row.Pkgs || row.totalPkgs || 0) - Number(row.deliveredPkgs || 0),
+      destination: row.DestCode || row.Destination || '',
+      dlyContactNo: row.contactNo || '',
+      autoNo: Number(row.AutoNo || row.autoNo) || null,
+      pen_DelWts: Number(row.ActualWt || row.totalWt || 0) - Number(row.deliveredWt || 0),
+      delPkgs: Number(row.deliveredPkgs) || 0,
+      dockno: row.LRNumber || row.dockno || '',
+      isEnabled: true,
+      receivedBy: row.personName || '',
+      delydate: this.formatDeliveryDate(row.deliveryDate),
+      pkgs_Pending: Number(row.Pkgs || row.totalPkgs || 0) - Number(row.deliveredPkgs || 0),
+      deliveredTo: row.deliveredTo || ''
+    }));
+
+    const DepsList: any[] = [];
+    this.selectedDockets.forEach((row: any) => {
+      if (row.depsData) {
+        const items = Array.isArray(row.depsData) ? row.depsData : [row.depsData];
+        items.forEach((v: any) => {
+          DepsList.push({
+            depsfile: v.depsfile || v.fileBase64 || '',
+            docket: v.docket || row.LRNumber || row.dockno || '',
+            affectedQty: Number(v.affectedQty || v.affectedPkgs) || 0,
+            affectedInvVal: Number(v.affectedInvVal) || 0,
+            reason: v.reason || '',
+            depsNo: v.depsNo || '',
+            depsTyp: v.depsTyp || v.depstype || '',
+            fileName: v.fileName || '',
+            damageType: v.damageType || '',
+            affectedWeight: Number(v.affectedWeight) || 0,
+            invval: Number(v.invval) || 0,
+            totWeight: Number(v.totWeight || row.deliveredWt) || 0,
+            remarks: v.remarks || '',
+            docketsf: v.docketsf || row.docksf || '.',
+            pkgsdelivered: Number(v.pkgsdelivered || v.pkgsDelivered || row.deliveredPkgs) || 0,
+            severity: v.severity || ''
+          });
+        });
+      }
+    });
+
+    const formData = new FormData();
+    formData.append('DocketsUpdateList', JSON.stringify(DocketsUpdateList));
+    formData.append('DepsList', JSON.stringify(DepsList));
+    formData.append('LocationCode', this.docketService.loginUserList?.LocationCode || this.docketService.Location || '');
+    formData.append('BaseUserName', this.docketService.loginUserList?.BaseUserName || this.docketService.baseUsername || '');
+    formData.append('FinYear', this.docketService.loginUserList?.FinYear || this.docketService.FinYear || '');
+
+    this.selectedDockets.forEach((row: any) => {
+      const docNo = row.LRNumber || row.dockno || 'POD';
+      if (row.podFile1) {
+        formData.append('Files', row.podFile1, `${docNo}_FRONT_${row.podFile1.name}`);
+      }
+      if (row.podFile2) {
+        formData.append('BackFiles', row.podFile2, `${docNo}_BACK_${row.podFile2.name}`);
+      }
+    });
+
+    this.isSubmit = true;
+    this.deliveryUpdateService.counterDelivery(formData).subscribe({
+      next: (response: any) => {
+        this.isSubmit = false;
+        if (response && response.data && !response.data.isError) {
+          const docNo = this.selectedDockets[0]?.GDNo || this.selectedDockets[0]?.GBNo || '';
+          this.sweetAlertService.success(`
+            <div style="text-align:center;">
+              <div class="fw-bold fs-3 mb-2">Counter Delivery Success</div>
+              <p class="fs-5 mb-1"><strong>Document No:</strong> ${docNo || 'Success'}</p>
+            </div>
+          `);
+          this.deliveryUpdated.emit({
+            response,
+            formData,
+            selectedDockets: this.selectedDockets
+          });
+          this.closeModal();
+        } else {
+          this.sweetAlertService.error(response?.data?.message || response?.message || 'You have some errors. Please check.');
+        }
+      },
+      error: (error: any) => {
+        this.isSubmit = false;
+        console.error('Error submitting counter delivery:', error);
+        this.sweetAlertService.error(error?.error?.message || error?.message || 'Failed to submit counter delivery.');
+      }
+    });
   }
 }

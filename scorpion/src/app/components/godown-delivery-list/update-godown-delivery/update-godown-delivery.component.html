@@ -303,8 +303,9 @@
 
         <!-- Modal Footer -->
         <div class="godown-modal-footer">
-            <button type="button" class="btn btn-modal-cancel" (click)="closeModal()">Cancel</button>
-            <button type="button" class="btn btn-modal-submit" (click)="submitGodownDelivery()">
+            <button type="button" class="btn btn-modal-cancel" [disabled]="isSubmit" (click)="closeModal()">Cancel</button>
+            <button type="button" class="btn btn-modal-submit" [disabled]="isSubmit" (click)="submitGodownDelivery()">
+                <span *ngIf="isSubmit" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
                 Submit — Update Godown Delivery
             </button>
         </div>

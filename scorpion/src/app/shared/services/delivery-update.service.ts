@@ -9,8 +9,12 @@ export class DeliveryUpdateService {
 
 constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerService) { }
 
- deliveryUpdate(paylaod: any): Observable<any> {
+  deliveryUpdate(paylaod: any): Observable<any> {
     return this.apiHandlerService.Post(`THC/add-update`,paylaod);
+  }
+
+  counterDelivery(formData: any): Observable<any> {
+    return this.apiHandlerService.Post(`THC/CounterDelivery`, formData);
   }
 
     checkPODValidation(formData:any){
