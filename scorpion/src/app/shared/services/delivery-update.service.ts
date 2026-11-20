@@ -7,21 +7,21 @@ import { Observable } from 'rxjs';
 })
 export class DeliveryUpdateService {
 
-constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerService) { }
+  constructor(@Inject(ApiHandlerService) private apiHandlerService: ApiHandlerService) { }
 
   deliveryUpdate(paylaod: any): Observable<any> {
-    return this.apiHandlerService.Post(`THC/add-update`,paylaod);
+    return this.apiHandlerService.Post(`THC/add-update`, paylaod);
   }
 
-  counterDelivery(formData: any): Observable<any> {
-    return this.apiHandlerService.Post(`THC/CounterDelivery`, formData);
+  counterDelivery(payload: any): Observable<any> {
+    return this.apiHandlerService.Post(`THC/CounterDelivery`, payload);
   }
 
-    checkPODValidation(formData:any){
-    return this.apiHandlerService.Post(`THC/check-validation`,formData);
-   }
+  checkPODValidation(formData: any) {
+    return this.apiHandlerService.Post(`THC/check-validation`, formData);
+  }
 
-    CheckPODValidation(formData:any,BaseUserName:string){
-    return this.apiHandlerService.Post(`THC/CheckPODValidation?BaseUserName=${BaseUserName}`,formData);
-   }
+  CheckPODValidation(formData: any, BaseUserName: string) {
+    return this.apiHandlerService.Post(`THC/CheckPODValidation?BaseUserName=${BaseUserName}`, formData);
+  }
 }
