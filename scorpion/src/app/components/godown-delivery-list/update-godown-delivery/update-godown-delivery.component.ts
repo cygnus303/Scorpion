@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -58,7 +58,8 @@ export class UpdateGodownDeliveryComponent implements OnInit {
 
   constructor(
     public docketService: DocketService,
-    public generalMasterService: GeneralMasterService
+    public generalMasterService: GeneralMasterService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -77,14 +78,22 @@ export class UpdateGodownDeliveryComponent implements OnInit {
 
     const today = new Date();
     this.selectedDockets.forEach(row => {
-      row.deliveredPkgs = row.deliveredPkgs !== undefined ? row.deliveredPkgs : (row.Pkgs || 40);
-      row.deliveredWt = row.deliveredWt !== undefined ? row.deliveredWt : (row.ActualWt || 986.8);
+      const totalPkgs = Number(row.Pkgs !== undefined ? row.Pkgs : (row.pkgsno || 0));
+      const totalWt = Number(row.ActualWt !== undefined ? row.ActualWt : (row.weight || 0));
+
+      row.totalPkgs = totalPkgs;
+      row.totalWt = totalWt;
+
+      // Default deliveredPkgs to total docket packages if not set or <= 0
+      row.deliveredPkgs = (Number(row.deliveredPkgs) > 0) ? Number(row.deliveredPkgs) : totalPkgs;
+      row.deliveredWt = (Number(row.deliveredWt) > 0) ? Number(row.deliveredWt) : totalWt;
       row.partDeliveredReason = row.partDeliveredReason || 'N/A';
       row.deliveredTo = row.deliveredTo || null;
       row.personName = row.personName || '';
       row.contactNo = (row.contactNo || '').toString().replace(/[^0-9]/g, '').slice(0, 10);
       row.isContactTouched = false;
       row.deliveryDate = row.deliveryDate ? new Date(row.deliveryDate) : today;
+
       if (row.DRSDate) {
         row.minDeliveryDate = new Date(row.DRSDate);
       } else if (row.LRDate) {
@@ -106,6 +115,7 @@ export class UpdateGodownDeliveryComponent implements OnInit {
     };
 
     this.showModal = true;
+    this.cdr.detectChanges();
   }
 
   closeModal() {
@@ -130,23 +140,60 @@ export class UpdateGodownDeliveryComponent implements OnInit {
     }
   }
 
-  isContactInvalid(target: any): boolean {
+  isContactInvalid(target: any, isBulk: boolean = false): boolean {
     if (!target) return false;
     const val = (target.contactNo || '').toString().trim();
+    if (isBulk) {
+      return val.length > 0 && val.length < 10;
+    }
     if (target.isContactTouched || this.isSubmitted) {
-      return val.length < 10;
+      return val.length !== 10;
     }
     return false;
   }
 
-  isDeliveredPkgsInvalid(row: any): boolean {
-    const totalPkgs = Number(row.Pkgs) || 40;
+  onDeliveredPkgsChange(row: any) {
+    const totalPkgs = Number(row.totalPkgs || row.Pkgs) || 0;
+    const totalWt = Number(row.totalWt || row.ActualWt) || 0;
     const pkgs = Number(row.deliveredPkgs);
-    return isNaN(pkgs) || pkgs <= 0 || pkgs > totalPkgs;
+
+    if (isNaN(pkgs) || pkgs <= 0) {
+      row.deliveredWt = 0;
+      row.partDeliveredReason = 'N/A';
+    } else if (pkgs >= totalPkgs) {
+      row.deliveredPkgs = totalPkgs;
+      row.deliveredWt = totalWt;
+      row.partDeliveredReason = 'N/A';
+    } else {
+      row.deliveredWt = totalPkgs > 0 ? parseFloat(((totalWt * pkgs) / totalPkgs).toFixed(2)) : 0;
+      if (!row.partDeliveredReason || row.partDeliveredReason === 'N/A') {
+        row.partDeliveredReason = 'Shortage';
+      }
+    }
+
+    if (this.isSubmitted) {
+      this.validateDockets();
+    }
+  }
+
+  getPkgsError(row: any): string {
+    const totalPkgs = Number(row.totalPkgs || row.Pkgs) || 0;
+    const val = row.deliveredPkgs;
+    if (val === '' || val === null || val === undefined || Number(val) <= 0 || isNaN(Number(val))) {
+      return 'Cannot be 0';
+    }
+    if (totalPkgs > 0 && Number(val) > totalPkgs) {
+      return `Max ${totalPkgs}`;
+    }
+    return '';
+  }
+
+  isDeliveredPkgsInvalid(row: any): boolean {
+    return this.getPkgsError(row) !== '';
   }
 
   isReasonInvalid(row: any): boolean {
-    const totalPkgs = Number(row.Pkgs) || 40;
+    const totalPkgs = Number(row.totalPkgs || row.Pkgs) || 0;
     const pkgs = Number(row.deliveredPkgs);
     return !isNaN(pkgs) && pkgs > 0 && pkgs < totalPkgs && (!row.partDeliveredReason || row.partDeliveredReason === 'N/A');
   }
@@ -163,6 +210,10 @@ export class UpdateGodownDeliveryComponent implements OnInit {
     return !row.podReceived || row.podReceived === '';
   }
 
+  isPodUploadInvalid(row: any): boolean {
+    return (row.podReceived === 'Y' || row.podReceived === 'Yes') && !row.podFile1;
+  }
+
   isPodQualityInvalid(row: any): boolean {
     return (row.podReceived === 'Y' || row.podReceived === 'Yes') && (!row.podQuality || row.podQuality === '');
   }
@@ -173,12 +224,13 @@ export class UpdateGodownDeliveryComponent implements OnInit {
     this.selectedDockets.forEach(row => {
       const lrNo = row.LRNumber || row.dockno || 'Docket';
       const messages: string[] = [];
-      const totalPkgs = Number(row.Pkgs) || 40;
+      const totalPkgs = Number(row.totalPkgs || row.Pkgs) || 0;
       const deliveredPkgs = Number(row.deliveredPkgs);
 
       // 1. Delivered Pkgs
-      if (isNaN(deliveredPkgs) || deliveredPkgs <= 0 || deliveredPkgs > totalPkgs) {
-        messages.push(`"Delivered Pkgs" must be between 1 and ${totalPkgs}`);
+      const pkgsErr = this.getPkgsError(row);
+      if (pkgsErr) {
+        messages.push(`"Delivered Pkgs" ${pkgsErr.toLowerCase()}`);
       }
 
       // 2. Part Delivered Reason
@@ -208,6 +260,9 @@ export class UpdateGodownDeliveryComponent implements OnInit {
       if (!row.podReceived || row.podReceived === '') {
         messages.push(`"POD Received" selection is mandatory`);
       } else if (row.podReceived === 'Y' || row.podReceived === 'Yes') {
+        if (!row.podFile1) {
+          messages.push(`"POD Upload 1" is mandatory`);
+        }
         if (!row.podQuality || row.podQuality === '') {
           messages.push(`"POD Quality" selection is mandatory`);
         }
@@ -219,6 +274,18 @@ export class UpdateGodownDeliveryComponent implements OnInit {
     });
 
     return this.validationErrors.length === 0;
+  }
+
+  setPodReceived(target: any, val: string) {
+    target.podReceived = val;
+    this.onPodReceivedChange(target);
+  }
+
+  setPodQuality(row: any, val: string) {
+    row.podQuality = val;
+    if (this.isSubmitted) {
+      this.validateDockets();
+    }
   }
 
   onPodReceivedChange(row: any) {
@@ -239,18 +306,27 @@ export class UpdateGodownDeliveryComponent implements OnInit {
     } else if (fileIndex === 2) {
       row.podFile2 = file;
     }
+    if (this.isSubmitted) {
+      this.validateDockets();
+    }
   }
 
   applyBulkToAll() {
     this.selectedDockets.forEach(row => {
-      if (this.bulkUpdate.deliveredTo) row.deliveredTo = this.bulkUpdate.deliveredTo;
-      if (this.bulkUpdate.personName) row.personName = this.bulkUpdate.personName;
+      if (this.bulkUpdate.deliveredTo !== null && this.bulkUpdate.deliveredTo !== undefined && this.bulkUpdate.deliveredTo !== '') {
+        row.deliveredTo = this.bulkUpdate.deliveredTo;
+      }
+      if (this.bulkUpdate.personName !== null && this.bulkUpdate.personName !== undefined && this.bulkUpdate.personName !== '') {
+        row.personName = this.bulkUpdate.personName;
+      }
       if (this.bulkUpdate.contactNo) {
         row.contactNo = this.bulkUpdate.contactNo;
         row.isContactTouched = true;
       }
-      if (this.bulkUpdate.deliveryDate) row.deliveryDate = this.bulkUpdate.deliveryDate;
-      if (this.bulkUpdate.podReceived) {
+      if (this.bulkUpdate.deliveryDate) {
+        row.deliveryDate = new Date(this.bulkUpdate.deliveryDate);
+      }
+      if (this.bulkUpdate.podReceived !== null && this.bulkUpdate.podReceived !== undefined && this.bulkUpdate.podReceived !== '') {
         row.podReceived = this.bulkUpdate.podReceived;
         if (row.podReceived !== 'Y' && row.podReceived !== 'Yes') {
           row.podQuality = '';
@@ -259,6 +335,14 @@ export class UpdateGodownDeliveryComponent implements OnInit {
         }
       }
     });
+
+    // Reassign array to trigger Angular Change Detection across all rows
+    this.selectedDockets = [...this.selectedDockets];
+    this.cdr.detectChanges();
+
+    if (this.isSubmitted) {
+      this.validateDockets();
+    }
   }
 
   submitGodownDelivery() {
