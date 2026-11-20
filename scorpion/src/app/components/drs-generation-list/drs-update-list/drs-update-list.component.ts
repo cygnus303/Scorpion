@@ -1141,6 +1141,12 @@ export class DRSUpdateListComponent implements AfterViewInit, OnDestroy {
   }
 
   deliveryUpdate() {
+    const selectedDockets = this.drsList.controls.filter((ctrl: any) => ctrl.get('isChecked')?.value === true);
+    if (!selectedDockets || selectedDockets.length === 0) {
+      this.sweetAlertService.info('Please select at least one docket.');
+      return;
+    }
+
     const DepsList: any[] = [];
     this.drsList.controls.forEach(ctrl => {
       if (ctrl.value.depsData && ctrl.value.isChecked === true) {
