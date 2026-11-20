@@ -42,6 +42,15 @@
         background: #f8fafc;
     }
 
+    tbody tr.row-selected td {
+        background: #eef4ff !important;
+    }
+
+    tbody td input[type="checkbox"]:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+    }
+
     tbody tr:last-child td {
         border-bottom: none;
     }
@@ -214,76 +223,109 @@
     border-color: #fecaca !important;
 }
 
-/* ── Bottom Action Footer Toolbar ── */
+/* ── Bottom Action Footer Toolbar (Matching Mockup Prototype) ── */
 .table-action-footer {
     padding: 10px 16px;
     background: #ffffff;
     border-top: 1px solid #e2e8f0;
 
     .action-note {
-        font-size: 12px;
+        font-size: 12.5px;
         color: #64748b;
+
+        strong {
+            color: #0f2a4a;
+        }
     }
 
     .btn-action-clear {
         background: #ffffff;
-        border: 1px solid #cbd5e1;
-        color: #64748b;
-        font-size: 12px;
+        border: 1px solid #c9d2df;
+        color: #1d2939;
+        font-size: 12.5px;
         font-weight: 600;
-        padding: 6px 16px;
-        border-radius: 4px;
+        padding: 7px 16px;
+        border-radius: 6px;
         transition: all 0.15s;
+        white-space: nowrap;
 
-        &:hover {
+        &:hover:not(:disabled) {
             background: #f8fafc;
-            color: #334155;
+            color: #0f2a4a;
             border-color: #94a3b8;
+        }
+
+        &:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            background: #f8fafc;
+            color: #94a3b8;
         }
     }
 
     .btn-action-gbhcc {
-        background: #0284c7;
-        border: 1px solid #0284c7;
+        background: #5b21b6;
+        border: 1px solid #5b21b6;
         color: #ffffff;
-        font-size: 12px;
+        font-size: 12.5px;
         font-weight: 600;
-        padding: 6px 18px;
-        border-radius: 4px;
+        padding: 7px 18px;
+        border-radius: 6px;
         transition: all 0.15s;
+        white-space: nowrap;
 
-        &:hover {
-            background: #0369a1;
+        &:hover:not(:disabled) {
+            background: #4c1d95;
+            border-color: #4c1d95;
+        }
+
+        &:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
         }
     }
 
     .btn-action-updategd {
-        background: #16a34a;
-        border: 1px solid #16a34a;
+        background: #0f2a4a;
+        border: 1px solid #0f2a4a;
         color: #ffffff;
-        font-size: 12px;
+        font-size: 12.5px;
         font-weight: 600;
-        padding: 6px 18px;
-        border-radius: 4px;
+        padding: 7px 18px;
+        border-radius: 6px;
         transition: all 0.15s;
+        white-space: nowrap;
 
-        &:hover {
-            background: #15803d;
+        &:hover:not(:disabled) {
+            background: #1b3d66;
+            border-color: #1b3d66;
+        }
+
+        &:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
         }
     }
 
     .btn-action-gdhcc {
-        background: #7c3aed;
-        border: 1px solid #7c3aed;
+        background: #12a150;
+        border: 1px solid #12a150;
         color: #ffffff;
-        font-size: 12px;
+        font-size: 12.5px;
         font-weight: 600;
-        padding: 6px 18px;
-        border-radius: 4px;
+        padding: 7px 18px;
+        border-radius: 6px;
         transition: all 0.15s;
+        white-space: nowrap;
 
-        &:hover {
-            background: #6d28d9;
+        &:hover:not(:disabled) {
+            background: #0e8441;
+            border-color: #0e8441;
+        }
+
+        &:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
         }
     }
 }

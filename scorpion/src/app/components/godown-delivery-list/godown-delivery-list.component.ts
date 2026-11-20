@@ -212,14 +212,96 @@ export class GodownDeliveryListComponent {
     this.fetchLRList();
   }
 
-  // Selection Checkbox helpers
+  // =========================================================================
+  // 1. Action eligibility logic for an individual docket
+  // =========================================================================
+  getActions(item: any) {
+    if (!item) return { canUpdate: false, canGBHCC: false, canGDHCC: false };
+
+    // Check existence of document numbers
+    const hasGB = !!(item.GBNo && item.GBNo !== '—' && item.GBNo !== '-' && item.GBNo !== 'Not Generated' && item.GBNo !== 'N/A');
+    const hasGD = !!(item.GDNo && item.GDNo !== '—' && item.GDNo !== '-');
+    const hasGBHCC = !!(item.GBHCCNo && item.GBHCCNo !== '—' && item.GBHCCNo !== '-');
+    const hasGDHCC = !!(item.GDHCCNo && item.GDHCCNo !== '—' && item.GDHCCNo !== '-');
+    const isDelivered = item.StatusCode === 'D';
+
+    return {
+      // Rule 1 & 2: Update Godown Delivery (No GD No and delivery is pending)
+      canUpdate: !hasGD && !isDelivered && item.PkpDelType !== 'Godown-Door',
+
+      // Rule 2, 3 & 5: GB HCC (GB No exists and GB HCC No is not yet generated)
+      canGBHCC: hasGB && !hasGBHCC,
+
+      // Rule 3, 4 & 6: GD HCC (GD No exists and GD HCC No is not yet generated)
+      canGDHCC: hasGD && !hasGDHCC
+    };
+  }
+
+  // =========================================================================
+  // 2. Action buttons enable/disable logic based on selected dockets
+  // =========================================================================
+  get isUpdateGDEnabled(): boolean {
+    const selected = this.getSelectedItems();
+    return selected.length > 0 && selected.every(item => this.getActions(item).canUpdate);
+  }
+
+  get isGBHCCEnabled(): boolean {
+    const selected = this.getSelectedItems();
+    return selected.length > 0 && selected.every(item => this.getActions(item).canGBHCC);
+  }
+
+  get isGDHCCEnabled(): boolean {
+    const selected = this.getSelectedItems();
+    return selected.length > 0 && selected.every(item => this.getActions(item).canGDHCC);
+  }
+
+  // =========================================================================
+  // 3. Row checkbox disabled logic
+  // =========================================================================
+  isCheckboxDisabled(item: any): boolean {
+    const actions = this.getActions(item);
+
+    // If no action is pending for this row, disable the checkbox
+    if (!actions.canUpdate && !actions.canGBHCC && !actions.canGDHCC) {
+      return true;
+    }
+
+    const selected = this.getSelectedItems();
+    // If no docket is selected yet, or this row is already selected, keep it enabled
+    if (selected.length === 0 || item.isSelected) {
+      return false;
+    }
+
+    // If dockets are selected, only rows sharing at least one common compatible action can be selected
+    const matchUpdate = this.isUpdateGDEnabled && actions.canUpdate;
+    const matchGB = this.isGBHCCEnabled && actions.canGBHCC;
+    const matchGD = this.isGDHCCEnabled && actions.canGDHCC;
+
+    // Disable checkbox if no common action matches
+    return !(matchUpdate || matchGB || matchGD);
+  }
+
+  // =========================================================================
+  // 4. Checkbox Selection Helpers
+  // =========================================================================
   toggleSelectAll() {
-    this.isAllSelected = !this.isAllSelected;
-    this.godownDeliveryList.forEach(item => item.isSelected = this.isAllSelected);
+    if (this.isAllSelected) {
+      this.clearSelection();
+      return;
+    }
+    const eligible = this.godownDeliveryList.filter(item => !this.isCheckboxDisabled(item));
+    eligible.forEach(item => item.isSelected = true);
+    this.checkIfAllSelected();
   }
 
   checkIfAllSelected() {
-    this.isAllSelected = this.godownDeliveryList.length > 0 && this.godownDeliveryList.every(item => item.isSelected);
+    const selected = this.getSelectedItems();
+    if (selected.length === 0) {
+      this.isAllSelected = false;
+      return;
+    }
+    const selectable = this.godownDeliveryList.filter(item => !this.isCheckboxDisabled(item) || item.isSelected);
+    this.isAllSelected = selectable.length > 0 && selectable.every(item => item.isSelected);
   }
 
   clearSelection() {
@@ -240,39 +322,38 @@ export class GodownDeliveryListComponent {
     return this.selectedItem || {};
   }
 
-isGBHCCDisabled(): boolean {
-  const item = this.selectedItem;
-  if (!item) return true;
-  const currentLocation = this.docketService.loginUserList?.LocationCode;
-  return (
-    !item.GBNo || 
-    (item.GBHCCNo !== '' && item.GBHCCNo !== null && item.GBHCCNo !== undefined) || 
-    item.OrgCode !== currentLocation
-  );
-}
+  get selectedCount(): number {
+    return this.getSelectedItems().length;
+  }
 
-isUpdateDeliveryDisabled(): boolean {
-  const item = this.selectedItem;
-  if (!item) return true; 
-  const currentLocation = this.docketService.loginUserList?.LocationCode;
-  return (
-    item.StatusCode !== 'P' ||
-    item.ReassignedLocation !== currentLocation ||
-    item.PkpDelTypeCode === '2'
-  );
-}
+  get availableActionsList(): string[] {
+    const acts: string[] = [];
+    if (this.isGBHCCEnabled) acts.push('GB HCC');
+    if (this.isUpdateGDEnabled) acts.push('Update Godown Delivery');
+    if (this.isGDHCCEnabled) acts.push('GD HCC');
+    return acts;
+  }
 
-isGDHCCDisabled(): boolean {
-  const item = this.selectedItem;
-  if (!item) return true; 
-  const currentLocation = this.docketService.loginUserList?.LocationCode;
+  get availableActionsText(): string {
+    return this.availableActionsList.join(', ');
+  }
 
-  return (
-    !item.GDNo ||
-    (item.GDHCCNo !== '' && item.GDHCCNo !== null && item.GDHCCNo !== undefined) ||
-    item.DestCode !== currentLocation
-  );
-}
+  get isHeaderCheckboxDisabled(): boolean {
+    return !this.godownDeliveryList || this.godownDeliveryList.length === 0;
+  }
+
+  // Compatibility helpers
+  isGBHCCDisabled(): boolean {
+    return !this.isGBHCCEnabled;
+  }
+
+  isUpdateDeliveryDisabled(): boolean {
+    return !this.isUpdateGDEnabled;
+  }
+
+  isGDHCCDisabled(): boolean {
+    return !this.isGDHCCEnabled;
+  }
 
 
   // Update Godown Delivery Modal

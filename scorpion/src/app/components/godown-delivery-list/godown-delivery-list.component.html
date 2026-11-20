@@ -75,7 +75,7 @@
                 <thead>
                     <tr>
                         <th class="text-center" style="width: 40px;">
-                            <input type="checkbox" style="cursor: pointer;" [checked]="isAllSelected" (change)="toggleSelectAll()">
+                            <input type="checkbox" style="cursor: pointer;" [checked]="isAllSelected" [disabled]="isHeaderCheckboxDisabled" (change)="toggleSelectAll()">
                         </th>
                         <th class="text-center" style="width: 45px;">#</th>
                         <th class="text-center">LR NUMBER</th>
@@ -113,9 +113,9 @@
                 </tbody>
 
                 <tbody *ngIf="!isLoading && godownDeliveryList.length > 0">
-                    <tr *ngFor="let item of godownDeliveryList; let i = index">
+                    <tr *ngFor="let item of godownDeliveryList; let i = index" [class.row-selected]="item.isSelected">
                         <td class="text-center">
-                            <input type="checkbox" style="cursor: pointer;" [(ngModel)]="item.isSelected" (change)="checkIfAllSelected()">
+                            <input type="checkbox" style="cursor: pointer;" [(ngModel)]="item.isSelected" [disabled]="isCheckboxDisabled(item)" (change)="checkIfAllSelected()">
                         </td>
                         <td style="color:#9e9e9e;text-align:center">
                             {{ item.SrNo || ((config.page - 1) * config.pageSize + i + 1) }}
@@ -209,16 +209,24 @@
          <!-- Bottom Action Footer Toolbar -->
                         <div class="table-action-footer d-flex justify-content-between align-items-center">
                             <div class="action-note">
-                                Select dockets, then choose an action — one GD No. / one HCC is generated for all selected LRs
+                                <ng-container *ngIf="selectedCount === 0">
+                                    Select dockets, then choose an action — one GD No. / one HCC is generated for all selected LRs
+                                </ng-container>
+                                <ng-container *ngIf="selectedCount > 0">
+                                    <strong>{{ selectedCount }}</strong> docket(s) selected —
+                                    <span *ngIf="availableActionsList.length > 0">
+                                        available: <strong>{{ availableActionsText }}</strong>
+                                    </span>
+                                    <span *ngIf="availableActionsList.length === 0" class="text-danger fw-semibold">
+                                        no common action — select dockets of the same kind
+                                    </span>
+                                </ng-container>
                             </div>
                             <div class="d-flex align-items-center gap-2">
-                                <button type="button" class="btn btn-action-clear" (click)="clearSelection()">Clear</button>
-                                <button type="button" class="btn btn-action-gbhcc" [disabled]="isGBHCCDisabled()"
-                                (click)="openSelectedGBHCC()">GB HCC</button>
-                                <button type="button" class="btn btn-action-updategd" 
-                                 [disabled]="isUpdateDeliveryDisabled()" (click)="openUpdateGodownDelivery()">Update Godown Delivery</button>
-                                <button type="button" class="btn btn-action-gdhcc" 
-                                [disabled]="isGDHCCDisabled()" (click)="openSelectedGDHCC()">GD HCC</button>
+                                <button type="button" class="btn btn-action-clear" [disabled]="selectedCount === 0" (click)="clearSelection()">Clear</button>
+                                <button type="button" class="btn btn-action-gbhcc" [disabled]="!isGBHCCEnabled" (click)="openSelectedGBHCC()">GB HCC {{ isGBHCCEnabled && selectedCount > 0 ? '(' + selectedCount + ')' : '' }}</button>
+                                <button type="button" class="btn btn-action-updategd" [disabled]="!isUpdateGDEnabled" (click)="openUpdateGodownDelivery()">Update Godown Delivery {{ isUpdateGDEnabled && selectedCount > 0 ? '(' + selectedCount + ')' : '' }}</button>
+                                <button type="button" class="btn btn-action-gdhcc" [disabled]="!isGDHCCEnabled" (click)="openSelectedGDHCC()">GD HCC {{ isGDHCCEnabled && selectedCount > 0 ? '(' + selectedCount + ')' : '' }}</button>
                             </div>
                         </div>
 
