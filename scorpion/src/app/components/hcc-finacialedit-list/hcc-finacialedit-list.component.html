@@ -254,7 +254,7 @@
                                     (click)="onCancel(row)"
                                     [disabled]="!row.HCNumber || row.HCCBillNo || row.HCCStatus === 'Cancelled' || row.HCCStatus === 'Billed'"
                                     title="Cancel HCC">🚫 Cancel</button>
-                                <button *ngIf="menuAccessService.hasPermission('Edit')" (click)="openEditModal(row)"
+                                <button *ngIf="!isHQTR && menuAccessService.hasPermission('Edit')" (click)="openEditModal(row)"
                                     [disabled]="row.HCCStatus?.trim()?.toLowerCase() === 'cancelled'|| row.HCCStatus === 'Billed'|| row.HCCBillNo" class="ab ab-edit" title="Edit HCC">✏️
                                     Edit</button>
                             </div>
