@@ -5,7 +5,7 @@
             <div class="modal-title-text">
                 Update Godown Delivery — {{ selectedDockets.length }} Docket(s) · Delivery Branch {{ docketService.Location || 'PIM' }}
             </div>
-            <button type="button" class="btn-close-custom" (click)="closeModal()">&times;</button>
+            <button type="button" class="btn-close-modal" (click)="closeModal()">&times;</button>
         </div>
 
         <!-- Modal Body -->
@@ -24,9 +24,16 @@
                             bindLabel="codeDesc"
                             bindValue="codeId"
                             [items]="generalMasterService.deliveredToData"
-                            placeholder="Select"
+                            placeholder="-- Select --"
                             [dropdownPosition]="'auto'"
+                            panelClass="godown-select-panel"
                             appendTo="body">
+                            <ng-template ng-option-tmp let-item="item">
+                                <div class="godown-opt-wrap" [title]="item.codeDesc">{{ item.codeDesc }}</div>
+                            </ng-template>
+                            <ng-template ng-label-tmp let-item="item">
+                                <span class="godown-label-wrap" [title]="item.codeDesc">{{ item.codeDesc }}</span>
+                            </ng-template>
                         </ng-select>
                     </div>
                     <div style="flex: 1; min-width: 120px;">
@@ -48,14 +55,11 @@
                         <label class="field-label">DELIVERY DATE</label>
                         <div class="input-group input-group-sm">
                             <input type="text" class="form-control form-control-sm" #bulkDp="bsDatepicker" bsDatepicker
+                                container="body" [class.disabled-input]="true"
+                                placement="bottom"
                                 [maxDate]="maxDate" [bsConfig]="datePickerConfig" [(ngModel)]="bulkUpdate.deliveryDate" placeholder="dd-mmm-yyyy">
                             <span class="input-group-text cursor-pointer" (click)="bulkDp.toggle()">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                                </svg>
+                                <i class="fa fa-calendar"></i>
                             </span>
                         </div>
                     </div>
@@ -110,16 +114,18 @@
                             <th class="col-lr">LR NO / DATE</th>
                             <th class="col-org">ORG / DEST</th>
                             <th class="col-total">TOTAL<br>PKGS / WT</th>
-                            <th class="text-center col-pkgs">DELIVERED<br>PKGS *</th>
+                            <th class="text-center col-pkgs">DELIVERED<br>PKGS&nbsp;*</th>
                             <th class="text-center col-wt">DELIVERED<br>WT</th>
                             <th class="col-reason">PART<br>REASON</th>
-                            <th class="col-delto">DELIVERED TO *</th>
-                            <th class="col-person">PERSON NAME *</th>
-                            <th class="col-contact">CONTACT NO *</th>
-                            <th class="col-date">DELIVERY DATE *</th>
-                            <th class="col-podrec">POD REC. *</th>
-                            <th class="col-podupload">POD UPLOAD</th>
-                            <th class="col-podquality">POD QUALITY</th>
+                            <th class="col-delto">DELIVERED<br>TO&nbsp;*</th>
+                            <th class="col-person">PERSON<br>NAME&nbsp;*</th>
+                            <th class="col-contact">CONTACT<br>NO&nbsp;*</th>
+                            <th class="col-date">DELIVERY<br>DATE&nbsp;*</th>
+                            <th class="col-podrec">POD<br>REC.&nbsp;*</th>
+                            <th class="col-podupload">POD<br>UPLOAD</th>
+                            <th class="col-podquality">POD<br>QUALITY</th>
+                            <th class="col-deps">DEPS</th>
+                            <th *ngIf="selectedDockets.length > 1" style="width: 26px;"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -166,7 +172,14 @@
                                     placeholder="Select"
                                     [readonly]="row.deliveredPkgs >= row.Pkgs"
                                     [dropdownPosition]="'auto'"
+                                    panelClass="godown-select-panel"
                                     appendTo="body">
+                                    <ng-template ng-option-tmp let-item="item">
+                                        <div class="godown-opt-wrap" [title]="item.codeDesc">{{ item.codeDesc }}</div>
+                                    </ng-template>
+                                    <ng-template ng-label-tmp let-item="item">
+                                        <span class="godown-label-wrap" [title]="item.codeDesc">{{ item.codeDesc }}</span>
+                                    </ng-template>
                                 </ng-select>
                             </td>
                             <td class="col-delto">
@@ -179,7 +192,14 @@
                                     [items]="generalMasterService.deliveredToData"
                                     placeholder="Select"
                                     [dropdownPosition]="'auto'"
+                                    panelClass="godown-select-panel"
                                     appendTo="body">
+                                    <ng-template ng-option-tmp let-item="item">
+                                        <div class="godown-opt-wrap" [title]="item.codeDesc">{{ item.codeDesc }}</div>
+                                    </ng-template>
+                                    <ng-template ng-label-tmp let-item="item">
+                                        <span class="godown-label-wrap" [title]="item.codeDesc">{{ item.codeDesc }}</span>
+                                    </ng-template>
                                 </ng-select>
                             </td>
                             <td class="col-person">
@@ -208,19 +228,17 @@
                                     <input type="text"
                                         class="form-control form-control-sm"
                                         #dp="bsDatepicker"
+                                        [class.disabled-input]="true"
                                         bsDatepicker
+                                        container="body"
+                                        placement="bottom"
                                         [maxDate]="maxDate"
                                         [minDate]="row.minDeliveryDate"
                                         [bsConfig]="datePickerConfig"
                                         [(ngModel)]="row.deliveryDate"
                                         placeholder="dd-mmm-yyyy">
                                     <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                            <line x1="16" y1="2" x2="16" y2="6"></line>
-                                            <line x1="8" y1="2" x2="8" y2="6"></line>
-                                            <line x1="3" y1="10" x2="21" y2="10"></line>
-                                        </svg>
+                                        <i class="fa fa-calendar"></i>
                                     </span>
                                 </div>
                             </td>
@@ -260,7 +278,7 @@
                                     </div>
                                 </ng-container>
                                 <ng-template #noPodUpload>
-                                    <span class="text-muted">—</span>
+                                    <span class="text-muted">N/A</span>
                                 </ng-template>
                             </td>
                             <td class="col-podquality">
@@ -287,8 +305,30 @@
                                     </div>
                                 </ng-container>
                                 <ng-template #noPodQuality>
-                                    <span class="text-muted">—</span>
+                                    <span class="text-muted">N/A</span>
                                 </ng-template>
+                            </td>
+                            <td class="col-deps">
+                                <ng-container *ngIf="row.podQuality === 'Bad'">
+                                    <a *ngIf="!row.depsData || row.depsData.length === 0"
+                                        class="text-danger fw-bold text-decoration-none cursor-pointer"
+                                        style="font-size: 11px;"
+                                        (click)="openDepsPopup(row)">
+                                        Enter DEPS *
+                                    </a>
+                                    <div *ngIf="row.depsData && row.depsData.length > 0"
+                                        class="text-primary fw-semibold cursor-pointer"
+                                        style="font-size: 10.5px;"
+                                        (click)="openDepsPopup(row)">
+                                        {{ getDepsSummary(row) }} <span class="text-decoration-underline">Edit</span>
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngIf="row.podQuality !== 'Bad'">
+                                    <span class="text-muted">—</span>
+                                </ng-container>
+                            </td>
+                            <td class="text-center" *ngIf="selectedDockets.length > 1" style="width: 26px; padding: 2px;">
+                                <button type="button" class="btn btn-sm btn-link text-danger p-0 text-decoration-none fw-bold" style="font-size: 16px; line-height: 1;" title="Remove from this update" (click)="removeDocket(i)">&times;</button>
                             </td>
                         </tr>
                     </tbody>
@@ -296,7 +336,7 @@
             </div>
 
             <!-- Information text under table -->
-            <div class="text-muted" style="font-size: 11px;">
+            <div class="text-muted" style="font-size: 11px; margin-top: 4px;">
                 On submit, all listed dockets are marked Delivered and <strong>one Godown Delivery No.</strong> is generated for all of them. Delivery date must be between each docket's DRS date and today.
             </div>
         </div>

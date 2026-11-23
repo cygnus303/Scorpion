@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -20,7 +20,8 @@ import { GodownUpdateDepsComponent } from '../godown-update-deps/godown-update-d
     GodownUpdateDepsComponent
   ],
   templateUrl: './update-godown-delivery.component.html',
-  styleUrl: './update-godown-delivery.component.scss'
+  styleUrl: './update-godown-delivery.component.scss',
+  encapsulation: ViewEncapsulation.None
 })
 export class UpdateGodownDeliveryComponent implements OnInit {
   @Output() deliveryUpdated = new EventEmitter<any>();
@@ -59,7 +60,8 @@ export class UpdateGodownDeliveryComponent implements OnInit {
   public datePickerConfig: any = {
     dateInputFormat: 'DD-MMM-YYYY',
     containerClass: 'theme-dark-blue',
-    showWeekNumbers: false
+    showWeekNumbers: false,
+    adaptivePosition: true
   };
 
   constructor(
@@ -427,6 +429,16 @@ export class UpdateGodownDeliveryComponent implements OnInit {
     const sStr = String(seconds).padStart(2, '0');
 
     return `${year}-${month}-${day}T${hStr}:${mStr}:${sStr}.000Z`;
+  }
+
+  removeDocket(index: number) {
+    if (this.selectedDockets.length > 1) {
+      this.selectedDockets.splice(index, 1);
+      this.selectedDockets = [...this.selectedDockets];
+      if (this.isSubmitted) {
+        this.validateDockets();
+      }
+    }
   }
 
   submitGodownDelivery() {

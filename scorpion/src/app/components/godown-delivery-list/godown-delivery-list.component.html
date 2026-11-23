@@ -141,7 +141,7 @@
                             </div>
                         </td>
                         <td class="text-center">
-                            <span *ngIf="item.PkpDelType" class="badge-pd" [ngClass]="getPickupDeliveryTypeClass(item.PkpDelType)">
+                            <span *ngIf="item.PkpDelType" class="badge-pd" [ngClass]="getPickupDeliveryTypeClass(item.PkpDelTypeCode || item.PkpDelType)">
                                 {{ item.PkpDelType }}
                             </span>
                             <span *ngIf="!item.PkpDelType" class="text-muted">—</span>

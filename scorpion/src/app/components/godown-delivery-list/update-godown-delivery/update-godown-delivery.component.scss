@@ -48,9 +48,9 @@ svg {
 }
 
 .godown-modal-header {
-    background: #0f172a;
+    background: #0b2238;
     color: #ffffff;
-    padding: 10px 18px;
+    padding: 11px 18px;
 
     .modal-title-text {
         font-size: 13px;
@@ -58,11 +58,11 @@ svg {
         letter-spacing: 0.2px;
     }
 
-    .btn-close-custom {
+    .btn-close-modal {
         background: transparent;
         border: none;
         color: #ffffff;
-        font-size: 20px;
+        font-size: 22px;
         line-height: 1;
         cursor: pointer;
         padding: 0;
@@ -226,21 +226,22 @@ svg {
     border-collapse: collapse;
     font-size: 11px;
 
-    /* Column Widths (Sum = 1180px, perfectly fits in container) */
+    /* Column Widths */
     .col-sr        { width: 28px; }
     .col-lr        { width: 95px; }
     .col-org       { width: 75px; }
     .col-total     { width: 85px; }
     .col-pkgs      { width: 75px; }
-    .col-wt        { width: 62px; }
+    .col-wt        { width: 68px; }
     .col-reason    { width: 92px; }
     .col-delto     { width: 140px; }
-    .col-person    { width: 92px; }
+    .col-person    { width: 100px; }
     .col-contact   { width: 95px; }
-    .col-date      { width: 105px; }
-    .col-podrec    { width: 68px; }
-    .col-podupload { width: 110px; }
-    .col-podquality{ width: 85px; }
+    .col-date      { width: 110px; }
+    .col-podrec    { width: 75px; }
+    .col-podupload { width: 105px; }
+    .col-podquality{ width: 82px; }
+    .col-deps      { width: 80px; }
 
     thead th {
         background: #f8fafc;
@@ -276,6 +277,26 @@ svg {
         width: 100% !important;
         margin: 0 !important;
         box-sizing: border-box;
+    }
+
+    .col-pkgs input {
+        background: #eff6ff !important;
+        border-color: #bfdbfe !important;
+        color: #1e40af !important;
+        font-weight: 700 !important;
+
+        &:focus {
+            background: #ffffff !important;
+            border-color: #2563eb !important;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2) !important;
+        }
+    }
+
+    .col-wt input {
+        background: #f8fafc !important;
+        border-color: #e2e8f0 !important;
+        color: #475569 !important;
+        font-weight: 600 !important;
     }
 
     .form-control,
@@ -349,13 +370,13 @@ svg {
     .custom-file-btn {
         display: flex;
         align-items: center;
-        font-size: 9.5px;
-        font-weight: 500;
-        color: #2563eb;
-        background: #eff6ff;
-        border: 1px dashed #93c5fd;
-        border-radius: 3px;
-        padding: 2px 4px;
+        font-size: 10px;
+        font-weight: 600;
+        color: #0284c7;
+        background: #f0f9ff;
+        border: 1.5px dashed #38bdf8;
+        border-radius: 4px;
+        padding: 3px 6px;
         cursor: pointer;
         overflow: hidden;
         width: 100%;
@@ -371,8 +392,9 @@ svg {
         }
 
         &:hover {
-            background: #dbeafe;
-            border-color: #3b82f6;
+            background: #e0f2fe;
+            border-color: #0284c7;
+            color: #0369a1;
         }
 
         &.is-invalid {
@@ -380,10 +402,6 @@ svg {
             border-style: solid !important;
             background: #fef2f2 !important;
             color: #dc2626 !important;
-
-            svg {
-                stroke: #dc2626 !important;
-            }
         }
 
         input[type="file"] {
@@ -488,28 +506,101 @@ svg {
         background-color: #f8fafc;
         border: 1px solid #cbd5e1;
         border-left: none;
-        color: #64748b;
+        color: #1a2f53;
         cursor: pointer;
-        padding: 0 6px;
+        padding: 0 7px;
         font-size: 11px;
         display: flex;
         align-items: center;
         justify-content: center;
         height: 28px;
 
+        i.fa-calendar {
+            font-size: 12px;
+            color: #1a2f53;
+        }
+
         &:hover {
             background-color: #f1f5f9;
-            color: #1e293b;
+            color: #0f172a;
         }
     }
 }
 
-::ng-deep bs-datepicker-container,
-::ng-deep .bs-datepicker {
-    z-index: 999999 !important;
+bs-datepicker-container,
+.bs-datepicker-container,
+.bs-datepicker,
+.theme-dark-blue {
+    z-index: 9999999 !important;
 }
 
-::ng-deep .ng-dropdown-panel {
+.ng-dropdown-panel.godown-select-panel {
+    z-index: 999999 !important;
+    min-width: 320px !important;
+    width: auto !important;
+    max-width: 480px !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.15) !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 6px !important;
+    background: #ffffff !important;
+
+    .ng-dropdown-panel-items {
+        max-height: 250px !important;
+
+        .ng-option {
+            white-space: normal !important;
+            word-break: break-word !important;
+            overflow: visible !important;
+            text-overflow: clip !important;
+            padding: 8px 10px !important;
+            font-size: 11.5px !important;
+            line-height: 1.35 !important;
+            border-bottom: 1px solid #f1f5f9;
+
+            &:last-child {
+                border-bottom: none;
+            }
+
+            &.ng-option-selected,
+            &.ng-option-marked {
+                background-color: #f1f5f9 !important;
+                color: #0f172a !important;
+                font-weight: 600;
+            }
+
+            .ng-option-label,
+            span,
+            div,
+            .godown-opt-wrap {
+                white-space: normal !important;
+                word-break: break-word !important;
+                overflow: visible !important;
+                text-overflow: clip !important;
+                display: block !important;
+                line-height: 1.35 !important;
+            }
+        }
+    }
+}
+
+.godown-opt-wrap {
+    white-space: normal !important;
+    word-break: break-word !important;
+    display: block !important;
+    line-height: 1.35 !important;
+    font-size: 11.5px !important;
+}
+
+.godown-label-wrap {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.ng-dropdown-panel {
     z-index: 999999 !important;
 
     .ng-dropdown-panel-items {
@@ -517,7 +608,7 @@ svg {
             white-space: normal !important;
             word-break: break-word !important;
             overflow: visible !important;
-            text-overflow: unset !important;
+            text-overflow: clip !important;
 
             .ng-option-label,
             span,
@@ -525,7 +616,7 @@ svg {
                 white-space: normal !important;
                 word-break: break-word !important;
                 overflow: visible !important;
-                text-overflow: unset !important;
+                text-overflow: clip !important;
             }
         }
     }
@@ -575,8 +666,8 @@ svg {
     }
 
     .btn-modal-submit {
-        background: #0f172a;
-        border: 1px solid #0f172a;
+        background: #0b2238;
+        border: 1px solid #0b2238;
         color: #ffffff;
         font-weight: 700;
         font-size: 11.5px;
@@ -585,8 +676,8 @@ svg {
         transition: all 0.15s;
 
         &:hover {
-            background: #1e293b;
-            border-color: #1e293b;
+            background: #14324f;
+            border-color: #14324f;
         }
     }
 }
