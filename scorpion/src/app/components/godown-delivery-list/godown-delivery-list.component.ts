@@ -464,13 +464,13 @@ export class GodownDeliveryListComponent {
 
 openHCCModal(lr: any) {
     if (this.HCCDetailsComponent) {
-      this.HCCDetailsComponent.showPopup(lr, 'GB', 'GB');
+      this.HCCDetailsComponent.showPopup(lr, 'G', 'GB');
     }
   }
 
   openGDHCCModal(lr: any) {
     if (this.HCCDetailsComponent) {
-      this.HCCDetailsComponent.showPopup(lr, 'GD', 'GD');
+      this.HCCDetailsComponent.showPopup(lr, 'G', 'GD');
     }
   }
 
