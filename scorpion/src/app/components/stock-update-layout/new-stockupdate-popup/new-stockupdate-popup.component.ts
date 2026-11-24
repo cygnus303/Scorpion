@@ -15,6 +15,7 @@ import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angula
 import { SharedModule } from 'app/shared/shared/shared.module';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
 import { VendorChargeHelperService } from 'app/shared/services/vendor-charge.service';
+import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 import { environment } from 'environments/environment';
 
 @Component({
@@ -53,13 +54,25 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
   public headerRateType: any = null;
   // public loadingChargeCtrl = new FormControl('0.00', [Validators.min(0.01)]);
   public loadingChargeCtrl = new FormControl('0.00');
-  public incomingSealNo: string = '';
-  public sealStatus: string | null = null;
-  public sealStatusList: any[] = [
+  public apiSealNo: string = '';
+  public apiSealList: string[] = [];
+  public expectedSealCount: number = 1;
+  public sealForm!: FormGroup;
+
+  public Seallist = [
     { text: 'Ok', value: 'Ok' },
     { text: 'Broken', value: 'Broken' },
     { text: 'Unsealed', value: 'Unsealed' }
   ];
+  public matchSeallist = [
+    { text: 'Ok', value: 'Ok' }
+  ];
+  public mismatchSeallist = [
+    { text: 'Broken', value: 'Broken' },
+    { text: 'Unsealed', value: 'Unsealed' }
+  ];
+  public activeSeallist: any[] = [...this.Seallist];
+  public isStatusFrozen: boolean = false;
 
   onlyNumberKey(event: KeyboardEvent): boolean {
     const charCode = event.which ? event.which : event.keyCode;
@@ -87,10 +100,18 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
     private deliveryUpdateService: DeliveryUpdateService,
     public generalMasterService: GeneralMasterService,
     public vendorChargeHelper: VendorChargeHelperService,
+    private dynamicDataService: DynamicDataService,
     private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
+    const saved = localStorage.getItem("loginUserList");
+    if (saved) {
+      this.docketService.loginUserList = JSON.parse(saved);
+      this.docketService.Location = this.docketService.loginUserList?.LocationCode;
+      this.docketService.BaseUserCode = this.docketService.loginUserList?.UserId;
+      this.docketService.baseUsername = this.docketService.loginUserList?.BaseUserName;
+    }
     this.getDeliveryProcesses();
     // this.generalMasterService.getChargeTypeData();
     // this.getVendorType();
@@ -184,6 +205,10 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
       vehno: '',
       updateDate: this.getCurrentFormattedDate()
     };
+    this.apiSealNo = '';
+    this.apiSealList = [];
+    this.expectedSealCount = 1;
+    this.buildSealForm();
     this.listVSFUM = [];
     this.selectedDeliveryProcessAll = null;
     this.unloaderName = null;
@@ -201,6 +226,7 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
 
     this.generalMasterService.getChargeTypeData();
     this.getVendorType();
+    this.sealvalidation(thcNo);
 
     // Show popup immediately
     this.modalRef = this.modalService.show(this.Templatepod, {
@@ -226,10 +252,14 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
             vehno: vsfum.vehno || '',
             updateDate: this.getCurrentFormattedDate()
           };
-          const sealNoVal = this.stockData?.isn || this.stockData?.sealno || this.stockData?.sealNo || this.stockData?.sealno_in || '';
-          const sealStatusVal = this.stockData?.sealStatus || this.stockData?.status || this.stockData?.seal_status || (sealNoVal ? 'Ok' : null);
-          this.incomingSealNo = sealNoVal;
-          this.sealStatus = sealStatusVal;
+          const sealNoVal = (this.stockData?.isn || this.stockData?.sealno || this.stockData?.sealNo || this.stockData?.sealno_in || '').toString().trim();
+          if (!this.apiSealNo && sealNoVal && sealNoVal.toLowerCase() !== 'null' && sealNoVal.toLowerCase() !== 'undefined') {
+            this.apiSealNo = sealNoVal;
+            this.parseApiSeals(sealNoVal);
+            this.setupSealFormControls();
+            this.validateAllSeals();
+            this.cdr.detectChanges();
+          }
 
           this.listVSFUM = res.listVSFUM || [];
           // Pre-populate fields if needed
@@ -410,6 +440,7 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
     if (!originalState) {
       row.isDamage = true;
       row.isSelected = true; // Auto select the row when checking damage
+      this.onRowSelectChange();
       this.openDepsPopup(row, index, 'D');
     } else {
       if (row.damageDepsData || (row.depsData && row.depsData.depsTyp === 'D')) {
@@ -580,6 +611,7 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
       this.listVSFUM[index].depsData = depsData;
       this.listVSFUM[index].isDamage = true;
       this.listVSFUM[index].isSelected = true;
+      this.onRowSelectChange();
       this.listVSFUM[index].damageQry = depsData.affectedQty || 0;
       this.listVSFUM[index].damageWeight = depsData.affectedWeight || 0;
       this.listVSFUM[index].damageType = depsData.damageType || '';
@@ -699,6 +731,7 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
   toggleAll(event: any) {
     const checked = event.target.checked;
     this.listVSFUM.forEach(row => row.isSelected = checked);
+    this.onRowSelectChange();
   }
 
   isAllSelected(): boolean {
@@ -1240,6 +1273,258 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
     }
   }
 
+  buildSealForm() {
+    this.isStatusFrozen = true;
+    this.activeSeallist = [...this.mismatchSeallist];
+    this.sealForm = new FormGroup({
+      ISN: new FormControl(''),
+      ISN2: new FormControl('', [Validators.maxLength(6)]),
+      ISN3: new FormControl('', [Validators.maxLength(6)]),
+      s2id_Status: new FormControl('')
+    });
+
+    this.sealForm.get('ISN')?.valueChanges.subscribe(() => {
+      this.validateAllSeals();
+    });
+    this.sealForm.get('ISN2')?.valueChanges.subscribe(() => {
+      this.validateAllSeals();
+    });
+    this.sealForm.get('ISN3')?.valueChanges.subscribe(() => {
+      this.validateAllSeals();
+    });
+    this.sealForm.get('s2id_Status')?.valueChanges.subscribe(status => {
+      this.onStatusChange(status);
+    });
+
+    this.setupSealFormControls();
+  }
+
+  sealvalidation(thcNo: any) {
+    const location = this.docketService.loginUserList?.LocationCode || '';
+    const payload = {
+      FilterJson: {
+        ReportId: '395',
+        DocNo: thcNo,
+        BRCD: location
+      }
+    };
+
+    this.dynamicDataService.getDynamicData(payload).subscribe({
+      next: (response: any) => {
+        const list = response?.Table1 || (Array.isArray(response) ? response : (response?.data?.Table1 || []));
+        let seal = '';
+        if (list && list.length > 0) {
+          const allRowSeals = list.map((r: any) => (r?.SealNo ?? r?.sealNo ?? r?.SEALNO ?? r?.Sealno ?? r?.seal_no ?? r?.isn ?? '').toString().trim()).filter((s: string) => s && s.toLowerCase() !== 'null' && s.toLowerCase() !== 'undefined');
+          seal = allRowSeals.join(',');
+
+          if (seal.toLowerCase() === 'null' || seal.toLowerCase() === 'undefined') {
+            seal = '';
+          }
+        }
+        if (!seal && this.stockData) {
+          seal = (this.stockData?.sealno ?? this.stockData?.isn ?? this.stockData?.sealNo ?? '').toString().trim();
+        }
+        this.apiSealNo = seal;
+        this.parseApiSeals(seal);
+        this.setupSealFormControls();
+        this.validateAllSeals();
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        console.error('Error in sealvalidation:', err);
+        const fallbackSeal = (this.stockData?.sealno ?? this.stockData?.isn ?? this.stockData?.sealNo ?? '').toString().trim();
+        this.apiSealNo = fallbackSeal;
+        this.parseApiSeals(fallbackSeal);
+        this.setupSealFormControls();
+        this.validateAllSeals();
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  parseApiSeals(rawSeal: string) {
+    if (!rawSeal) {
+      this.apiSealList = [];
+      this.expectedSealCount = 1;
+      return;
+    }
+    const seals = rawSeal
+      .split(',')
+      .map(s => s.trim())
+      .filter(s => s && s.toLowerCase() !== 'null' && s.toLowerCase() !== 'undefined');
+    this.apiSealList = seals;
+    this.expectedSealCount = seals.length > 0 ? Math.min(seals.length, 3) : 1;
+  }
+
+  get hasSelectedDockets(): boolean {
+    return !!this.listVSFUM && this.listVSFUM.some(row => row.isSelected === true);
+  }
+
+  onRowSelectChange() {
+    this.cdr.detectChanges();
+  }
+
+  setupSealFormControls() {
+    /*
+    const isnCtrl = this.sealForm?.get('ISN');
+    const isn2Ctrl = this.sealForm?.get('ISN2');
+    const isn3Ctrl = this.sealForm?.get('ISN3');
+
+    isnCtrl?.setValidators([Validators.required, Validators.maxLength(6)]);
+    isnCtrl?.updateValueAndValidity({ emitEvent: false });
+
+    if (this.expectedSealCount >= 2) {
+      isn2Ctrl?.setValidators([Validators.required, Validators.maxLength(6)]);
+    } else {
+      isn2Ctrl?.clearValidators();
+      isn2Ctrl?.setValue('', { emitEvent: false });
+    }
+    isn2Ctrl?.updateValueAndValidity({ emitEvent: false });
+
+    if (this.expectedSealCount >= 3) {
+      isn3Ctrl?.setValidators([Validators.required, Validators.maxLength(6)]);
+    } else {
+      isn3Ctrl?.clearValidators();
+      isn3Ctrl?.setValue('', { emitEvent: false });
+    }
+    isn3Ctrl?.updateValueAndValidity({ emitEvent: false });
+    */
+  }
+
+  validateAllSeals() {
+    if (!this.sealForm) return;
+
+    const s1 = (this.sealForm.get('ISN')?.value || '').toString().trim();
+    const s2 = (this.sealForm.get('ISN2')?.value || '').toString().trim();
+    const s3 = (this.sealForm.get('ISN3')?.value || '').toString().trim();
+
+    const isnCtrl = this.sealForm.get('ISN');
+    const isn2Ctrl = this.sealForm.get('ISN2');
+    const isn3Ctrl = this.sealForm.get('ISN3');
+    const statusControl = this.sealForm.get('s2id_Status');
+
+    // Case 1: No seal in API
+    if (this.apiSealList.length === 0) {
+      this.activeSeallist = [...this.Seallist];
+      this.isStatusFrozen = false;
+      if (!s1) {
+        isnCtrl?.setErrors({ required: true });
+      } else if (s1.length > 6) {
+        isnCtrl?.setErrors({ maxlength: true });
+      } else {
+        isnCtrl?.setErrors(null);
+      }
+      this.cdr.detectChanges();
+      return;
+    }
+
+    // Case 2: API has seals
+    const activeControls = [isnCtrl];
+    const enteredValues = [s1];
+    if (this.expectedSealCount >= 2) {
+      activeControls.push(isn2Ctrl);
+      enteredValues.push(s2);
+    }
+    if (this.expectedSealCount >= 3) {
+      activeControls.push(isn3Ctrl);
+      enteredValues.push(s3);
+    }
+
+    let anyEmpty = false;
+    activeControls.forEach((ctrl, idx) => {
+      const val = enteredValues[idx];
+      if (!val) {
+        ctrl?.setErrors({ required: true });
+        anyEmpty = true;
+      } else if (val.length > 6) {
+        ctrl?.setErrors({ maxlength: true });
+      }
+    });
+
+    if (anyEmpty) {
+      this.isStatusFrozen = true;
+      this.activeSeallist = [...this.mismatchSeallist];
+      if (statusControl?.value === 'Ok') {
+        statusControl?.setValue(null, { emitEvent: false });
+      }
+      this.cdr.detectChanges();
+      return;
+    }
+
+    // Check if ALL entered seals match the API seals (sorted comparison)
+    const expectedSorted = [...this.apiSealList.slice(0, this.expectedSealCount)].map(s => s.toLowerCase()).sort();
+    const enteredSorted = [...enteredValues].map(s => s.toLowerCase()).sort();
+    const allMatched = JSON.stringify(expectedSorted) === JSON.stringify(enteredSorted);
+
+    if (allMatched) {
+      this.activeSeallist = [...this.matchSeallist];
+      statusControl?.setValue('Ok', { emitEvent: false });
+      this.isStatusFrozen = true;
+      activeControls.forEach(ctrl => ctrl?.setErrors(null));
+      statusControl?.setErrors(null);
+    } else {
+      // Ok is strictly EXCLUDED when mismatch occurs; only Broken & Unsealed are shown
+      this.activeSeallist = [...this.mismatchSeallist];
+      this.isStatusFrozen = false;
+      if (statusControl?.value === 'Ok') {
+        statusControl?.setValue(null, { emitEvent: false });
+      }
+
+      const currentStatus = statusControl?.value;
+      if (currentStatus === 'Broken' || currentStatus === 'Unsealed') {
+        activeControls.forEach(ctrl => {
+          if (!ctrl?.errors?.['required'] && !ctrl?.errors?.['maxlength']) {
+            ctrl?.setErrors(null);
+          }
+        });
+      } else {
+        activeControls.forEach((ctrl, idx) => {
+          const val = enteredValues[idx];
+          const matchesAnyExpected = this.apiSealList.some(exp => exp.toLowerCase() === val.toLowerCase());
+          const countInEntered = enteredValues.filter(v => v.toLowerCase() === val.toLowerCase()).length;
+          if (!matchesAnyExpected || countInEntered > 1) {
+            ctrl?.setErrors({ sealMismatch: true });
+          } else {
+            ctrl?.setErrors(null);
+          }
+        });
+      }
+    }
+    this.cdr.detectChanges();
+  }
+
+  onStatusDropdownOpen() {
+    this.validateAllSeals();
+    this.cdr.detectChanges();
+  }
+
+  onStatusChange(status: any) {
+    this.validateAllSeals();
+  }
+
+  onSealInput(event: any, controlName: string = 'ISN'): void {
+    const input = event.target as HTMLInputElement;
+    if (!input) return;
+    const cleanValue = (input.value || '').replace(/\D/g, '').slice(0, 6);
+    if (input.value !== cleanValue) {
+      input.value = cleanValue;
+      this.sealForm?.get(controlName)?.setValue(cleanValue, { emitEvent: true });
+    }
+  }
+
+  getFormattedArrivalSeals(): string {
+    const s1 = (this.sealForm?.get('ISN')?.value || '').toString().trim();
+    const s2 = (this.sealForm?.get('ISN2')?.value || '').toString().trim();
+    const s3 = (this.sealForm?.get('ISN3')?.value || '').toString().trim();
+
+    const seals: string[] = [];
+    if (s1) seals.push(s1);
+    if (s2) seals.push(s2);
+    if (s3) seals.push(s3);
+
+    return seals.join(',');
+  }
+
   isUnloaderInvalid(): boolean {
     return (this.submitted || this.unloaderTouched) && !this.unloaderName;
   }
@@ -1250,21 +1535,24 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
 
   submitStockUpdate() {
     this.submitted = true;
-    this.unloaderTouched = true;
-    this.supervisorTouched = true;
-
-    // if (this.loadingChargeCtrl.invalid) {
-    //   this.loadingChargeCtrl.markAsTouched();
-    //   return;
-    // }
-
-    if (!this.unloaderName || !this.unloadingSupervisor) {
-      return;
-    }
 
     const selectedRows = this.listVSFUM.filter(row => row.isSelected === true);
     if (selectedRows.length === 0) {
       this.sweetAlertService.warning('Please select at least one docket to update.');
+      return;
+    }
+
+    this.unloaderTouched = true;
+    this.supervisorTouched = true;
+
+    this.sealForm?.markAllAsTouched();
+    this.validateAllSeals();
+
+    if (this.sealForm?.invalid) {
+      return;
+    }
+
+    if (!this.unloaderName || !this.unloadingSupervisor) {
       return;
     }
 
@@ -1410,8 +1698,8 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
     formData.append("ViewModel.VSFUM.ISCheckRemarks", '');
     formData.append("ViewModel.VSFUM.UnLoadingSupervisor", this.unloadingSupervisor || '');
     formData.append("ViewModel.VSFUM.UnLoaderName", this.unloaderName || '');
-    formData.append("ViewModel.VSFUM.ISN", this.incomingSealNo || this.stockData?.isn || '');
-    formData.append("ViewModel.VSFUM.SealStatus", this.sealStatus || this.stockData?.sealStatus || this.stockData?.status || '');
+    formData.append("ViewModel.VSFUM.ISN", this.getFormattedArrivalSeals());
+    formData.append("ViewModel.VSFUM.Status", this.sealForm?.get('s2id_Status')?.value || '');
     formData.append("BaseUserName", this.docketService.loginUserList?.BaseUserName || this.docketService.loginUserList?.UserId || '');
     formData.append("BaseFinYear", this.docketService.loginUserList?.FinYear || '');
 

@@ -128,10 +128,12 @@ export class ThcArrivalPopupComponent {
     this.isStatusFrozen = true;
     this.activeSeallist = [...this.mismatchSeallist];
     this.arrivalForm = new FormGroup({
-      ISN: new FormControl('', [Validators.required, Validators.maxLength(6)]),
+      // ISN: new FormControl('', [Validators.required, Validators.maxLength(6)]),
+      ISN: new FormControl(''),
       ISN2: new FormControl('', [Validators.maxLength(6)]),
       ISN3: new FormControl('', [Validators.maxLength(6)]),
-      s2id_Status: new FormControl(null, [Validators.required]),
+      // s2id_Status: new FormControl(null, [Validators.required]),
+      s2id_Status: new FormControl(''),
       AD: new FormControl(this.getCurrentDateTime()),
       CLOSEKM: new FormControl('0'),
       IR: new FormControl('', [Validators.required]),
@@ -299,6 +301,7 @@ export class ThcArrivalPopupComponent {
   }
 
   setupSealFormControls() {
+    /*
     const isnCtrl = this.arrivalForm?.get('ISN');
     const isn2Ctrl = this.arrivalForm?.get('ISN2');
     const isn3Ctrl = this.arrivalForm?.get('ISN3');
@@ -321,6 +324,7 @@ export class ThcArrivalPopupComponent {
       isn3Ctrl?.setValue('', { emitEvent: false });
     }
     isn3Ctrl?.updateValueAndValidity({ emitEvent: false });
+    */
   }
 
   validateAllSeals() {
@@ -601,12 +605,12 @@ export class ThcArrivalPopupComponent {
   }
 
   onSubmit() {
-    this.validateAllSeals();
-    const statusControl = this.arrivalForm.get('s2id_Status');
-    if (!statusControl?.value) {
-      statusControl?.setErrors({ required: true });
-    }
-    this.cdr.detectChanges();
+    // this.validateAllSeals();
+    // const statusControl = this.arrivalForm.get('s2id_Status');
+    // if (!statusControl?.value) {
+    //   statusControl?.setErrors({ required: true });
+    // }
+    // this.cdr.detectChanges();
 
     if (this.arrivalForm.invalid) {
       Object.keys(this.arrivalForm.controls).forEach(controlName => {

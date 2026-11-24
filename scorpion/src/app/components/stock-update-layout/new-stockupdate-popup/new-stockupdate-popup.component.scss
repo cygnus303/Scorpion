@@ -167,3 +167,17 @@
         border-color: #2b3990 !important;
     }
 }
+
+.freeze-dropdown {
+    pointer-events: none !important;
+    opacity: 0.85;
+    cursor: not-allowed;
+    ::ng-deep .ng-select-container {
+        background-color: #f1f5f9 !important;
+        cursor: not-allowed !important;
+    }
+}
+
+::ng-deep ng-select.border-danger .ng-select-container {
+    border: 1px solid #dc3545 !important;
+}
