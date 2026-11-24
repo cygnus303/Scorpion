@@ -85,6 +85,7 @@
                         </div>
                         <div class="p-3 bg-white">
                             <!-- Dynamic Multiple Seals Row (Visible when 2 or 3 Seals from Dynamic API) -->
+                            <!--
                             <div class="row mb-3" *ngIf="expectedSealCount > 1">
                                 <div [ngClass]="expectedSealCount === 2 ? 'col-4' : 'col-3'">
                                     <div class="form-group-input">
@@ -187,9 +188,11 @@
                                     </div>
                                 </div>
                             </div>
+                            -->
 
                             <!-- Row 1: Incoming Seal # & Status (When 1 Seal) | Vehicle Arrival Date & Time | Unloader -->
                             <div class="row mb-3">
+                                <!--
                                 <div class="col-4" *ngIf="expectedSealCount <= 1">
                                     <div class="form-group-input">
                                         <label class="form-label d-flex align-items-center gap-1 fw-bold"
@@ -233,6 +236,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                -->
 
                                 <div class="col-4">
                                     <div class="form-group-input">
