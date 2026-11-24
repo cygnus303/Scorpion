@@ -416,18 +416,28 @@ export class AddPrqComponent {
     if (event && event.text) {
       this.prqForm.patchValue({
         customer_Name: event.text,
-        payBase: null
+        payBase: null,
+        transportMode: null,
+        service_Type: null,
+        ftlType: null
       });
     } else {
       this.prqForm.patchValue({
         customer_Name: '',
-        payBase: null
+        payBase: null,
+        transportMode: null,
+        service_Type: null,
+        ftlType: null
       });
       this.allowedPaybasList = null;
       this.paybaseData = [...this.allPaybaseData];
+      this.serviceData = [];
+      this.transportModes = [];
       return;
     }
     this.allowedPaybasList = null;
+    this.serviceData = [];
+    this.transportModes = [];
     this.getContract(event?.id, '');
   }
 
@@ -464,20 +474,25 @@ export class AddPrqComponent {
       this.paybaseData = allowedList.map(a => ({ codeId: a, codeDesc: a }));
     }
 
-    // Auto-select if only 1 option
-    if (this.paybaseData.length === 1) {
-      this.prqForm.patchValue({ payBase: this.paybaseData[0].codeId });
-    } else {
-      const current = this.prqForm.get('payBase')?.value;
-      if (current && !this.paybaseData.some(p => p.codeId === current)) {
-        this.prqForm.patchValue({ payBase: null });
-      }
+    const current = this.prqForm.get('payBase')?.value;
+    if (current && !this.paybaseData.some(p => p.codeId === current)) {
+      this.prqForm.patchValue({ payBase: null });
     }
   }
 
   onPayBasChange(event: any) {
     this.contractErrorMsg = '';
-    const paybas = event?.codeId || (typeof event === 'string' ? event : null) || this.prqForm.get('payBase')?.value || '';
+    this.prqForm.patchValue({
+      transportMode: null,
+      service_Type: null,
+      ftlType: null
+    });
+    const paybas = event ? (event.codeId || (typeof event === 'string' ? event : '')) : '';
+    if (!paybas) {
+      this.serviceData = [];
+      this.transportModes = [];
+      return;
+    }
     const customerId = this.prqForm.get('customerCode')?.value;
     if (customerId) {
       this.getContract(customerId, paybas);
@@ -521,11 +536,98 @@ export class AddPrqComponent {
       next: (response: any) => {
         if (response && response.data && response.data.length > 0) {
           const item = response.data[0];
+          const contractId = (item.contractId || '').toString().trim();
           const serviceTypesStr = item.serviceTypes || '';
           const transportTypesStr = item.transportTypes || '';
+          const custcatStr = (item.custcat || item.payBas || '').toString().trim().toUpperCase();
+          const custcatList = custcatStr.split(',').map((c: string) => c.trim()).filter(Boolean);
+
+          this.prqForm.patchValue({
+            contractID: item.contractId || ''
+          });
+
+          const hasP02 = custcatList.includes('P02') || (paybasValue && paybasValue.toString().trim().toUpperCase() === 'P02');
+          const hasNonP02 = custcatList.some((c: string) => c !== 'P02');
+          const isOnlyP02 = custcatList.length > 0 && custcatList.every((c: string) => c === 'P02');
+          const isP02Selected = paybasValue && paybasValue.toString().trim().toUpperCase() === 'P02';
+
+          if (!contractId && hasP02 && hasNonP02) {
+            this.contractErrorMsg = 'No active TBB contract found for this customer';
+            if (isPaybasBlank) {
+              let paybasDataFromApi = item.custcat || item.payBas || '';
+
+              if (!paybasDataFromApi && response.data.length > 1) {
+                const allPay = response.data.map((d: any) => d.custcat || d.payBas).filter(Boolean);
+                if (allPay.length > 0) {
+                  paybasDataFromApi = allPay;
+                }
+              }
+
+              if (paybasDataFromApi) {
+                this.allowedPaybasList = paybasDataFromApi;
+                this.filterPaybase(paybasDataFromApi);
+              }
+              return;
+            }
+          }
+
+          // 2. Jo specific P02 select karyu hoy ane contractId nathi:
+          if (!contractId && isP02Selected) {
+            const errorMsg = 'No active TBB contract found for this customer';
+            this.contractErrorMsg = errorMsg;
+            this.sweetAlertService.error(errorMsg);
             this.prqForm.patchValue({
-            contractID:item.contractId
-          })
+              payBase: null,
+              transportMode: null,
+              service_Type: null,
+              ftlType: null
+            });
+            this.serviceData = [];
+            this.transportModes = [];
+            return;
+          }
+
+          // 3. Jo fakt P02 j chhe (bijo koi custcat nathi) ane contractId nathi:
+          if (!contractId && isOnlyP02) {
+            const errorMsg = 'No active contract';
+            this.contractErrorMsg = errorMsg;
+            this.sweetAlertService.error(errorMsg);
+            this.prqForm.patchValue({
+              payBase: null,
+              transportMode: null,
+              service_Type: null,
+              ftlType: null
+            });
+            this.serviceData = [];
+            this.transportModes = [];
+            if (isPaybasBlank) {
+              this.paybaseData = [];
+            }
+            return;
+          }
+
+          // 2. Jo P02 sivay na custcat aave to paybas nu dropdown bind thavu joia
+          if (isPaybasBlank && hasNonP02) {
+            let paybasDataFromApi = item.custcat || item.payBas || '';
+
+            if (!paybasDataFromApi && response.data.length > 1) {
+              const allPay = response.data.map((d: any) => d.custcat || d.payBas).filter(Boolean);
+              if (allPay.length > 0) {
+                paybasDataFromApi = allPay;
+              }
+            }
+
+            if (paybasDataFromApi) {
+              this.allowedPaybasList = paybasDataFromApi;
+              this.filterPaybase(paybasDataFromApi);
+            }
+            this.contractErrorMsg = '';
+
+            // Jo contractId nathi ane initial load (paybas blank) chhe, to aagal return kari devu jethi error na aave
+            if (!contractId && serviceTypesStr.trim() === '' && transportTypesStr.trim() === '') {
+              return;
+            }
+          }
 
           if (serviceTypesStr.trim() === '' && transportTypesStr.trim() === '') {
             const errorMsg = paybasValue
@@ -534,7 +636,10 @@ export class AddPrqComponent {
             this.contractErrorMsg = errorMsg;
             this.sweetAlertService.error(errorMsg);
             this.prqForm.patchValue({
-              payBase: null
+              payBase: null,
+              transportMode: null,
+              service_Type: null,
+              ftlType: null
             });
             this.serviceData = [];
             this.transportModes = [];
@@ -548,16 +653,14 @@ export class AddPrqComponent {
 
           // Only filter PayBas dropdown if paybas in request was null or blank!
           if (isPaybasBlank) {
-            let paybasDataFromApi = item.custcat || item.custCat || item.CustCat || item.custcode || item.custCode || '';
+            let paybasDataFromApi = item.custcat || '';
 
             if (!paybasDataFromApi) {
-              paybasDataFromApi = item.paybas || item.payBas || item.payBase || item.paybase || 
-                                  item.PayBas || item.PayBase || item.paymentTypes || item.paymentType || 
-                                  item.payTypes || item.payType || item.payBasis || item.PayBasis || '';
+              paybasDataFromApi = item.payBas || '';
             }
 
             if (!paybasDataFromApi && response.data.length > 1) {
-              const allPay = response.data.map((d: any) => d.custcat || d.custCat || d.CustCat || d.paybas || d.payBas || d.PayBas || d.payBase || d.PayBase).filter(Boolean);
+              const allPay = response.data.map((d: any) => d.custcat || d.payBas).filter(Boolean);
               if (allPay.length > 0) {
                 paybasDataFromApi = allPay;
               }
@@ -569,22 +672,32 @@ export class AddPrqComponent {
             }
           }
 
-          this.getTransportModes('', transportTypesStr);
+          if (transportTypesStr) {
+            this.getTransportModes('', transportTypesStr);
+          } else {
+            this.transportModes = [];
+          }
 
-          this.serviceData = serviceTypesStr.split(',').map((s: string) => ({ name: s.trim(), value: s.trim() })).filter((s: any) => s.value !== '');
-          if (this.serviceData.length === 1) {
-            this.prqForm.patchValue({ service_Type: this.serviceData[0].value });
+          if (serviceTypesStr) {
+            this.serviceData = serviceTypesStr.split(',').map((s: string) => ({ name: s.trim(), value: s.trim() })).filter((s: any) => s.value !== '');
+          } else {
+            this.serviceData = [];
           }
         } else {
           const errorMsg = paybasValue
             ? `Contract is not available for this customer paybasis.`
-            : 'Contract details are not available for this customer. Cannot proceed with PRQ generation.';
+            : 'No active contract';
           this.contractErrorMsg = errorMsg;
           this.sweetAlertService.error(errorMsg);
           this.serviceData = [];
           this.transportModes = [];
           if (paybasValue) {
-            this.prqForm.patchValue({ payBase: null });
+            this.prqForm.patchValue({
+              payBase: null,
+              transportMode: null,
+              service_Type: null,
+              ftlType: null
+            });
           } else if (isPaybasBlank) {
             this.paybaseData = [];
           }

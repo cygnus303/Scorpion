@@ -5,7 +5,7 @@
             <div class="modal-title-text">
                 Update Godown Delivery — {{ selectedDockets.length }} Docket(s) · Delivery Branch {{ docketService.Location || 'PIM' }}
             </div>
-            <button type="button" class="btn-close-custom" (click)="closeModal()">&times;</button>
+            <button type="button" class="btn-close-modal" (click)="closeModal()">&times;</button>
         </div>
 
         <!-- Modal Body -->
@@ -16,7 +16,7 @@
                     Apply to all dockets (optional — each row stays editable)
                 </div>
                 <div class="d-flex align-items-end gap-2 flex-wrap">
-                    <div style="flex: 1; min-width: 140px;">
+                    <div style="flex: 1.2; min-width: 140px;">
                         <label class="field-label">DELIVERED TO</label>
                         <ng-select
                             class="noFoundTextColor clear-icon remove-white-space mselect"
@@ -24,41 +24,61 @@
                             bindLabel="codeDesc"
                             bindValue="codeId"
                             [items]="generalMasterService.deliveredToData"
-                            placeholder="Select"
+                            placeholder="-- Select --"
+                            [dropdownPosition]="'auto'"
+                            panelClass="godown-select-panel"
                             appendTo="body">
+                            <ng-template ng-option-tmp let-item="item">
+                                <div class="godown-opt-wrap" [title]="item.codeDesc">{{ item.codeDesc }}</div>
+                            </ng-template>
+                            <ng-template ng-label-tmp let-item="item">
+                                <span class="godown-label-wrap" [title]="item.codeDesc">{{ item.codeDesc }}</span>
+                            </ng-template>
                         </ng-select>
                     </div>
-                    <div style="flex: 1; min-width: 140px;">
+                    <div style="flex: 1; min-width: 120px;">
                         <label class="field-label">PERSON NAME</label>
                         <input type="text" class="form-control form-control-sm" placeholder="Receiver name" [(ngModel)]="bulkUpdate.personName">
                     </div>
-                    <div style="flex: 1; min-width: 140px;">
+                    <div style="flex: 1; min-width: 120px;">
                         <label class="field-label">CONTACT NO</label>
                         <input type="text" class="form-control form-control-sm" placeholder="10-digit mobile" maxlength="10"
                             [(ngModel)]="bulkUpdate.contactNo"
                             (input)="onContactInput($event, bulkUpdate)"
                             (keypress)="onlyNumbers($event)"
-                            (blur)="bulkUpdate.isContactTouched = true"
-                            [class.is-invalid]="isContactInvalid(bulkUpdate)">
-                        <div class="contact-error-msg" *ngIf="isContactInvalid(bulkUpdate)">
-                            Please enter valid mobile number
+                            [class.is-invalid]="isContactInvalid(bulkUpdate, true)">
+                        <div class="contact-error-msg" *ngIf="isContactInvalid(bulkUpdate, true)">
+                            Must be 10 digits
                         </div>
                     </div>
-                    <div style="flex: 1; min-width: 140px;">
+                    <div style="flex: 1; min-width: 125px;">
                         <label class="field-label">DELIVERY DATE</label>
                         <div class="input-group input-group-sm">
                             <input type="text" class="form-control form-control-sm" #bulkDp="bsDatepicker" bsDatepicker
+                                container="body" [class.disabled-input]="true"
+                                placement="bottom"
                                 [maxDate]="maxDate" [bsConfig]="datePickerConfig" [(ngModel)]="bulkUpdate.deliveryDate" placeholder="dd-mmm-yyyy">
                             <span class="input-group-text cursor-pointer" (click)="bulkDp.toggle()">
                                 <i class="fa fa-calendar"></i>
                             </span>
                         </div>
                     </div>
-                    <div style="flex: 1; min-width: 110px;">
+                    <div style="flex: 0.8; min-width: 90px;">
                         <label class="field-label">POD RECEIVED</label>
-                        <select class="form-select form-select-sm" [(ngModel)]="bulkUpdate.podReceived">
-                            <option *ngFor="let opt of podReceivedList" [value]="opt.value">{{ opt.label }}</option>
-                        </select>
+                        <div class="pod-toggle-pill bulk-toggle">
+                            <button type="button"
+                                class="toggle-btn"
+                                [class.active-yes]="bulkUpdate.podReceived === 'Y' || bulkUpdate.podReceived === 'Yes'"
+                                (click)="bulkUpdate.podReceived = (bulkUpdate.podReceived === 'Y' ? '' : 'Y')">
+                                Yes
+                            </button>
+                            <button type="button"
+                                class="toggle-btn"
+                                [class.active-no]="bulkUpdate.podReceived === 'N' || bulkUpdate.podReceived === 'No'"
+                                (click)="bulkUpdate.podReceived = (bulkUpdate.podReceived === 'N' ? '' : 'N')">
+                                No
+                            </button>
+                        </div>
                     </div>
                     <div style="width: 110px;">
                         <button type="button" class="btn btn-outline-secondary btn-sm w-100 fw-semibold btn-apply-all" (click)="applyBulkToAll()">
@@ -70,7 +90,14 @@
 
             <!-- Validation Error Alert Card -->
             <div class="validation-alert-card" *ngIf="isSubmitted && validationErrors.length > 0">
-                <div class="alert-title">Please correct the following before submitting:</div>
+                <div class="alert-title d-flex align-items-center gap-2">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="flex-shrink-0">
+                        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                    <span>Please correct the following before submitting:</span>
+                </div>
                 <ul class="alert-list">
                     <li *ngFor="let err of validationErrors">
                         <strong>{{ err.lrNo }}:</strong> {{ err.messages.join('; ') }}
@@ -78,145 +105,252 @@
                 </ul>
             </div>
 
-            <!-- Table Section -->
+            <!-- Table Section with No Gaps and No Horizontal Scroll -->
             <div class="modal-table-wrap">
                 <table class="table modal-data-table mb-0 align-middle">
                     <thead>
                         <tr>
-                            <th class="text-center" style="width: 40px;">#</th>
-                            <th style="min-width: 120px;">LR NO / DATE</th>
-                            <th style="min-width: 100px;">ORG / DEST</th>
-                            <th style="min-width: 130px;">TOTAL PKGS / WT</th>
-                            <th style="min-width: 100px;">DELIVERED PKGS *</th>
-                            <th style="min-width: 100px;">DELIVERED WT</th>
-                            <th style="min-width: 150px;">PART DELIVERED REASON</th>
-                            <th style="min-width: 140px;">DELIVERED TO *</th>
-                            <th style="min-width: 140px;">PERSON NAME *</th>
-                            <th style="min-width: 140px;">CONTACT NO *</th>
-                            <th style="min-width: 140px;">DELIVERY DATE *</th>
-                            <th style="min-width: 110px;">POD RECEIVED *</th>
-                            <th class="text-center" style="min-width: 180px;">POD UPLOAD</th>
-                            <th class="text-center" style="min-width: 110px;">POD QUALITY</th>
-                            <th class="text-center" style="min-width: 60px;">DEPS</th>
+                            <th class="text-center col-sr">#</th>
+                            <th class="col-lr">LR NO / DATE</th>
+                            <th class="col-org">ORG / DEST</th>
+                            <th class="col-total">TOTAL<br>PKGS / WT</th>
+                            <th class="text-center col-pkgs">DELIVERED<br>PKGS&nbsp;*</th>
+                            <th class="text-center col-wt">DELIVERED<br>WT</th>
+                            <th class="col-reason">PART<br>REASON</th>
+                            <th class="col-delto">DELIVERED<br>TO&nbsp;*</th>
+                            <th class="col-person">PERSON<br>NAME&nbsp;*</th>
+                            <th class="col-contact">CONTACT<br>NO&nbsp;*</th>
+                            <th class="col-date">DELIVERY<br>DATE&nbsp;*</th>
+                            <th class="col-podrec">POD<br>REC.&nbsp;*</th>
+                            <th class="col-podupload">POD<br>UPLOAD</th>
+                            <th class="col-podquality">POD<br>QUALITY</th>
+                            <th class="col-deps">DEPS</th>
+                            <th *ngIf="selectedDockets.length > 1" style="width: 26px;"></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let row of selectedDockets; let i = index">
-                            <td class="text-center text-muted">{{ i + 1 }}</td>
-                            <td>
-                                <div class="fw-bold text-dark" style="font-size: 11.5px;">{{ row.LRNumber }}</div>
-                                <div class="text-muted" style="font-size: 10.5px;">{{ row.LRDateText || (row.LRDate | date:'dd-MMM-yyyy') }}</div>
+                            <td class="text-center text-muted col-sr">{{ i + 1 }}</td>
+                            <td class="col-lr">
+                                <div class="fw-bold text-dark" style="font-size: 11px;">{{ row.LRNumber }}</div>
+                                <div class="text-muted" style="font-size: 10px;">{{ row.LRDateText || (row.LRDate | date:'dd-MMM-yyyy') }}</div>
                             </td>
-                            <td>
-                                <span class="fw-semibold text-secondary">{{ row.OrgDest || (row.OrgCode + ' / ' + row.DestCode) }}</span>
+                            <td class="col-org">
+                                <div class="fw-semibold text-secondary" style="font-size: 10.5px;">{{ row.OrgDest || (row.OrgCode + ' / ' + row.DestCode) }}</div>
+                                <div *ngIf="row.ReassignedLocation" class="text-primary fw-bold" style="font-size: 9.5px;">{{ row.ReassignedLocation }}</div>
                             </td>
-                            <td>
-                                <div class="fw-bold text-dark" style="font-size: 11.5px;">{{ row.Pkgs }} / {{ row.ActualWt  }} Kg</div>
-                                <div class="text-muted" style="font-size: 10.5px;">DRS {{ row.DRSDate }}</div>
+                            <td class="col-total">
+                                <div class="fw-bold text-dark" style="font-size: 11px;">{{ row.Pkgs }} / {{ row.ActualWt }} Kg</div>
+                                <div class="text-muted" *ngIf="row.DRSDate" style="font-size: 10px;">DRS {{ row.DRSDate }}</div>
                             </td>
-                            <td>
-                                <input type="number" class="form-control form-control-sm" [(ngModel)]="row.deliveredPkgs" style="width: 80px;" [class.is-invalid]="row.deliveredPkgs <= 0">
-                                <div class="text-danger" style="font-size: 11px; margin-top: 2px;" *ngIf="row.deliveredPkgs <= 0">Cannot be 0</div>
+                            <td class="col-pkgs">
+                                <input type="number"
+                                    class="form-control form-control-sm text-center cell-input"
+                                    [(ngModel)]="row.deliveredPkgs"
+                                    (ngModelChange)="onDeliveredPkgsChange(row)"
+                                    [class.is-invalid]="getPkgsError(row) !== ''"
+                                    min="1"
+                                    [max]="row.Pkgs">
+                                <div class="text-danger err-sub" *ngIf="getPkgsError(row)">
+                                    {{ getPkgsError(row) }}
+                                </div>
                             </td>
-                            <td>
-                                <input type="number" class="form-control form-control-sm" [(ngModel)]="row.deliveredWt" style="width: 90px;" readonly>
+                            <td class="col-wt">
+                                <input type="number"
+                                    class="form-control form-control-sm text-center bg-light cell-input"
+                                    [(ngModel)]="row.deliveredWt"
+                                    readonly>
                             </td>
-                            <td>
-                                <select class="form-select form-select-sm" [(ngModel)]="row.partDeliveredReason" [class.is-invalid]="isSubmitted && isReasonInvalid(row)">
-                                    <option value="N/A">N/A</option>
-                                    <option value="Shortage">Shortage</option>
-                                    <option value="Damage">Damage</option>
-                                    <option value="Customer Refused">Customer Refused</option>
-                                </select>
-                            </td>
-                            <td>
+                            <td class="col-reason">
                                 <ng-select
-                                    class="noFoundTextColor clear-icon remove-white-space mselect"
+                                    class="noFoundTextColor clear-icon remove-white-space mselect cell-input"
+                                    [class.is-invalid]="isSubmitted && isReasonInvalid(row)"
+                                    [(ngModel)]="row.partDeliveredReason"
+                                    bindLabel="codeDesc"
+                                    bindValue="codeId"
+                                    [items]="generalMasterService.partDeliveredReasonData"
+                                    placeholder="Select"
+                                    [readonly]="row.deliveredPkgs >= row.Pkgs"
+                                    [dropdownPosition]="'auto'"
+                                    panelClass="godown-select-panel"
+                                    appendTo="body">
+                                    <ng-template ng-option-tmp let-item="item">
+                                        <div class="godown-opt-wrap" [title]="item.codeDesc">{{ item.codeDesc }}</div>
+                                    </ng-template>
+                                    <ng-template ng-label-tmp let-item="item">
+                                        <span class="godown-label-wrap" [title]="item.codeDesc">{{ item.codeDesc }}</span>
+                                    </ng-template>
+                                </ng-select>
+                            </td>
+                            <td class="col-delto">
+                                <ng-select
+                                    class="noFoundTextColor clear-icon remove-white-space mselect cell-input"
                                     [class.is-invalid]="isSubmitted && isDeliveredToInvalid(row)"
                                     [(ngModel)]="row.deliveredTo"
                                     bindLabel="codeDesc"
                                     bindValue="codeId"
                                     [items]="generalMasterService.deliveredToData"
                                     placeholder="Select"
-                                    appendTo="body"
-                                    [readonly]="(row.deliveredPkgs || 0) == 0">
+                                    [dropdownPosition]="'auto'"
+                                    panelClass="godown-select-panel"
+                                    appendTo="body">
+                                    <ng-template ng-option-tmp let-item="item">
+                                        <div class="godown-opt-wrap" [title]="item.codeDesc">{{ item.codeDesc }}</div>
+                                    </ng-template>
+                                    <ng-template ng-label-tmp let-item="item">
+                                        <span class="godown-label-wrap" [title]="item.codeDesc">{{ item.codeDesc }}</span>
+                                    </ng-template>
                                 </ng-select>
                             </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" [(ngModel)]="row.personName" [class.is-invalid]="isSubmitted && isPersonNameInvalid(row)">
+                            <td class="col-person">
+                                <input type="text"
+                                    class="form-control form-control-sm cell-input"
+                                    placeholder="Name"
+                                    [(ngModel)]="row.personName"
+                                    [class.is-invalid]="isSubmitted && isPersonNameInvalid(row)">
                             </td>
-                            <td>
-                                <div style="min-width: 130px;">
-                                    <input type="text" class="form-control form-control-sm" maxlength="10" placeholder="Contact No"
-                                        [(ngModel)]="row.contactNo"
-                                        (input)="onContactInput($event, row)"
-                                        (keypress)="onlyNumbers($event)"
-                                        (blur)="row.isContactTouched = true"
-                                        [class.is-invalid]="isContactInvalid(row)">
-                                    <div class="contact-error-msg" *ngIf="isContactInvalid(row)">
-                                        Please enter valid mobile number
-                                    </div>
+                            <td class="col-contact">
+                                <input type="text"
+                                    class="form-control form-control-sm cell-input"
+                                    placeholder="Mobile"
+                                    maxlength="10"
+                                    [(ngModel)]="row.contactNo"
+                                    (input)="onContactInput($event, row)"
+                                    (keypress)="onlyNumbers($event)"
+                                    (blur)="row.isContactTouched = true"
+                                    [class.is-invalid]="isContactInvalid(row)">
+                                <div class="contact-error-msg" *ngIf="isContactInvalid(row)">
+                                    10 digits
                                 </div>
                             </td>
-                            <td>
-                                <div class="input-group input-group-sm" style="min-width: 130px;">
-                                    <input type="text" class="form-control form-control-sm" #dp="bsDatepicker" bsDatepicker
-                                        [maxDate]="maxDate" [minDate]="row.minDeliveryDate" [bsConfig]="datePickerConfig" [(ngModel)]="row.deliveryDate" placeholder="dd-mmm-yyyy">
+                            <td class="col-date">
+                                <div class="input-group input-group-sm cell-input">
+                                    <input type="text"
+                                        class="form-control form-control-sm"
+                                        #dp="bsDatepicker"
+                                        [class.disabled-input]="true"
+                                        bsDatepicker
+                                        container="body"
+                                        placement="bottom"
+                                        [maxDate]="maxDate"
+                                        [minDate]="row.minDeliveryDate"
+                                        [bsConfig]="datePickerConfig"
+                                        [(ngModel)]="row.deliveryDate"
+                                        placeholder="dd-mmm-yyyy">
                                     <span class="input-group-text cursor-pointer" (click)="dp.toggle()">
                                         <i class="fa fa-calendar"></i>
                                     </span>
                                 </div>
                             </td>
-                            <td>
-                                <select class="form-select form-select-sm" [(ngModel)]="row.podReceived" (change)="onPodReceivedChange(row)" [class.is-invalid]="isSubmitted && isPodReceivedInvalid(row)">
-                                    <option *ngFor="let opt of podReceivedList" [value]="opt.value">{{ opt.label }}</option>
-                                </select>
+                            <td class="col-podrec">
+                                <div class="pod-toggle-pill" [class.is-invalid]="isSubmitted && isPodReceivedInvalid(row)">
+                                    <button type="button"
+                                        class="toggle-btn"
+                                        [class.active-yes]="row.podReceived === 'Y' || row.podReceived === 'Yes'"
+                                        (click)="setPodReceived(row, 'Y')">
+                                        Yes
+                                    </button>
+                                    <button type="button"
+                                        class="toggle-btn"
+                                        [class.active-no]="row.podReceived === 'N' || row.podReceived === 'No'"
+                                        (click)="setPodReceived(row, 'N')">
+                                        No
+                                    </button>
+                                </div>
                             </td>
-                            <td>
+                            <td class="col-podupload">
                                 <ng-container *ngIf="row.podReceived === 'Y' || row.podReceived === 'Yes'; else noPodUpload">
-                                    <div class="pod-upload-container d-flex flex-column gap-2" style="min-width: 175px;">
-                                        <div>
-                                            <input type="file" class="form-control form-control-sm" (change)="onFileChange($event, row, 1)">
-                                            <div class="pod-upload-label">POD Upload 1 *</div>
-                                        </div>
-                                        <div>
-                                            <input type="file" class="form-control form-control-sm" (change)="onFileChange($event, row, 2)">
-                                            <div class="pod-upload-label">POD Upload 2</div>
-                                        </div>
+                                    <div class="d-flex flex-column gap-1">
+                                        <label class="custom-file-btn" [class.is-invalid]="isSubmitted && isPodUploadInvalid(row)">
+                                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
+                                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                                            </svg>
+                                            <span class="file-name-text">{{ row.podFile1 ? row.podFile1.name : 'POD 1 *' }}</span>
+                                            <input type="file" (change)="onFileChange($event, row, 1)">
+                                        </label>
+                                        <label class="custom-file-btn" *ngIf="row.podFile1">
+                                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1">
+                                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                                            </svg>
+                                            <span class="file-name-text">{{ row.podFile2 ? row.podFile2.name : 'POD 2' }}</span>
+                                            <input type="file" (change)="onFileChange($event, row, 2)">
+                                        </label>
                                     </div>
                                 </ng-container>
                                 <ng-template #noPodUpload>
-                                    <div class="text-center text-muted fst-italic">N/A</div>
+                                    <span class="text-muted">N/A</span>
                                 </ng-template>
                             </td>
-                            <td>
+                            <td class="col-podquality">
                                 <ng-container *ngIf="row.podReceived === 'Y' || row.podReceived === 'Yes'; else noPodQuality">
-                                    <select class="form-select form-select-sm" [(ngModel)]="row.podQuality" style="min-width: 95px;" [class.is-invalid]="isSubmitted && isPodQualityInvalid(row)">
-                                        <option *ngFor="let q of podQualityList" [value]="q.value">{{ q.label }}</option>
-                                    </select>
+                                    <div class="pod-toggle-pill quality-toggle" [class.is-invalid]="isSubmitted && isPodQualityInvalid(row)">
+                                        <button type="button"
+                                            class="toggle-btn"
+                                            [class.active-good]="row.podQuality === 'Good'"
+                                            (click)="setPodQuality(row, 'Good')">
+                                            Good
+                                        </button>
+                                        <button type="button"
+                                            class="toggle-btn"
+                                            [class.active-bad]="row.podQuality === 'Bad'"
+                                            (click)="setPodQuality(row, 'Bad')">
+                                            Bad
+                                        </button>
+                                    </div>
+                                    <div *ngIf="row.podQuality === 'Bad' && row.depsData && row.depsData.length > 0"
+                                        class="badge bg-danger-subtle text-danger border border-danger-subtle mt-1 cursor-pointer text-nowrap"
+                                        style="font-size: 8.5px; padding: 2px 4px; display: inline-block;"
+                                        (click)="openDepsPopup(row)">
+                                        DEPS ({{ getDepsSummary(row) }}) ✎
+                                    </div>
                                 </ng-container>
                                 <ng-template #noPodQuality>
-                                    <div class="text-center text-muted fst-italic">N/A</div>
+                                    <span class="text-muted">N/A</span>
                                 </ng-template>
                             </td>
-                            <td class="text-center text-muted">—</td>
+                            <td class="col-deps">
+                                <ng-container *ngIf="row.podQuality === 'Bad'">
+                                    <a *ngIf="!row.depsData || row.depsData.length === 0"
+                                        class="text-danger fw-bold text-decoration-none cursor-pointer"
+                                        style="font-size: 11px;"
+                                        (click)="openDepsPopup(row)">
+                                        Enter DEPS *
+                                    </a>
+                                    <div *ngIf="row.depsData && row.depsData.length > 0"
+                                        class="text-primary fw-semibold cursor-pointer"
+                                        style="font-size: 10.5px;"
+                                        (click)="openDepsPopup(row)">
+                                        {{ getDepsSummary(row) }} <span class="text-decoration-underline">Edit</span>
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngIf="row.podQuality !== 'Bad'">
+                                    <span class="text-muted">—</span>
+                                </ng-container>
+                            </td>
+                            <td class="text-center" *ngIf="selectedDockets.length > 1" style="width: 26px; padding: 2px;">
+                                <button type="button" class="btn btn-sm btn-link text-danger p-0 text-decoration-none fw-bold" style="font-size: 16px; line-height: 1;" title="Remove from this update" (click)="removeDocket(i)">&times;</button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
             <!-- Information text under table -->
-            <div class="text-muted" style="font-size: 11px;">
+            <div class="text-muted" style="font-size: 11px; margin-top: 4px;">
                 On submit, all listed dockets are marked Delivered and <strong>one Godown Delivery No.</strong> is generated for all of them. Delivery date must be between each docket's DRS date and today.
             </div>
         </div>
 
         <!-- Modal Footer -->
         <div class="godown-modal-footer">
-            <button type="button" class="btn btn-modal-cancel" (click)="closeModal()">Cancel</button>
-            <button type="button" class="btn btn-modal-submit" (click)="submitGodownDelivery()">
+            <button type="button" class="btn btn-modal-cancel" [disabled]="isSubmit" (click)="closeModal()">Cancel</button>
+            <button type="button" class="btn btn-modal-submit" [disabled]="isSubmit" (click)="submitGodownDelivery()">
+                <span *ngIf="isSubmit" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
                 Submit — Update Godown Delivery
             </button>
         </div>
     </div>
 </div>
+
+<!-- DEPS Entry Modal for Bad POD Quality -->
+<app-godown-update-deps #GodownUpdateDepsComponent (depsSaved)="onDepsSaved($event)" (depsCancelled)="onDepsCancelled($event)"></app-godown-update-deps>

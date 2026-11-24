@@ -251,6 +251,10 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
     });
   }
 
+  get isHQTR(): boolean {
+    return this.docketService.loginUserList?.LocationCode === 'HQTR';
+  }
+
   openHCCview(row: any) {
     this.HCCviewComponent.showPopup(row);
   }
@@ -358,7 +362,7 @@ export class HccFinacialeditListComponent implements OnInit, OnDestroy {
     }
   }
 
-  
+
   onGBNo(lr: any) {
     this.gbViewComponent.openModal(lr);
   }

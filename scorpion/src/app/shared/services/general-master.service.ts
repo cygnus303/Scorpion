@@ -20,6 +20,7 @@ export class GeneralMasterService {
   public deliveryProcessData: PRSGeneralMasterResponse[] = [];
   public damageData: PRSGeneralMasterResponse[] = [];
   public deliveredToData: PRSGeneralMasterResponse[] = [];
+  public partDeliveredReasonData: PRSGeneralMasterResponse[] = [];
   public documentTypeList: PRSGeneralMasterResponse[] = [];
   public rateTypeList: PRSGeneralMasterResponse[] = [];
   public PayBsList: PRSGeneralMasterResponse[] = [];
@@ -173,6 +174,16 @@ export class GeneralMasterService {
       next: (response) => {
         if (response.success) {
           this.PayBsList = response.data;
+        }
+      }
+    });
+  }
+
+  getPartDeliveredReason(){
+    this.THCMasterService.getGeneralMasterDetail('PART_D').subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.partDeliveredReasonData = response.data;
         }
       }
     });

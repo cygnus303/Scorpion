@@ -1,10 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DocketService } from 'app/shared/services/docket.service';
 import { GeneralMasterService } from 'app/shared/services/general-master.service';
+import { DeliveryUpdateService } from 'app/shared/services/delivery-update.service';
+import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
+import { GodownUpdateDepsComponent } from '../godown-update-deps/godown-update-deps.component';
 
 @Component({
   selector: 'app-update-godown-delivery',
@@ -13,18 +16,22 @@ import { GeneralMasterService } from 'app/shared/services/general-master.service
     CommonModule,
     FormsModule,
     BsDatepickerModule,
-    NgSelectModule
+    NgSelectModule,
+    GodownUpdateDepsComponent
   ],
   templateUrl: './update-godown-delivery.component.html',
-  styleUrl: './update-godown-delivery.component.scss'
+  styleUrl: './update-godown-delivery.component.scss',
+  encapsulation: ViewEncapsulation.None
 })
 export class UpdateGodownDeliveryComponent implements OnInit {
   @Output() deliveryUpdated = new EventEmitter<any>();
+  @ViewChild('GodownUpdateDepsComponent') depsModalComponent!: GodownUpdateDepsComponent;
 
   public showModal: boolean = false;
   public selectedDockets: any[] = [];
 
   public isSubmitted: boolean = false;
+  public isSubmit: boolean = false;
   public validationErrors: { lrNo: string; messages: string[] }[] = [];
 
   public bulkUpdate: any = {
@@ -53,21 +60,29 @@ export class UpdateGodownDeliveryComponent implements OnInit {
   public datePickerConfig: any = {
     dateInputFormat: 'DD-MMM-YYYY',
     containerClass: 'theme-dark-blue',
-    showWeekNumbers: false
+    showWeekNumbers: false,
+    adaptivePosition: true
   };
 
   constructor(
     public docketService: DocketService,
-    public generalMasterService: GeneralMasterService
+    public generalMasterService: GeneralMasterService,
+    public deliveryUpdateService: DeliveryUpdateService,
+    public sweetAlertService: SweetAlertService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     this.generalMasterService.getDeliveredToData();
+    this.generalMasterService.getPartDeliveredReason();
   }
 
   showPopup(dockets: any[]) {
     if (!this.generalMasterService.deliveredToData || this.generalMasterService.deliveredToData.length === 0) {
       this.generalMasterService.getDeliveredToData();
+    }
+    if (!this.generalMasterService.partDeliveredReasonData || this.generalMasterService.partDeliveredReasonData.length === 0) {
+      this.generalMasterService.getPartDeliveredReason();
     }
 
     this.isSubmitted = false;
@@ -77,14 +92,22 @@ export class UpdateGodownDeliveryComponent implements OnInit {
 
     const today = new Date();
     this.selectedDockets.forEach(row => {
-      row.deliveredPkgs = row.deliveredPkgs !== undefined ? row.deliveredPkgs : (row.Pkgs || 40);
-      row.deliveredWt = row.deliveredWt !== undefined ? row.deliveredWt : (row.ActualWt || 986.8);
-      row.partDeliveredReason = row.partDeliveredReason || 'N/A';
+      const totalPkgs = Number(row.Pkgs !== undefined ? row.Pkgs : (row.pkgsno || 0));
+      const totalWt = Number(row.ActualWt !== undefined ? row.ActualWt : (row.weight || 0));
+
+      row.totalPkgs = totalPkgs;
+      row.totalWt = totalWt;
+
+      // Default deliveredPkgs to total docket packages if not set or <= 0
+      row.deliveredPkgs = (Number(row.deliveredPkgs) > 0) ? Number(row.deliveredPkgs) : totalPkgs;
+      row.deliveredWt = (Number(row.deliveredWt) > 0) ? Number(row.deliveredWt) : totalWt;
+      row.partDeliveredReason = (row.deliveredPkgs < totalPkgs && row.partDeliveredReason && row.partDeliveredReason !== 'N/A') ? row.partDeliveredReason : null;
       row.deliveredTo = row.deliveredTo || null;
       row.personName = row.personName || '';
       row.contactNo = (row.contactNo || '').toString().replace(/[^0-9]/g, '').slice(0, 10);
       row.isContactTouched = false;
       row.deliveryDate = row.deliveryDate ? new Date(row.deliveryDate) : today;
+
       if (row.DRSDate) {
         row.minDeliveryDate = new Date(row.DRSDate);
       } else if (row.LRDate) {
@@ -106,6 +129,7 @@ export class UpdateGodownDeliveryComponent implements OnInit {
     };
 
     this.showModal = true;
+    this.cdr.detectChanges();
   }
 
   closeModal() {
@@ -130,23 +154,60 @@ export class UpdateGodownDeliveryComponent implements OnInit {
     }
   }
 
-  isContactInvalid(target: any): boolean {
+  isContactInvalid(target: any, isBulk: boolean = false): boolean {
     if (!target) return false;
     const val = (target.contactNo || '').toString().trim();
+    if (isBulk) {
+      return val.length > 0 && val.length < 10;
+    }
     if (target.isContactTouched || this.isSubmitted) {
-      return val.length < 10;
+      return val.length !== 10;
     }
     return false;
   }
 
-  isDeliveredPkgsInvalid(row: any): boolean {
-    const totalPkgs = Number(row.Pkgs) || 40;
+  onDeliveredPkgsChange(row: any) {
+    const totalPkgs = Number(row.totalPkgs || row.Pkgs) || 0;
+    const totalWt = Number(row.totalWt || row.ActualWt) || 0;
     const pkgs = Number(row.deliveredPkgs);
-    return isNaN(pkgs) || pkgs <= 0 || pkgs > totalPkgs;
+
+    if (isNaN(pkgs) || pkgs <= 0) {
+      row.deliveredWt = 0;
+      row.partDeliveredReason = null;
+    } else if (pkgs >= totalPkgs) {
+      row.deliveredPkgs = totalPkgs;
+      row.deliveredWt = totalWt;
+      row.partDeliveredReason = null;
+    } else {
+      row.deliveredWt = totalPkgs > 0 ? parseFloat(((totalWt * pkgs) / totalPkgs).toFixed(2)) : 0;
+      if (row.partDeliveredReason === 'N/A') {
+        row.partDeliveredReason = null;
+      }
+    }
+
+    if (this.isSubmitted) {
+      this.validateDockets();
+    }
+  }
+
+  getPkgsError(row: any): string {
+    const totalPkgs = Number(row.totalPkgs || row.Pkgs) || 0;
+    const val = row.deliveredPkgs;
+    if (val === '' || val === null || val === undefined || Number(val) <= 0 || isNaN(Number(val))) {
+      return 'Cannot be 0';
+    }
+    if (totalPkgs > 0 && Number(val) > totalPkgs) {
+      return `Max ${totalPkgs}`;
+    }
+    return '';
+  }
+
+  isDeliveredPkgsInvalid(row: any): boolean {
+    return this.getPkgsError(row) !== '';
   }
 
   isReasonInvalid(row: any): boolean {
-    const totalPkgs = Number(row.Pkgs) || 40;
+    const totalPkgs = Number(row.totalPkgs || row.Pkgs) || 0;
     const pkgs = Number(row.deliveredPkgs);
     return !isNaN(pkgs) && pkgs > 0 && pkgs < totalPkgs && (!row.partDeliveredReason || row.partDeliveredReason === 'N/A');
   }
@@ -163,6 +224,10 @@ export class UpdateGodownDeliveryComponent implements OnInit {
     return !row.podReceived || row.podReceived === '';
   }
 
+  isPodUploadInvalid(row: any): boolean {
+    return (row.podReceived === 'Y' || row.podReceived === 'Yes') && !row.podFile1;
+  }
+
   isPodQualityInvalid(row: any): boolean {
     return (row.podReceived === 'Y' || row.podReceived === 'Yes') && (!row.podQuality || row.podQuality === '');
   }
@@ -173,12 +238,13 @@ export class UpdateGodownDeliveryComponent implements OnInit {
     this.selectedDockets.forEach(row => {
       const lrNo = row.LRNumber || row.dockno || 'Docket';
       const messages: string[] = [];
-      const totalPkgs = Number(row.Pkgs) || 40;
+      const totalPkgs = Number(row.totalPkgs || row.Pkgs) || 0;
       const deliveredPkgs = Number(row.deliveredPkgs);
 
       // 1. Delivered Pkgs
-      if (isNaN(deliveredPkgs) || deliveredPkgs <= 0 || deliveredPkgs > totalPkgs) {
-        messages.push(`"Delivered Pkgs" must be between 1 and ${totalPkgs}`);
+      const pkgsErr = this.getPkgsError(row);
+      if (pkgsErr) {
+        messages.push(`"Delivered Pkgs" ${pkgsErr.toLowerCase()}`);
       }
 
       // 2. Part Delivered Reason
@@ -208,8 +274,15 @@ export class UpdateGodownDeliveryComponent implements OnInit {
       if (!row.podReceived || row.podReceived === '') {
         messages.push(`"POD Received" selection is mandatory`);
       } else if (row.podReceived === 'Y' || row.podReceived === 'Yes') {
+        if (!row.podFile1) {
+          messages.push(`"POD Upload 1" is mandatory`);
+        }
         if (!row.podQuality || row.podQuality === '') {
           messages.push(`"POD Quality" selection is mandatory`);
+        } else if (row.podQuality === 'Bad') {
+          if (!row.depsData || (Array.isArray(row.depsData) && row.depsData.length === 0)) {
+            messages.push(`"DEPS Entry" details are required when POD Quality is Bad`);
+          }
         }
       }
 
@@ -219,6 +292,59 @@ export class UpdateGodownDeliveryComponent implements OnInit {
     });
 
     return this.validationErrors.length === 0;
+  }
+
+  setPodReceived(target: any, val: string) {
+    target.podReceived = val;
+    this.onPodReceivedChange(target);
+  }
+
+  setPodQuality(row: any, val: string) {
+    row.podQuality = val;
+    if (val === 'Bad') {
+      this.openDepsPopup(row);
+    } else {
+      row.depsData = null;
+    }
+    if (this.isSubmitted) {
+      this.validateDockets();
+    }
+  }
+
+  openDepsPopup(row: any) {
+    if (this.depsModalComponent) {
+      this.depsModalComponent.openModal(row);
+    }
+  }
+
+  onDepsSaved(event: any) {
+    if (event && event.docket) {
+      event.docket.podQuality = 'Bad';
+      event.docket.depsData = event.depsData || event.depsRows;
+    }
+    if (this.isSubmitted) {
+      this.validateDockets();
+    }
+  }
+
+  onDepsCancelled(event: { docket: any; hasExisting: boolean }) {
+    if (event && event.docket && !event.hasExisting) {
+      event.docket.podQuality = '';
+    }
+    if (this.isSubmitted) {
+      this.validateDockets();
+    }
+  }
+
+  getDepsSummary(row: any): string {
+    if (!row.depsData) return '';
+    const list = Array.isArray(row.depsData) ? row.depsData : [row.depsData];
+    const types = list.map((d: any) => {
+      const t = d.depsTyp || d.depstype || d.depsType || '';
+      return (t === 'D' || t === 'Damage') ? 'Damage' : 'Shortage';
+    });
+    const unique = Array.from(new Set(types));
+    return unique.join(' + ') || 'Bad';
   }
 
   onPodReceivedChange(row: any) {
@@ -239,18 +365,27 @@ export class UpdateGodownDeliveryComponent implements OnInit {
     } else if (fileIndex === 2) {
       row.podFile2 = file;
     }
+    if (this.isSubmitted) {
+      this.validateDockets();
+    }
   }
 
   applyBulkToAll() {
     this.selectedDockets.forEach(row => {
-      if (this.bulkUpdate.deliveredTo) row.deliveredTo = this.bulkUpdate.deliveredTo;
-      if (this.bulkUpdate.personName) row.personName = this.bulkUpdate.personName;
+      if (this.bulkUpdate.deliveredTo !== null && this.bulkUpdate.deliveredTo !== undefined && this.bulkUpdate.deliveredTo !== '') {
+        row.deliveredTo = this.bulkUpdate.deliveredTo;
+      }
+      if (this.bulkUpdate.personName !== null && this.bulkUpdate.personName !== undefined && this.bulkUpdate.personName !== '') {
+        row.personName = this.bulkUpdate.personName;
+      }
       if (this.bulkUpdate.contactNo) {
         row.contactNo = this.bulkUpdate.contactNo;
         row.isContactTouched = true;
       }
-      if (this.bulkUpdate.deliveryDate) row.deliveryDate = this.bulkUpdate.deliveryDate;
-      if (this.bulkUpdate.podReceived) {
+      if (this.bulkUpdate.deliveryDate) {
+        row.deliveryDate = new Date(this.bulkUpdate.deliveryDate);
+      }
+      if (this.bulkUpdate.podReceived !== null && this.bulkUpdate.podReceived !== undefined && this.bulkUpdate.podReceived !== '') {
         row.podReceived = this.bulkUpdate.podReceived;
         if (row.podReceived !== 'Y' && row.podReceived !== 'Yes') {
           row.podQuality = '';
@@ -259,16 +394,155 @@ export class UpdateGodownDeliveryComponent implements OnInit {
         }
       }
     });
+
+    // Reassign array to trigger Angular Change Detection across all rows
+    this.selectedDockets = [...this.selectedDockets];
+    this.cdr.detectChanges();
+
+    if (this.isSubmitted) {
+      this.validateDockets();
+    }
+  }
+
+  formatDeliveryDate(dateVal: any): string {
+    if (!dateVal) return new Date().toISOString();
+    const d = new Date(dateVal);
+    if (isNaN(d.getTime())) return String(dateVal);
+
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+
+    const now = new Date();
+    let hours = d.getHours();
+    let minutes = d.getMinutes();
+    let seconds = d.getSeconds();
+
+    if (hours === 0 && minutes === 0 && seconds === 0) {
+      hours = now.getHours();
+      minutes = now.getMinutes();
+      seconds = now.getSeconds();
+    }
+
+    const hStr = String(hours).padStart(2, '0');
+    const mStr = String(minutes).padStart(2, '0');
+    const sStr = String(seconds).padStart(2, '0');
+
+    return `${year}-${month}-${day}T${hStr}:${mStr}:${sStr}.000Z`;
+  }
+
+  removeDocket(index: number) {
+    if (this.selectedDockets.length > 1) {
+      this.selectedDockets.splice(index, 1);
+      this.selectedDockets = [...this.selectedDockets];
+      if (this.isSubmitted) {
+        this.validateDockets();
+      }
+    }
   }
 
   submitGodownDelivery() {
     this.isSubmitted = true;
-    const isValid = this.validateDockets();
-    if (!isValid) {
+    if (!this.validateDockets()) {
       return;
     }
-    console.log('Submitting Godown Delivery:', this.selectedDockets);
-    this.deliveryUpdated.emit(this.selectedDockets);
-    this.closeModal();
+
+    const DocketsUpdateList = this.selectedDockets.map((row: any) => ({
+      remark: row.remarks || '',
+      contactNo: row.contactNo || '',
+      delyperson: row.personName || '',
+      origin: row.OrgCode || row.Origin || '',
+      podReceived: row.podReceived || '',
+      dlyPerson: row.personName || '',
+      partY_CODE: row.BillingPartyCode || row.PARTY_CODE || '',
+      docksf: row.docksf || '.',
+      delWts: Number(row.deliveredWt) || 0,
+      isEnabledBadPodoption: row.podQuality === 'Bad',
+      pen_DelPkgs: Number(row.Pkgs || row.totalPkgs || 0) - Number(row.deliveredPkgs || 0),
+      destination: row.DestCode || row.Destination || '',
+      dlyContactNo: row.contactNo || '',
+      autoNo: Number(row.AutoNo || row.autoNo) || null,
+      pen_DelWts: Number(row.ActualWt || row.totalWt || 0) - Number(row.deliveredWt || 0),
+      delPkgs: Number(row.deliveredPkgs) || 0,
+      dockno: row.LRNumber || row.dockno || '',
+      isEnabled: true,
+      receivedBy: row.personName || '',
+      delydate: this.formatDeliveryDate(row.deliveryDate),
+      pkgs_Pending: Number(row.Pkgs || row.totalPkgs || 0) - Number(row.deliveredPkgs || 0),
+      deliveredTo: row.deliveredTo || ''
+    }));
+
+    const DepsList: any[] = [];
+    this.selectedDockets.forEach((row: any) => {
+      if (row.depsData) {
+        const items = Array.isArray(row.depsData) ? row.depsData : [row.depsData];
+        items.forEach((v: any) => {
+          DepsList.push({
+            depsfile: v.depsfile || v.fileBase64 || '',
+            docket: v.docket || row.LRNumber || row.dockno || '',
+            affectedQty: Number(v.affectedQty || v.affectedPkgs) || 0,
+            affectedInvVal: Number(v.affectedInvVal) || 0,
+            reason: v.reason || '',
+            depsNo: v.depsNo || '',
+            depsTyp: v.depsTyp || v.depstype || '',
+            fileName: v.fileName || '',
+            damageType: v.damageType || '',
+            affectedWeight: Number(v.affectedWeight) || 0,
+            invval: Number(v.invval) || 0,
+            totWeight: Number(v.totWeight || row.deliveredWt) || 0,
+            remarks: v.remarks || '',
+            docketsf: v.docketsf || row.docksf || '.',
+            pkgsdelivered: Number(v.pkgsdelivered || v.pkgsDelivered || row.deliveredPkgs) || 0,
+            severity: v.severity || ''
+          });
+        });
+      }
+    });
+
+    const formData = new FormData();
+    formData.append('DocketsUpdateList', JSON.stringify(DocketsUpdateList));
+    formData.append('DepsList', JSON.stringify(DepsList));
+    formData.append('LocationCode', this.docketService.loginUserList?.LocationCode || this.docketService.Location || '');
+    formData.append('BaseUserName', this.docketService.loginUserList?.BaseUserName || this.docketService.baseUsername || '');
+    formData.append('FinYear', this.docketService.loginUserList?.FinYear || this.docketService.FinYear || '');
+
+    this.selectedDockets.forEach((row: any) => {
+      const docNo = row.LRNumber || row.dockno || 'POD';
+      if (row.podFile1) {
+        formData.append('Files', row.podFile1, `${docNo}_FRONT_${row.podFile1.name}`);
+      }
+      if (row.podFile2) {
+        formData.append('BackFiles', row.podFile2, `${docNo}_BACK_${row.podFile2.name}`);
+      }
+    });
+
+    this.isSubmit = true;
+    this.deliveryUpdateService.counterDelivery(formData).subscribe({
+      next: (response: any) => {
+        this.isSubmit = false;
+        if (response && response.data && !response.data.isError) {
+          const docNo = this.selectedDockets[0]?.GDNo || this.selectedDockets[0]?.GBNo || '';
+          this.sweetAlertService.success(`
+            <div style="text-align:center;">
+              <div class="fw-bold fs-3 mb-2">Counter Delivery Success</div>
+              <p class="fs-5 mb-1"><strong>Document No:</strong> ${docNo || 'Success'}</p>
+            </div>
+          `);
+          this.deliveryUpdated.emit({
+            response,
+            formData,
+            selectedDockets: this.selectedDockets
+          });
+          this.closeModal();
+        } else {
+          this.sweetAlertService.error(response?.data?.message || response?.message || 'You have some errors. Please check.');
+        }
+      },
+      error: (error: any) => {
+        this.isSubmit = false;
+        console.error('Error submitting counter delivery:', error);
+        this.sweetAlertService.error(error?.error?.message || error?.message || 'Failed to submit counter delivery.');
+      }
+    });
   }
 }

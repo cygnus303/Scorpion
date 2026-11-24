@@ -1,0 +1,244 @@
+// DEPS Entry Popup SCSS (Matching drs-update-deps)
+
+.godown-deps-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(2px);
+  z-index: 10050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+}
+
+.godown-deps-dialog {
+  background: #ffffff;
+  width: 98%;
+  max-width: 1520px;
+  border-radius: 10px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  max-height: 92vh;
+  overflow: hidden;
+  animation: depsFadeIn 0.2s ease-out;
+}
+
+@keyframes depsFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// Header Custom gradient
+.depsf-hdr {
+  background: linear-gradient(135deg, #6d1b7b, #4a148c);
+  color: #ffffff;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+
+  .depsf-hdr-left {
+    h2 {
+      font-size: 15px !important;
+      font-weight: 700 !important;
+    }
+    .depsf-sub {
+      font-size: 11px !important;
+    }
+  }
+
+  .btn-close {
+    filter: invert(1) grayscale(1) brightness(2);
+  }
+}
+
+// Meta Section Info Strip
+.depsf-meta {
+  background: #fae8ff !important;
+  border-bottom: 1px solid #f3d8f9;
+
+  .depsf-meta-item {
+    font-size: 11px !important;
+
+    .depsf-meta-label {
+      color: #701a75;
+    }
+
+    .depsf-meta-val {
+      color: #4a044e;
+    }
+  }
+}
+
+// Table Scroll Area
+.depsf-body {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 60vh;
+  min-height: 140px;
+  background: #fdfbfd;
+}
+
+// Table Structure overrides
+.depsf-tbl {
+  width: 100%;
+  min-width: 1650px;
+  font-size: 11px !important;
+
+  thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  th {
+    padding: 10px 8px;
+    font-weight: 700 !important;
+    font-size: 11px !important;
+    white-space: nowrap;
+
+    &.th-info {
+      background: #e8eaf6;
+      color: #1a237e;
+    }
+
+    &.th-misc {
+      background: #37474f;
+      color: #ffffff;
+    }
+
+    &.th-deps {
+      background: #5e007e;
+      color: #ffffff;
+    }
+
+    &.th-dmg {
+      background: #880e4f;
+      color: #ffffff;
+    }
+  }
+
+  tbody {
+    td {
+      font-size: 11px !important;
+      vertical-align: middle;
+
+      .form-control, .form-select {
+        font-size: 11px !important;
+      }
+    }
+  }
+}
+
+// Custom Multi-select Dropdown (Box ID Checkbox list panel)
+.ms-dropdown {
+  position: relative;
+  width: 100%;
+
+  .form-select {
+    font-size: 11px !important;
+    text-align: left;
+    height: 28px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .ms-panel {
+    display: none;
+    position: absolute;
+    top: 30px;
+    left: 0;
+    right: 0;
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 100;
+    background: #ffffff;
+
+    label {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      padding: 6px 10px !important;
+      margin: 0 !important;
+      cursor: pointer;
+      font-size: 11px !important;
+      border-radius: 4px;
+      color: #334155;
+      font-weight: 500;
+      padding-left: 8px !important;
+
+      &:hover {
+        background: #f3e8ff;
+        color: #6b21a8;
+      }
+
+      input[type="checkbox"] {
+        accent-color: #7b1fa2;
+        cursor: pointer;
+        margin-left: 0 !important;
+        margin-top: 0 !important;
+        margin-right: 0 !important;
+        width: 13px;
+        height: 13px;
+      }
+    }
+  }
+
+  &.open {
+    .ms-panel {
+      display: block;
+    }
+  }
+}
+
+// File Upload helper labels
+.deps-file-cell {
+  .form-control {
+    font-size: 10px !important;
+    height: auto !important;
+    padding: 3px 6px;
+  }
+}
+
+.btn-delete-row {
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  color: #dc2626;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+
+  &:hover {
+    background: #ef4444;
+    color: #ffffff;
+    border-color: #ef4444;
+  }
+}
+
+// Modal footer override
+.depsf-ftr {
+  background: #fdf8fe;
+  border-top: 1px solid #f3e8ff;
+  padding: 10px 18px;
+}

@@ -223,11 +223,23 @@ export class GodownDeliveryListComponent {
     const hasGD = !!(item.GDNo && item.GDNo !== '—' && item.GDNo !== '-');
     const hasGBHCC = !!(item.GBHCCNo && item.GBHCCNo !== '—' && item.GBHCCNo !== '-');
     const hasGDHCC = !!(item.GDHCCNo && item.GDHCCNo !== '—' && item.GDHCCNo !== '-');
-    const isDelivered = item.StatusCode === 'D';
+
+    // 1. Status must be Pending ('P')
+    const statusCode = (item.StatusCode).toString().trim().toUpperCase();
+    const isPending = statusCode === 'P';
+
+    // 2. ReassignedLocation and Login Location must match
+    const loginLoc = (this.docketService.loginUserList?.LocationCode || this.docketService.Location || '').toString().trim().toUpperCase();
+    const reassignedLoc = (item.ReassignedLocation).toString().trim().toUpperCase();
+    const isLocationMatch = !loginLoc || (reassignedLoc === loginLoc);
+
+    // 3. PkpDelTypeCode must NOT be "2" (and PkpDelType is not Godown-Door)
+    const pkpCode = (item.PkpDelTypeCode !== undefined ? item.PkpDelTypeCode : '').toString().trim();
+    const isNotCode2 = pkpCode !== '2' && item.PkpDelType !== 'Godown-Door';
 
     return {
-      // Rule 1 & 2: Update Godown Delivery (No GD No and delivery is pending)
-      canUpdate: !hasGD && !isDelivered && item.PkpDelType !== 'Godown-Door',
+      // Update Godown Delivery: No GD No, Status is 'P', ReassignedLocation == Login Location, PkpDelTypeCode != '2'
+      canUpdate: !hasGD && isPending && isLocationMatch && isNotCode2,
 
       // Rule 2, 3 & 5: GB HCC (GB No exists and GB HCC No is not yet generated)
       canGBHCC: hasGB && !hasGBHCC,
@@ -342,20 +354,6 @@ export class GodownDeliveryListComponent {
     return !this.godownDeliveryList || this.godownDeliveryList.length === 0;
   }
 
-  // Compatibility helpers
-  isGBHCCDisabled(): boolean {
-    return !this.isGBHCCEnabled;
-  }
-
-  isUpdateDeliveryDisabled(): boolean {
-    return !this.isUpdateGDEnabled;
-  }
-
-  isGDHCCDisabled(): boolean {
-    return !this.isGDHCCEnabled;
-  }
-
-
   // Update Godown Delivery Modal
   openUpdateGodownDelivery() {
     const selected = this.getSelectedItems();
@@ -464,7 +462,7 @@ export class GodownDeliveryListComponent {
     }
   }
 
-  openHCCModal(lr: any) {
+openHCCModal(lr: any) {
     if (this.HCCDetailsComponent) {
       this.HCCDetailsComponent.showPopup(lr, 'G', 'GB');
     }
@@ -476,15 +474,28 @@ export class GodownDeliveryListComponent {
     }
   }
 
-  getPickupDeliveryTypeClass(type: string): string {
-    if (!type) return 'badge-default';
-    const t = type.toLowerCase().replace(/\s+/g, '-');
-    if (t.includes('door') && t.includes('godown')) {
-      if (t.startsWith('door')) return 'badge-door-godown';
-      return 'badge-godown-door';
+  getPickupDeliveryTypeClass(type: any): string {
+    if (!type === null) return 'badge-default';
+
+    // If item object is passed directly
+    if (typeof type === 'object') {
+      const code = (type?.PkpDelTypeCode).toString().trim();
+      if (code) return this.getPickupDeliveryTypeClass(code);
+      const rawText = (type?.PkpDelType ).toString().trim();
+      return this.getPickupDeliveryTypeClass(rawText);
     }
-    if (t.includes('godown')) return 'badge-godown-godown';
-    if (t.includes('door')) return 'badge-door-door';
+
+    const val = type.toString().trim();
+    switch (val) {
+      case '1':
+        return 'badge-godown-godown';
+      case '2':
+        return 'badge-godown-door';
+      case '3':
+        return 'badge-door-godown';
+      case '4':
+        return 'badge-door-door';
+    }
     return 'badge-default';
   }
 
