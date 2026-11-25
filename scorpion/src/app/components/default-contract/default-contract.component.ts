@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
 import { DefaultContractService } from 'app/shared/services/default-contract.service';
 import { DocketService } from 'app/shared/services/docket.service';
@@ -83,33 +83,113 @@ export class DefaultContractComponent {
     });
   }
 
-  applyLBHLogic(isVolumetric: boolean) {
-  const measure = this.contractcharge?.cft_Measure; // INCHES | CM | FEET
-  const maxValue = measure === 'INCHES' ? 99.99 : measure === 'CM' ? 999.99 :null;
-  ['length', 'breadth', 'height'].forEach(field => {
-    const control = this.DefaultcontractForm.get(field);
+  get volumetricRows(): FormArray {
+    return this.DefaultcontractForm.get('volumetricRows') as FormArray;
+  }
+
+  get extraVolumetricRows(): FormArray {
+    return this.volumetricRows;
+  }
+
+  createVolumetricRow(length: any = '', breadth: any = '', height: any = '', noOfPkgs: any = '', cubicweight: any = 0, actualWeight: any = ''): FormGroup {
+    const isVolumetric = this.DefaultcontractForm ? this.DefaultcontractForm.get('VolumetricAppl')?.value : false;
+    const measure = this.contractcharge?.cft_Measure;
+    const maxValue = measure === 'INCHES' ? 99.99 : measure === 'CM' ? 999.99 : null;
+    const validators: any[] = [];
+    const reqValidators: any[] = [];
     if (isVolumetric) {
-      const validators = [Validators.required];
+      validators.push(Validators.required);
       if (maxValue !== null) {
         validators.push(Validators.max(maxValue));
       }
-      control?.setValidators(validators);
-    } else {
-      control?.clearValidators();
-      control?.setValue(0);
+      reqValidators.push(Validators.required, Validators.min(1));
     }
-    control?.updateValueAndValidity();
-  });
-  this.getCFTCalculation();
-}
+
+    const row = new FormGroup({
+      length: new FormControl(length, validators),
+      breadth: new FormControl(breadth, validators),
+      height: new FormControl(height, validators),
+      noOfPkgs: new FormControl(noOfPkgs, reqValidators),
+      cubicweight: new FormControl(cubicweight),
+      actualWeight: new FormControl(actualWeight, reqValidators)
+    });
+    row.valueChanges.subscribe(() => {
+      this.getCFTCalculation();
+    });
+    return row;
+  }
+
+  addVolumetricRow() {
+    this.volumetricRows.push(this.createVolumetricRow('', '', '', '', 0, ''));
+    this.getCFTCalculation();
+  }
+
+  removeVolumetricRow(index: number) {
+    if (this.volumetricRows.length > 1) {
+      this.volumetricRows.removeAt(index);
+    } else {
+      this.volumetricRows.at(0).reset({ length: '', breadth: '', height: '', noOfPkgs: '', cubicweight: 0, actualWeight: '' });
+    }
+    this.getCFTCalculation();
+  }
+
+  applyLBHLogic(isVolumetric: boolean) {
+    const measure = this.contractcharge?.cft_Measure; // INCHES | CM | FEET
+    const maxValue = measure === 'INCHES' ? 99.99 : measure === 'CM' ? 999.99 : null;
+    const validators = isVolumetric ? [Validators.required] : [];
+    if (isVolumetric && maxValue !== null) {
+      validators.push(Validators.max(maxValue));
+    }
+    const reqValidators = isVolumetric ? [Validators.required, Validators.min(1)] : [];
+
+    ['length', 'breadth', 'height'].forEach(field => {
+      const control = this.DefaultcontractForm.get(field);
+      if (isVolumetric) {
+        control?.setValidators(validators);
+      } else {
+        control?.clearValidators();
+        control?.setValue(0);
+      }
+      control?.updateValueAndValidity();
+    });
+
+    if (this.volumetricRows) {
+      this.volumetricRows.controls.forEach(row => {
+        ['length', 'breadth', 'height'].forEach(field => {
+          const ctrl = row.get(field);
+          if (isVolumetric) {
+            ctrl?.setValidators(validators);
+          } else {
+            ctrl?.clearValidators();
+            ctrl?.setValue('');
+          }
+          ctrl?.updateValueAndValidity();
+        });
+        ['noOfPkgs', 'actualWeight'].forEach(field => {
+          const ctrl = row.get(field);
+          if (isVolumetric) {
+            ctrl?.setValidators(reqValidators);
+          } else {
+            ctrl?.clearValidators();
+            ctrl?.setValue('');
+          }
+          ctrl?.updateValueAndValidity();
+        });
+      });
+      if (!isVolumetric) {
+        this.volumetricRows.clear();
+        this.volumetricRows.push(this.createVolumetricRow('', '', '', '', 0, ''));
+      }
+    }
+    this.getCFTCalculation();
+  }
 
   resetLBHValues() {
-    this.DefaultcontractForm.patchValue({
-      length: 0,
-      breadth: 0,
-      height: 0,
-    });
-    this.getCFTCalculation()
+    if (this.volumetricRows) {
+      this.volumetricRows.clear();
+      this.volumetricRows.push(this.createVolumetricRow('', '', '', '', 0, ''));
+    }
+    this.getCFTCalculation();
   }
 
   buildForm(){
@@ -147,6 +227,7 @@ export class DefaultContractComponent {
       breadth:new FormControl(''),
       height:new FormControl(''),
       CFTRatio:new FormControl(''),
+      volumetricRows: new FormArray([this.createVolumetricRow('', '', '', '', 0, '')]),
       fuelSurchrg:new FormControl(0,Validators.required),
       orgncd:new FormControl(''),
       orgArea:new FormControl(''),
@@ -202,15 +283,15 @@ export class DefaultContractComponent {
   }
 
 
-  clearOnFocus(controlName: string) {
-    const control = this.DefaultcontractForm.get(controlName);
-    if (control && control.value === 0) {
+  clearOnFocus(controlOrName: any, field?: string) {
+    const control = field && controlOrName?.get ? controlOrName.get(field) : (typeof controlOrName === 'string' ? this.DefaultcontractForm.get(controlOrName) : controlOrName);
+    if (control && (control.value === 0 || control.value === '0')) {
       control.setValue('');
     }
   }
 
-  resetOnBlur(controlName: string) {
-    const control = this.DefaultcontractForm.get(controlName);
+  resetOnBlur(controlOrName: any, field?: string) {
+    const control = field && controlOrName?.get ? controlOrName.get(field) : (typeof controlOrName === 'string' ? this.DefaultcontractForm.get(controlOrName) : controlOrName);
     if (control && !control.value) {
       control.setValue(0);
     }
@@ -380,35 +461,86 @@ calculateSubTotal() {
       control.setValidators(validators);
       control.updateValueAndValidity({ emitEvent: false });
     });
+
+    if (this.volumetricRows) {
+      const validators = [Validators.required, Validators.min(0)];
+      if (maxValue !== null) {
+        validators.push(Validators.max(maxValue));
+      }
+      this.volumetricRows.controls.forEach(row => {
+        controls.forEach(ctrl => {
+          const control = row.get(ctrl);
+          control?.setValidators(validators);
+          control?.updateValueAndValidity({ emitEvent: false });
+        });
+        ['noOfPkgs', 'actualWeight'].forEach(ctrl => {
+          const control = row.get(ctrl);
+          control?.setValidators([Validators.required, Validators.min(1)]);
+          control?.updateValueAndValidity({ emitEvent: false });
+        });
+      });
+    }
   }
 
 
   getCFTCalculation() {
-  let volMeasureType = '';
-  let cftWtRatio = 0;
-  if (this.contractcharge) {
-    volMeasureType = this.contractcharge?.cft_Measure; // 'INCHES' | 'CM' | 'FEET'
-    cftWtRatio = this.contractcharge?.cft_Ratio || 0;
-  }
-    let length = this.DefaultcontractForm.value.length || 0;
-    let breadth = this.DefaultcontractForm.value.breadth || 0;
-    let height = this.DefaultcontractForm.value.height || 0;
-    const pkgsNo = this.DefaultcontractForm.value.Pkgs || 0;
-    let cubicweight = 0;
-      // Normal volume calculation
-      let volume = 0;
-      if (volMeasureType === 'INCHES') {
-        volume = (length * breadth * height * cftWtRatio) / 1728;
-      } else if (volMeasureType === 'CM') {
-        volume = (length * breadth * height * cftWtRatio) / 27000;
-      } else if (volMeasureType === 'FEET') {
-        volume = length * breadth * height * cftWtRatio;
-      }
-      cubicweight = +(volume * pkgsNo).toFixed(2);
-      this.DefaultcontractForm.patchValue({
-        cftTotal:cubicweight
-      }); 
-      this.calculateRate();
+    let volMeasureType = '';
+    let cftWtRatio = 0;
+    if (this.contractcharge) {
+      volMeasureType = this.contractcharge?.cft_Measure; // 'INCHES' | 'CM' | 'FEET'
+      cftWtRatio = this.contractcharge?.cft_Ratio || 0;
+    }
+    const defaultPkgs = Number(this.DefaultcontractForm?.value?.Pkgs) || 0;
+    let totalCubicWeight = 0;
+    let totalNoOfPkgs = 0;
+    let totalActualWeight = 0;
+
+    if (this.volumetricRows && this.volumetricRows.length > 0) {
+      this.volumetricRows.controls.forEach(control => {
+        const row = control.value;
+        const l = Number(row.length) || 0;
+        const b = Number(row.breadth) || 0;
+        const h = Number(row.height) || 0;
+        const rowPkgs = Number(row.noOfPkgs) || 0;
+        const rowActualWt = Number(row.actualWeight) || 0;
+
+        let volume = 0;
+        if (volMeasureType === 'INCHES') {
+          volume = (l * b * h * cftWtRatio) / 1728;
+        } else if (volMeasureType === 'CM') {
+          volume = (l * b * h * cftWtRatio) / 27000;
+        } else if (volMeasureType === 'FEET') {
+          volume = l * b * h * cftWtRatio;
+        }
+
+        const effectivePkgs = rowPkgs > 0 ? rowPkgs : (this.volumetricRows.length <= 1 && defaultPkgs > 0 ? defaultPkgs : 1);
+        const rowCwt = +(volume * effectivePkgs).toFixed(2);
+
+        if (control.get('cubicweight')?.value !== rowCwt) {
+          control.get('cubicweight')?.setValue(rowCwt, { emitEvent: false });
+        }
+
+        totalCubicWeight += rowCwt;
+        if (rowPkgs > 0) totalNoOfPkgs += rowPkgs;
+        if (rowActualWt > 0) totalActualWeight += rowActualWt;
+      });
+    }
+
+    const cubicweight = +totalCubicWeight.toFixed(2);
+
+    const patchObj: any = {
+      cftTotal: cubicweight
+    };
+
+    if (totalNoOfPkgs > 0) {
+      patchObj.Pkgs = totalNoOfPkgs;
+    }
+    if (totalActualWeight > 0) {
+      patchObj.weightKG = totalActualWeight;
+    }
+
+    this.DefaultcontractForm.patchValue(patchObj, { emitEvent: false }); 
+    this.calculateRate();
   }
 
 calculateDiscount() {
@@ -445,7 +577,29 @@ logInvalidControls() {
 }
 
   OnSubmit() {
-    const data = this.DefaultcontractForm.value
+    const data = this.DefaultcontractForm.value;
+
+    const volumetricList: any[] = [];
+    if (data.VolumetricAppl && this.volumetricRows) {
+      this.volumetricRows.controls.forEach((control, index) => {
+        const row = control.value;
+        volumetricList.push({
+          srNo: index + 1,
+          voL_L: Number(row.length) || 0,
+          voL_B: Number(row.breadth) || 0,
+          voL_H: Number(row.height) || 0,
+          pkgsno: Number(row.noOfPkgs) || 0,
+          actuwt: Number(row.actualWeight) || 0,
+          vol_cft: Number(row.cubicweight) || 0,
+          toT_CFT: Number(row.cubicweight) || 0,
+          cftRatio: Number(data.CFTRatio) || 0,
+          DOCKNO:'',
+          VolumetricBox:''
+        });
+      });
+    }
+    const firstRow = volumetricList[0] || { VOL_L: 0, VOL_B: 0, VOL_H: 0 };
+
     const payload = {
       enquiryID: 0,
       enquiryNo: "",
@@ -474,11 +628,12 @@ logInvalidControls() {
       pkgsno:  data.Pkgs || 0,
       actuwt:  data.weightKG || 0, 
       chrgwt:  data.chrgwt || 0,
-      voL_L:  data.length || 0,
-      voL_B:  data.breadth || 0,
-      voL_H:  data.height || 0,
+      voL_L:  Number(firstRow.VOL_L) || 0,
+      voL_B:  Number(firstRow.VOL_B) || 0,
+      voL_H:  Number(firstRow.VOL_H) || 0,
       toT_CFT:  data.cftTotal || 0,
       vol_cft:  data.cftTotal || 0,
+      docketBoxLBHEnquiryList: volumetricList,
       ratE_TYPE: this.defaultContractList?.rateType,
       frT_RATE: data.freightRate,
       freighT_CALC: data.freightRate,
@@ -535,7 +690,7 @@ logInvalidControls() {
       console.log(this.DefaultcontractForm.value);
       this.isSubmitting=true;
       this.defaultContractService.DocketEnquirySubmit(payload).subscribe({next: (response: any) => {
-          if (response) {
+          if (response.status === 'True') {
             this.buildForm();
             this.sweetAlertService.success(`Successfully Submitted!! Enquiry No: <b>${response.enquiryNo}</b>`);
             this.isSubmitting = false;

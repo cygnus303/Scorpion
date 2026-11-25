@@ -203,7 +203,11 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Weight Kgs</label>
                 <div class="col-sm-7">
-                    <input class="form-control required2" type="text" placeholder="Enter Weight Kgs" formControlName="weightKG" (focus)="clearOnFocus('weightKG')" (blur)="resetOnBlur('weightKG')"
+                    <input class="form-control required2" type="text" placeholder="Enter Weight Kgs" formControlName="weightKG"
+                     [readonly]="DefaultcontractForm.get('VolumetricAppl')?.value"
+                     [class.readonly-disabled]="DefaultcontractForm.get('VolumetricAppl')?.value"
+                     (focus)="!DefaultcontractForm.get('VolumetricAppl')?.value && clearOnFocus('weightKG')"
+                     (blur)="!DefaultcontractForm.get('VolumetricAppl')?.value && resetOnBlur('weightKG')"
                      [ngClass]="{ 'border-danger': DefaultcontractForm.get('weightKG')?.invalid  && DefaultcontractForm.get('weightKG')?.touched}" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                      <div *ngIf="DefaultcontractForm.get('weightKG')?.invalid && DefaultcontractForm.get('weightKG')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('weightKG')?.hasError('required')">Weight Kgs is required.</small>
@@ -216,9 +220,12 @@
             <div class="row">
                 <label class="col-sm-5 col-form-label text-end">Pkgs</label>
                 <div class="col-sm-7">
-                    <input class="form-control required2" type="text" placeholder="Enter Pkgs" formControlName="Pkgs" (focus)="clearOnFocus('Pkgs')" 
-                    (blur)="resetOnBlur('Pkgs')"
-                    [ngClass]="{ 'border-danger': DefaultcontractForm.get('Pkgs')?.invalid  && DefaultcontractForm.get('Pkgs')?.touched}" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
+                    <input class="form-control required2" type="text" placeholder="Enter Pkgs" formControlName="Pkgs"
+                     [readonly]="DefaultcontractForm.get('VolumetricAppl')?.value"
+                     [class.readonly-disabled]="DefaultcontractForm.get('VolumetricAppl')?.value"
+                     (focus)="!DefaultcontractForm.get('VolumetricAppl')?.value && clearOnFocus('Pkgs')" 
+                     (blur)="!DefaultcontractForm.get('VolumetricAppl')?.value && resetOnBlur('Pkgs')"
+                     [ngClass]="{ 'border-danger': DefaultcontractForm.get('Pkgs')?.invalid  && DefaultcontractForm.get('Pkgs')?.touched}" oninput="this.value = this.value.replace(/[^0-9]/g,'');">
                     <div *ngIf="DefaultcontractForm.get('Pkgs')?.invalid && DefaultcontractForm.get('Pkgs')?.touched" class="text-danger">
                         <small *ngIf="DefaultcontractForm.get('Pkgs')?.hasError('required')">Pkgs is required.</small>
                          <small *ngIf="DefaultcontractForm.get('Pkgs')?.hasError('min')">Pkgs must be greater than 0.</small>
@@ -318,56 +325,99 @@
             </div>
         </div>
     </div>
-      <div class="row p-3 fade-in" *ngIf="DefaultcontractForm.get('VolumetricAppl')?.value">
-       <h3 class="pb-4 text-start challan-Details mb-4">Volumetric Applicable</h3>
-        <div class="col-3">
-            <div class="row">
-                <label class="col-sm-5 col-form-label text-end">Length ({{this.contractcharge?.cft_Measure}})</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter Length" formControlName="length" 
-                     oninput="this.value = this.value.replace(/[^0-9]/g,'');" (focus)="clearOnFocus('length')" (blur)="resetOnBlur('length')"
-                     [ngClass]="{'border-danger':DefaultcontractForm.get('length')?.hasError('max') &&DefaultcontractForm.get('length')?.touched}">
-                    <div class="text-danger" *ngIf="DefaultcontractForm.get('length')?.hasError('max')">
-                        Please enter value less than or equal to
-                        {{ contractcharge?.cft_Measure === 'INCHES' ? '99.99' : '999.99' }}
+      <div class="row px-3 pb-3 fade-in" *ngIf="DefaultcontractForm.get('VolumetricAppl')?.value">
+        <div class="col-12">
+            <!-- Header Toolbar -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="challan-Details mb-0">Volumetric Applicable</h3>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <label class="col-form-label text-secondary fw-semibold mb-0">CFT Ratio:</label>
+                        <input class="form-control text-center fw-bold" style="width: 75px; height: 34px;" type="text" formControlName="CFTRatio" readonly>
                     </div>
+                    <button type="button" class="btn btn-primary btn-sm px-3 py-1 fw-semibold d-inline-flex align-items-center gap-1" (click)="addVolumetricRow()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+                        </svg>
+                        <span>Add Box</span>
+                    </button>
                 </div>
             </div>
-        </div>
-        <div class="col-3">
-            <div class="row">
-                <label class="col-sm-5 col-form-label text-end">Breadth ({{this.contractcharge?.cft_Measure}})</label>
-                <div class="col-sm-7">
-                     <input class="form-control" type="text" placeholder="Enter Breadth" formControlName="breadth" 
-                     oninput="this.value = this.value.replace(/[^0-9]/g,'');" (focus)="clearOnFocus('breadth')" (blur)="resetOnBlur('breadth')"
-                     [ngClass]="{'border-danger':DefaultcontractForm.get('breadth')?.hasError('max') &&DefaultcontractForm.get('breadth')?.touched}">
-                     <div class="text-danger" *ngIf="DefaultcontractForm.get('breadth')?.hasError('max')">
-                        Please enter value less than or equal to
-                        {{ contractcharge?.cft_Measure === 'INCHES' ? '99.99' : '999.99' }}
-                        </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-3">
-            <div class="row">
-                <label class="col-sm-5 col-form-label text-end">Height ({{this.contractcharge?.cft_Measure}})</label>
-                <div class="col-sm-7">
-                     <input class="form-control" type="text" placeholder="Enter Height" formControlName="height"
-                     oninput="this.value = this.value.replace(/[^0-9]/g,'');" (focus)="clearOnFocus('height')" (blur)="resetOnBlur('height')"
-                     [ngClass]="{'border-danger':DefaultcontractForm.get('height')?.hasError('max') &&DefaultcontractForm.get('height')?.touched}">
-                    <div class="text-danger" *ngIf="DefaultcontractForm.get('height')?.hasError('max')">
-                        Please enter value less than or equal to
-                        {{ contractcharge?.cft_Measure === 'INCHES' ? '99.99' : '999.99' }}
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-3">
-            <div class="row">
-                <label class="col-sm-5 col-form-label text-end">CFT Ratio</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" placeholder="Enter CFT Ratio" formControlName="CFTRatio" oninput="this.value = this.value.replace(/[^0-9]/g,'');" readonly>
-                </div>
+
+            <!-- Scrollable Table Container -->
+            <div class="volumetric-table-container">
+                <table class="table table-bordered table-hover align-middle text-center mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>L ({{ contractcharge?.cft_Measure?.toLowerCase() === 'inches' ? 'IN' : contractcharge?.cft_Measure?.toLowerCase() === 'cm' ? 'CM' : (contractcharge?.cft_Measure || 'IN') }})</th>
+                            <th>B ({{ contractcharge?.cft_Measure?.toLowerCase() === 'inches' ? 'IN' : contractcharge?.cft_Measure?.toLowerCase() === 'cm' ? 'CM' : (contractcharge?.cft_Measure || 'IN') }})</th>
+                            <th>H ({{ contractcharge?.cft_Measure?.toLowerCase() === 'inches' ? 'IN' : contractcharge?.cft_Measure?.toLowerCase() === 'cm' ? 'CM' : (contractcharge?.cft_Measure || 'IN') }})</th>
+                            <th>No of Pkgs.</th>
+                            <th>Cubic Weight</th>
+                            <th>Actual Weight</th>
+                            <th style="width: 50px;">X</th>
+                        </tr>
+                    </thead>
+                    <tbody formArrayName="volumetricRows">
+                        <tr *ngFor="let row of volumetricRows.controls; let i = index" [formGroupName]="i">
+                            <td>
+                                <input class="form-control required2 text-end" type="text" placeholder="Enter length" formControlName="length"
+                                    oninput="this.value = this.value.replace(/[^0-9.]/g,'');" (focus)="clearOnFocus(row, 'length')"
+                                    [ngClass]="{'border-danger': row.get('length')?.hasError('max') && row.get('length')?.touched}">
+                                <div class="text-danger small mt-1" *ngIf="row.get('length')?.hasError('max')">
+                                    Please enter value &le;
+                                    {{ contractcharge?.cft_Measure === 'INCHES' ? '99.99' : '999.99' }}
+                                </div>
+                            </td>
+                            <td>
+                                <input class="form-control required2 text-end" type="text" placeholder="Enter breadth" formControlName="breadth"
+                                    oninput="this.value = this.value.replace(/[^0-9.]/g,'');" (focus)="clearOnFocus(row, 'breadth')"
+                                    [ngClass]="{'border-danger': row.get('breadth')?.hasError('max') && row.get('breadth')?.touched}">
+                                <div class="text-danger small mt-1" *ngIf="row.get('breadth')?.hasError('max')">
+                                    Please enter value &le;
+                                    {{ contractcharge?.cft_Measure === 'INCHES' ? '99.99' : '999.99' }}
+                                </div>
+                            </td>
+                            <td>
+                                <input class="form-control required2 text-end" type="text" placeholder="Enter height" formControlName="height"
+                                    oninput="this.value = this.value.replace(/[^0-9.]/g,'');" (focus)="clearOnFocus(row, 'height')"
+                                    [ngClass]="{'border-danger': row.get('height')?.hasError('max') && row.get('height')?.touched}">
+                                <div class="text-danger small mt-1" *ngIf="row.get('height')?.hasError('max')">
+                                    Please enter value &le;
+                                    {{ contractcharge?.cft_Measure === 'INCHES' ? '99.99' : '999.99' }}
+                                </div>
+                            </td>
+                            <td>
+                                <input class="form-control required2 text-end" type="text" placeholder="Enter No of Pkgs." formControlName="noOfPkgs"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g,'');" (focus)="clearOnFocus(row, 'noOfPkgs')"
+                                    [ngClass]="{'border-danger': row.get('noOfPkgs')?.invalid && row.get('noOfPkgs')?.touched}">
+                                <div class="text-danger small mt-1" *ngIf="row.get('noOfPkgs')?.invalid && row.get('noOfPkgs')?.touched">
+                                    <span *ngIf="row.get('noOfPkgs')?.hasError('required')">Please enter No of Pkgs.</span>
+                                    <span *ngIf="row.get('noOfPkgs')?.hasError('min')">Must be &ge; 1</span>
+                                </div>
+                            </td>
+                            <td>
+                                <input class="form-control required2 text-end" type="text" formControlName="cubicweight" readonly
+                                    style="background-color: #e9ecef;">
+                            </td>
+                            <td>
+                                <input class="form-control required2 text-end" type="text" placeholder="Actual Weight" formControlName="actualWeight"
+                                    oninput="this.value = this.value.replace(/[^0-9.]/g,'');" (focus)="clearOnFocus(row, 'actualWeight')"
+                                    [ngClass]="{'border-danger': row.get('actualWeight')?.invalid && row.get('actualWeight')?.touched}">
+                                <div class="text-danger small mt-1" *ngIf="row.get('actualWeight')?.invalid && row.get('actualWeight')?.touched">
+                                    <span *ngIf="row.get('actualWeight')?.hasError('required')">Actual weight is required.</span>
+                                    <span *ngIf="row.get('actualWeight')?.hasError('min')">Must be &ge; 1</span>
+                                </div>
+                            </td>
+                            <td class="text-center align-middle" style="width: 50px;">
+                                <div *ngIf="i !== 0" (click)="removeVolumetricRow(i)"
+                                    style="color: Maroon; font-size: 15px; font-weight: bold; cursor: pointer;" title="Remove Box">
+                                    ✕
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
