@@ -244,7 +244,11 @@ export class GodownDeliveryListComponent {
     // Godown Booking eligibility: Godown-Door or Godown to Godown without GB No.
     const isGBType = item.PkpDelType === 'Godown-Door' || item.PkpDelType === 'Godown to Godown' || pkpCode === '1' || pkpCode === '2';
     const orgCode = (item.OrgCode || item.orgncd || '').toString().trim().toUpperCase();
-    const isOrgMatch = !loginLoc || orgCode === loginLoc || !orgCode;
+    const isOrgMatch = !loginLoc || (orgCode === loginLoc) || (item.IsOriginBranch === true);
+
+    // Destination matching for GD HCC: DestCode / ReassignedLocation == Login Location
+    const destCode = (item.DestCode || item.destcd || '').toString().trim().toUpperCase();
+    const isDestMatch = !loginLoc || (destCode === loginLoc) || (reassignedLoc === loginLoc) || (item.IsDeliveryBranch === true);
 
     return {
       // Update Godown Booking: Godown-Door / Godown to Godown without GB No.
@@ -253,11 +257,11 @@ export class GodownDeliveryListComponent {
       // Update Godown Delivery: No GD No, Status is 'P', ReassignedLocation == Login Location, PkpDelTypeCode != '2'
       canUpdate: !hasGD && isPending && isLocationMatch && isNotCode2,
 
-      // Rule 2, 3 & 5: GB HCC (GB No exists and GB HCC No is not yet generated)
-      canGBHCC: hasGB && !hasGBHCC,
+      // Rule: GB HCC (GB No exists, GB HCC No is not yet generated, and OrgCode === Login LocationCode)
+      canGBHCC: hasGB && !hasGBHCC && isOrgMatch,
 
-      // Rule 3, 4 & 6: GD HCC (GD No exists and GD HCC No is not yet generated)
-      canGDHCC: hasGD && !hasGDHCC
+      // Rule: GD HCC (GD No exists, GD HCC No is not yet generated, and DestCode === Login LocationCode)
+      canGDHCC: hasGD && !hasGDHCC && isDestMatch
     };
   }
 
