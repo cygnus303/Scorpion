@@ -16,26 +16,20 @@ import { MenuAccessService } from 'app/shared/services/menu-access.service';
 import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { BasicDetailService } from 'app/shared/services/basic-detail.service';
-import { HCCDetailsComponent } from '../prs-generation-list/hcc-details/hcc-details.component';
-import { GbViewComponent } from './gb-view/gb-view.component';
 import { StickerPrintComponent } from './sticker-print/sticker-print.component';
 import { LrPrintComponent } from './lr-print/lr-print.component';
 import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
-import { GdViewComponent } from './gd-view/gd-view.component';
 import { EwaybillInvoiceModalComponent } from 'app/shared/components/ewaybill-invoice-modal/ewaybill-invoice-modal.component';
 
 @Component({
   selector: 'app-lr-list',
   standalone: true,
-  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, LrViewComponent, HCCDetailsComponent, GbViewComponent, StickerPrintComponent, LrPrintComponent, EwaybillInvoiceModalComponent, DateRangePickerComponent, GdViewComponent],
+  imports: [CommonModule, NgSelectModule, BsDatepickerModule, FormsModule, PaginationComponent, LrViewComponent, StickerPrintComponent, LrPrintComponent, EwaybillInvoiceModalComponent, DateRangePickerComponent],
   templateUrl: './lr-list.component.html',
   styleUrl: './lr-list.component.scss',
   providers: [BsModalService]
 })
 export class LrListComponent {
-  @ViewChild('HCCDetailsComponent') HCCDetailsComponent!: HCCDetailsComponent;
-  @ViewChild('GbViewComponent') gbViewComponent!: GbViewComponent;
-  @ViewChild('GdViewComponent') gdViewComponent!: GdViewComponent;
   public isLoading: boolean = false;
   public listSubscription?: Subscription;
   public LRData: any[] = [];
@@ -149,14 +143,6 @@ export class LrListComponent {
       default: return 'badge-default';
     }
   }
-
-  // openHCCModal(lr: any) {
-  //   this.HCCDetailsComponent.showPopup(lr, 'G', 'GB');
-  // }
-
-  // openGDHCCModal(lr: any) {
-  //   this.HCCDetailsComponent.showPopup(lr, 'G', 'GD');
-  // }
 
   private apiCache = new Map<string, any>();
 
@@ -403,24 +389,6 @@ export class LrListComponent {
     this.ewaybillInvoiceModal.openModal(lr);
   }
 
-  onGBNo(lr: any) {
-    this.gbViewComponent.openModal(lr);
-  }
-
-  onGDNo(lr: any) {
-    this.gdViewComponent.openModal(lr);
-  }
-
-  onViewHCC(documentNo: any, hccNo: any) {
-    const url = `${this.env.liveUrl}ViewPrint/ViewHCC?DocumentNo=${documentNo}&HCNo=${hccNo}&src=angular`;
-    const popup = window.open('', 'popupWindow',
-      'width=900,height=600,top=100,left=200,resizable=yes,scrollbars=yes'
-    );
-
-    if (popup) {
-      popup.location.href = url;
-    }
-  }
 
   openStickerPrintModal(lr: any) {
     this.selectedStickerLrItem = lr;

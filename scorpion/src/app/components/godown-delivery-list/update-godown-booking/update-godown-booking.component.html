@@ -1,0 +1,94 @@
+<div class="godown-booking-backdrop" *ngIf="showModal">
+  <div class="godown-booking-dialog">
+    <!-- Header -->
+    <div class="godown-booking-header d-flex align-items-center justify-content-between">
+      <div class="modal-title-text">
+        Update Godown Booking — {{ selectedDockets.length }} Docket(s) · {{ deliveryType }} · Booking Branch {{ bookingBranch }}
+      </div>
+      <button type="button" class="btn-close-modal" (click)="closeModal()" aria-label="Close">×</button>
+    </div>
+
+    <!-- Body -->
+    <div class="godown-booking-body">
+      <!-- 4 Top Info Cards -->
+      <div class="top-info-grid">
+        <div class="info-box">
+          <label class="info-label">GB NO.</label>
+          <input type="text" class="info-input" [value]="previewGbNo" readonly>
+        </div>
+        <div class="info-box">
+          <label class="info-label">BOOKING DATE</label>
+          <input type="text" class="info-input" [value]="bookingDateFormatted" readonly>
+        </div>
+        <div class="info-box">
+          <label class="info-label">DELIVERY TYPE</label>
+          <input type="text" class="info-input" [value]="deliveryType" readonly>
+        </div>
+        <div class="info-box">
+          <label class="info-label">TOTAL PKGS / WT</label>
+          <input type="text" class="info-input" [value]="totalPkgs + ' pkgs / ' + (totalWt | number:'1.2-2') + ' Kg'" readonly>
+        </div>
+      </div>
+
+      <!-- Table of Dockets -->
+      <div class="table-container">
+        <table class="booking-table">
+          <thead>
+            <tr>
+              <th style="width: 45px; text-align: center;">#</th>
+              <th>LR NO / DATE</th>
+              <th>ORG / DEST</th>
+              <th>REASSIGNED LOCATION</th>
+              <th>BILLING PARTY</th>
+              <th>DELIVERY TYPE</th>
+              <th style="text-align: center;">PKGS</th>
+              <th style="text-align: center;">WEIGHT (KG)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of selectedDockets; let i = index">
+              <td style="text-align: center;">{{ i + 1 }}</td>
+              <td>
+                <div class="lr-number">{{ row.LRNumber || row.dockno }}</div>
+                <div class="lr-date">{{ formatDate(row.LRDateText || row.LRDate) }}</div>
+              </td>
+              <td>
+                {{ row.OrgCode || row.orgncd }} / {{ row.DestCode || row.destcd }}
+              </td>
+              <td>
+                <span class="reassigned-text">{{ row.ReassignedLocation || row.DestCode || '—' }}</span>
+              </td>
+              <td>
+                {{ row.BillingPartyCode ? (row.BillingPartyCode + ' : ' + row.BillingPartyName) : (row.BillingParty || row.party || '—') }}
+              </td>
+              <td>
+                <span class="delivery-type-pill">{{ row.PkpDelType || deliveryType }}</span>
+              </td>
+              <td style="text-align: center;">{{ row.Pkgs || row.pkgsno || 0 }}</td>
+              <td style="text-align: center;">{{ (row.ActualWt || row.actuwt || row.weight || 0) | number:'1.0-2' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Remarks -->
+      <div class="remarks-wrap">
+        <label class="info-label">REMARKS</label>
+        <input type="text" class="form-control remarks-input" placeholder="Optional" [(ngModel)]="remarks">
+      </div>
+
+      <!-- Note -->
+      <div class="helper-note">
+        On submit, <strong>one Godown Booking No.</strong> is generated for all listed dockets. GB HCC (Unloading) can then be raised once for this GB No. — multiple LRs → 1 GB → 1 HCC.
+      </div>
+
+      <!-- Footer Buttons -->
+      <div class="modal-footer-actions d-flex justify-content-end align-items-center gap-2">
+        <button type="button" class="btn btn-cancel" (click)="closeModal()">Cancel</button>
+        <button type="button" class="btn btn-submit-gb" (click)="submitGodownBooking()" [disabled]="isSubmitting">
+          Submit — Update Godown Booking
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

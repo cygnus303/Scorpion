@@ -263,9 +263,9 @@
         }
     }
 
-    .btn-action-gbhcc {
-        background: #5b21b6;
-        border: 1px solid #5b21b6;
+    .btn-action-updategb {
+        background: #f47b20;
+        border: 1px solid #f47b20;
         color: #ffffff;
         font-size: 12.5px;
         font-weight: 600;
@@ -275,19 +275,43 @@
         white-space: nowrap;
 
         &:hover:not(:disabled) {
-            background: #4c1d95;
-            border-color: #4c1d95;
+            background: #d96814;
+            border-color: #d96814;
         }
 
         &:disabled {
             opacity: 0.45;
             cursor: not-allowed;
+            background: #f47b20;
+        }
+    }
+
+    .btn-action-gbhcc {
+        background: #9f7aea;
+        border: 1px solid #9f7aea;
+        color: #ffffff;
+        font-size: 12.5px;
+        font-weight: 600;
+        padding: 7px 18px;
+        border-radius: 6px;
+        transition: all 0.15s;
+        white-space: nowrap;
+
+        &:hover:not(:disabled) {
+            background: #805ad5;
+            border-color: #805ad5;
+        }
+
+        &:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            background: #9f7aea;
         }
     }
 
     .btn-action-updategd {
-        background: #0f2a4a;
-        border: 1px solid #0f2a4a;
+        background: #718096;
+        border: 1px solid #718096;
         color: #ffffff;
         font-size: 12.5px;
         font-weight: 600;
@@ -297,19 +321,20 @@
         white-space: nowrap;
 
         &:hover:not(:disabled) {
-            background: #1b3d66;
-            border-color: #1b3d66;
+            background: #4a5568;
+            border-color: #4a5568;
         }
 
         &:disabled {
             opacity: 0.45;
             cursor: not-allowed;
+            background: #718096;
         }
     }
 
     .btn-action-gdhcc {
-        background: #12a150;
-        border: 1px solid #12a150;
+        background: #68d391;
+        border: 1px solid #68d391;
         color: #ffffff;
         font-size: 12.5px;
         font-weight: 600;
@@ -319,13 +344,14 @@
         white-space: nowrap;
 
         &:hover:not(:disabled) {
-            background: #0e8441;
-            border-color: #0e8441;
+            background: #48bb78;
+            border-color: #48bb78;
         }
 
         &:disabled {
             opacity: 0.45;
             cursor: not-allowed;
+            background: #68d391;
         }
     }
 }
