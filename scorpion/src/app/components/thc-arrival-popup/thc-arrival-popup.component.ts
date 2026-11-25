@@ -116,17 +116,17 @@ export class ThcArrivalPopupComponent {
     this.THCData = data;
     console.log(this.THCData);
     this.refreshData();
-    this.sealvalidation(this.THCData.thcNo);
+    // this.sealvalidation(this.THCData.thcNo);
     this.modalRef = this.modalService.show(this.Templatepod, { class: 'modal-xl modal-dialog-centered', backdrop: true });
   }
 
   buildForm() {
-    if (!this.apiSealList || this.apiSealList.length === 0) {
-      this.apiSealNo = '';
-    }
+    // if (!this.apiSealList || this.apiSealList.length === 0) {
+    //   this.apiSealNo = '';
+    // }
 
-    this.isStatusFrozen = true;
-    this.activeSeallist = [...this.mismatchSeallist];
+    // this.isStatusFrozen = true;
+    // this.activeSeallist = [...this.mismatchSeallist];
     this.arrivalForm = new FormGroup({
       // ISN: new FormControl('', [Validators.required, Validators.maxLength(6)]),
       ISN: new FormControl(''),
@@ -145,23 +145,23 @@ export class ThcArrivalPopupComponent {
       LoadingCharge: new FormControl(0)
     });
 
-    this.arrivalForm.get('ISN')?.valueChanges.subscribe(() => {
-      this.validateAllSeals();
-    });
+    // this.arrivalForm.get('ISN')?.valueChanges.subscribe(() => {
+    //   this.validateAllSeals();
+    // });
 
-    this.arrivalForm.get('ISN2')?.valueChanges.subscribe(() => {
-      this.validateAllSeals();
-    });
+    // this.arrivalForm.get('ISN2')?.valueChanges.subscribe(() => {
+    //   this.validateAllSeals();
+    // });
 
-    this.arrivalForm.get('ISN3')?.valueChanges.subscribe(() => {
-      this.validateAllSeals();
-    });
+    // this.arrivalForm.get('ISN3')?.valueChanges.subscribe(() => {
+    //   this.validateAllSeals();
+    // });
 
-    this.arrivalForm.get('s2id_Status')?.valueChanges.subscribe(status => {
-      this.onStatusChange(status);
-    });
+    // this.arrivalForm.get('s2id_Status')?.valueChanges.subscribe(status => {
+    //   this.onStatusChange(status);
+    // });
 
-    this.setupSealFormControls();
+    // this.setupSealFormControls();
     this.arrivalForm.get('AD')?.valueChanges.subscribe(() => {
       this.validateLateArrivalReason();
     });
@@ -204,17 +204,17 @@ export class ThcArrivalPopupComponent {
         this.fetchPreparedByEmployee();
         this.isFetchingData = false;
         this.validateLateArrivalReason();
-        if (!this.apiSealNo) {
-          const resAny = response as any;
-          const detailSeal = (resAny?.sealNo ?? resAny?.SealNo ?? resAny?.SEALNO ?? resAny?.isn ?? '').toString().trim();
-          if (detailSeal && detailSeal.toLowerCase() !== 'null' && detailSeal.toLowerCase() !== 'undefined') {
-            this.apiSealNo = detailSeal;
-            this.parseApiSeals(detailSeal);
-            this.setupSealFormControls();
-            this.validateAllSeals();
-            this.cdr.detectChanges();
-          }
-        }
+        // if (!this.apiSealNo) {
+        //   const resAny = response as any;
+        //   const detailSeal = (resAny?.sealNo ?? resAny?.SealNo ?? resAny?.SEALNO ?? resAny?.isn ?? '').toString().trim();
+        //   if (detailSeal && detailSeal.toLowerCase() !== 'null' && detailSeal.toLowerCase() !== 'undefined') {
+        //     this.apiSealNo = detailSeal;
+        //     this.parseApiSeals(detailSeal);
+        //     this.setupSealFormControls();
+        //     this.validateAllSeals();
+        //     this.cdr.detectChanges();
+        //   }
+        // }
         this.cdr.detectChanges();
       },
       error: (err) => {
@@ -328,6 +328,8 @@ export class ThcArrivalPopupComponent {
   }
 
   validateAllSeals() {
+    // Disabled seal validation
+    /*
     if (!this.arrivalForm) return;
 
     const s1 = (this.arrivalForm.get('ISN')?.value || '').toString().trim();
@@ -427,6 +429,7 @@ export class ThcArrivalPopupComponent {
       }
     }
     this.cdr.detectChanges();
+    */
   }
 
   getFormattedArrivalSeals(): string {
@@ -443,12 +446,12 @@ export class ThcArrivalPopupComponent {
   }
 
   onStatusDropdownOpen() {
-    this.validateAllSeals();
-    this.cdr.detectChanges();
+    // this.validateAllSeals();
+    // this.cdr.detectChanges();
   }
 
   onStatusChange(status: any) {
-    this.validateAllSeals();
+    // this.validateAllSeals();
   }
 
   onlyNumberKey(event: KeyboardEvent): boolean {
@@ -605,6 +608,7 @@ export class ThcArrivalPopupComponent {
   }
 
   onSubmit() {
+    debugger
     // this.validateAllSeals();
     // const statusControl = this.arrivalForm.get('s2id_Status');
     // if (!statusControl?.value) {
