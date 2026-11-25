@@ -33,8 +33,18 @@
             </div>
         </div>
 
+        <div class="summary-card px-3 py-3 c-red cursor-pointer" [class.active-card]="config.statusFilter === 'B'"
+            (click)="filterByStatus('B')">
+            <div class="card-content">
+                <div class="s-label">PENDING FOR GODOWN BOOKING</div>
+                <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.PendingForGodownBooking ?? summaryData?.PendingGodownBooking ?? summaryData?.PendingGB ?? summaryData?.GodownBookingPending ?? 0 }}</div>
+                <div class="small text-body-tertiary">Godown-Door / Godown to Godown without GB No.</div>
+            </div>
+            <div class="position-absolute end-0 bottom-0 opacity-25 me-2 mb-2 fs-4">📦</div>
+        </div>
+
         <div class="summary-card px-3 py-3 c-orange cursor-pointer" [class.active-card]="config.statusFilter === 'P'"
-            (click)="filterByStatus('P')">
+        (click)="filterByStatus('P')">
             <div class="card-content">
                 <div class="s-label">Pending for Delivery</div>
                 <div class="s-val fs-2 fw-bold lh-1">{{ summaryData?.PendingForDelivery || 0 }}</div>
@@ -224,6 +234,7 @@
                             </div>
                             <div class="d-flex align-items-center gap-2">
                                 <button type="button" class="btn btn-action-clear" [disabled]="selectedCount === 0" (click)="clearSelection()">Clear</button>
+                                <button type="button" class="btn btn-action-updategb" [disabled]="!isUpdateGBEnabled" (click)="openUpdateGodownBooking()">Update Godown Booking {{ isUpdateGBEnabled && selectedCount > 0 ? '(' + selectedCount + ')' : '' }}</button>
                                 <button type="button" class="btn btn-action-gbhcc" [disabled]="!isGBHCCEnabled" (click)="openSelectedGBHCC()">GB HCC {{ isGBHCCEnabled && selectedCount > 0 ? '(' + selectedCount + ')' : '' }}</button>
                                 <button type="button" class="btn btn-action-updategd" [disabled]="!isUpdateGDEnabled" (click)="openUpdateGodownDelivery()">Update Godown Delivery {{ isUpdateGDEnabled && selectedCount > 0 ? '(' + selectedCount + ')' : '' }}</button>
                                 <button type="button" class="btn btn-action-gdhcc" [disabled]="!isGDHCCEnabled" (click)="openSelectedGDHCC()">GD HCC {{ isGDHCCEnabled && selectedCount > 0 ? '(' + selectedCount + ')' : '' }}</button>
@@ -238,6 +249,7 @@
 </div>
 
 <app-update-godown-delivery #UpdateGodownDeliveryComponent (deliveryUpdated)="onDeliveryUpdated($event)"></app-update-godown-delivery>
+<app-update-godown-booking #UpdateGodownBookingComponent (bookingUpdated)="onBookingUpdated($event)"></app-update-godown-booking>
 <app-godown-delivery-view #GodownDeliveryViewComponent (docketClick)="onView($event)"></app-godown-delivery-view>
 
 <app-lr-view #LrViewComponent></app-lr-view>
