@@ -376,7 +376,7 @@
                                 <div class="input-group">
                                     <input class="form-control" placeholder="dd/mm/yyyy" #dpUpdate="bsDatepicker" bsDatepicker
                                         formControlName="invoiceDate" [bsConfig]="{ dateInputFormat: 'DD MMM YYYY' }" container="body" [isDisabled]="true"
-                                        [class.disabled-input]="true"  [minDate]="minDate"
+                                        [class.disabled-input]="true"  [maxDate]="minDate"
                                         >
                                     <button class="btn btn-outline-secondary border shadow-none" (click)="dpUpdate.toggle()" type="button"
                                        >📅</button>
@@ -390,9 +390,9 @@
                                     style="font-size:11px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px">Invoice
                                     Value </label>
                                 <input type="text" formControlName="invoiceValue"
-                                    placeholder="Auto-filled from Eway Bill" oninput="this.value = this.value.replace(/[^0-9.]/g,'');"
+                                    placeholder="Auto-filled from Eway Bill" oninput="this.value = this.value.replace(/[^0-9.]/g,'');" maxlength="16"
                                     style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:7px;font-size:13px;outline:none;"
-                                    [readonly]="prqForm.get('ewayBill')?.value === 'with'"
+                                    [readonly]="prqForm.get('ewayBill')?.value === 'with'" oninput="this.value = this.value.replace(/[^0-9]/g,'');"
                                     [ngClass]="{'border-danger': prqForm.get('invoiceValue')?.invalid && prqForm.get('invoiceValue')?.touched}">
                                 <div *ngIf="prqForm.get('invoiceValue')?.invalid && prqForm.get('invoiceValue')?.touched"
                                     class="error-msg">This field is required</div>
