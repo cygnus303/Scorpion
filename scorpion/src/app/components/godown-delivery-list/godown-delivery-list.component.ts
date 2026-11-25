@@ -20,6 +20,7 @@ import { ExportService } from 'app/shared/services/export.service';
 import { environment } from 'environments/environment';
 import { DepsDetailsComponent } from '../drs-generation-list/deps-details/deps-details.component';
 import { UpdateGodownDeliveryComponent } from './update-godown-delivery/update-godown-delivery.component';
+import { UpdateGodownBookingComponent } from './update-godown-booking/update-godown-booking.component';
 import { GodownDeliveryViewComponent } from './godown-delivery-view/godown-delivery-view.component';
 
 @Component({
@@ -41,6 +42,7 @@ import { GodownDeliveryViewComponent } from './godown-delivery-view/godown-deliv
     GdViewComponent,
     DepsDetailsComponent,
     UpdateGodownDeliveryComponent,
+    UpdateGodownBookingComponent,
     GodownDeliveryViewComponent
   ],
   templateUrl: './godown-delivery-list.component.html',
@@ -54,6 +56,7 @@ export class GodownDeliveryListComponent {
   @ViewChild('HCCDetailsComponent') HCCDetailsComponent!: HCCDetailsComponent;
     @ViewChild('DepsDetailsComponent') depsDetailsComponent!: DepsDetailsComponent;
   @ViewChild('UpdateGodownDeliveryComponent') updateGodownDeliveryComponent!: UpdateGodownDeliveryComponent;
+  @ViewChild('UpdateGodownBookingComponent') updateGodownBookingComponent!: UpdateGodownBookingComponent;
   @ViewChild('GodownDeliveryViewComponent') godownDeliveryViewComponent!: GodownDeliveryViewComponent;
   
   public env = environment;
@@ -67,6 +70,7 @@ export class GodownDeliveryListComponent {
 
   public summaryData: any = {
     TotalLR: 0,
+    PendingForGodownBooking: 0,
     PendingForDelivery: 0,
     Delivered: 0
   };
@@ -173,7 +177,7 @@ export class GodownDeliveryListComponent {
       }
     } else {
       this.godownDeliveryList = [];
-      this.summaryData = { TotalLR: 0, PendingForDelivery: 0, Delivered: 0 };
+      this.summaryData = { TotalLR: 0, PendingForGodownBooking: 0, PendingForDelivery: 0, Delivered: 0 };
       this.config.totalRecords = 0;
       this.config.totalPages = 1;
     }
@@ -216,7 +220,7 @@ export class GodownDeliveryListComponent {
   // 1. Action eligibility logic for an individual docket
   // =========================================================================
   getActions(item: any) {
-    if (!item) return { canUpdate: false, canGBHCC: false, canGDHCC: false };
+    if (!item) return { canUpdate: false, canGBHCC: false, canGDHCC: false, canUpdateGB: false };
 
     // Check existence of document numbers
     const hasGB = !!(item.GBNo && item.GBNo !== '—' && item.GBNo !== '-' && item.GBNo !== 'Not Generated' && item.GBNo !== 'N/A');
@@ -225,19 +229,27 @@ export class GodownDeliveryListComponent {
     const hasGDHCC = !!(item.GDHCCNo && item.GDHCCNo !== '—' && item.GDHCCNo !== '-');
 
     // 1. Status must be Pending ('P')
-    const statusCode = (item.StatusCode).toString().trim().toUpperCase();
+    const statusCode = (item.StatusCode || '').toString().trim().toUpperCase();
     const isPending = statusCode === 'P';
 
     // 2. ReassignedLocation and Login Location must match
     const loginLoc = (this.docketService.loginUserList?.LocationCode || this.docketService.Location || '').toString().trim().toUpperCase();
-    const reassignedLoc = (item.ReassignedLocation).toString().trim().toUpperCase();
+    const reassignedLoc = (item.ReassignedLocation || '').toString().trim().toUpperCase();
     const isLocationMatch = !loginLoc || (reassignedLoc === loginLoc);
 
     // 3. PkpDelTypeCode must NOT be "2" (and PkpDelType is not Godown-Door)
     const pkpCode = (item.PkpDelTypeCode !== undefined ? item.PkpDelTypeCode : '').toString().trim();
     const isNotCode2 = pkpCode !== '2' && item.PkpDelType !== 'Godown-Door';
 
+    // Godown Booking eligibility: Godown-Door or Godown to Godown without GB No.
+    const isGBType = item.PkpDelType === 'Godown-Door' || item.PkpDelType === 'Godown to Godown' || pkpCode === '1' || pkpCode === '2';
+    const orgCode = (item.OrgCode || item.orgncd || '').toString().trim().toUpperCase();
+    const isOrgMatch = !loginLoc || orgCode === loginLoc || !orgCode;
+
     return {
+      // Update Godown Booking: Godown-Door / Godown to Godown without GB No.
+      canUpdateGB: isGBType && !hasGB && isOrgMatch,
+
       // Update Godown Delivery: No GD No, Status is 'P', ReassignedLocation == Login Location, PkpDelTypeCode != '2'
       canUpdate: !hasGD && isPending && isLocationMatch && isNotCode2,
 
@@ -252,6 +264,11 @@ export class GodownDeliveryListComponent {
   // =========================================================================
   // 2. Action buttons enable/disable logic based on selected dockets
   // =========================================================================
+  get isUpdateGBEnabled(): boolean {
+    const selected = this.getSelectedItems();
+    return selected.length > 0 && selected.every(item => this.getActions(item).canUpdateGB);
+  }
+
   get isUpdateGDEnabled(): boolean {
     const selected = this.getSelectedItems();
     return selected.length > 0 && selected.every(item => this.getActions(item).canUpdate);
@@ -274,7 +291,7 @@ export class GodownDeliveryListComponent {
     const actions = this.getActions(item);
 
     // If no action is pending for this row, disable the checkbox
-    if (!actions.canUpdate && !actions.canGBHCC && !actions.canGDHCC) {
+    if (!actions.canUpdate && !actions.canGBHCC && !actions.canGDHCC && !actions.canUpdateGB) {
       return true;
     }
 
@@ -285,12 +302,13 @@ export class GodownDeliveryListComponent {
     }
 
     // If dockets are selected, only rows sharing at least one common compatible action can be selected
+    const matchGBUpd = this.isUpdateGBEnabled && actions.canUpdateGB;
     const matchUpdate = this.isUpdateGDEnabled && actions.canUpdate;
     const matchGB = this.isGBHCCEnabled && actions.canGBHCC;
     const matchGD = this.isGDHCCEnabled && actions.canGDHCC;
 
     // Disable checkbox if no common action matches
-    return !(matchUpdate || matchGB || matchGD);
+    return !(matchGBUpd || matchUpdate || matchGB || matchGD);
   }
 
   // =========================================================================
@@ -340,6 +358,7 @@ export class GodownDeliveryListComponent {
 
   get availableActionsList(): string[] {
     const acts: string[] = [];
+    if (this.isUpdateGBEnabled) acts.push('Update Godown Booking');
     if (this.isGBHCCEnabled) acts.push('GB HCC');
     if (this.isUpdateGDEnabled) acts.push('Update Godown Delivery');
     if (this.isGDHCCEnabled) acts.push('GD HCC');
@@ -352,6 +371,30 @@ export class GodownDeliveryListComponent {
 
   get isHeaderCheckboxDisabled(): boolean {
     return !this.godownDeliveryList || this.godownDeliveryList.length === 0;
+  }
+
+  // Update Godown Booking Action
+  openUpdateGodownBooking() {
+    const selected = this.getSelectedItems();
+    if (selected.length === 0) {
+      if (this.godownDeliveryList.length > 0) {
+        const eligible = this.godownDeliveryList.filter(item => this.getActions(item).canUpdateGB);
+        if (eligible.length > 0 && this.updateGodownBookingComponent) {
+          this.updateGodownBookingComponent.showPopup([eligible[0]]);
+          return;
+        }
+      }
+      alert('Please select at least one docket eligible for Godown Booking.');
+      return;
+    }
+    if (this.updateGodownBookingComponent) {
+      this.updateGodownBookingComponent.showPopup(selected);
+    }
+  }
+
+  onBookingUpdated(event: any) {
+    console.log('Godown Booking updated:', event);
+    this.fetchData();
   }
 
   // Update Godown Delivery Modal

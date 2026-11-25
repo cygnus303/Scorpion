@@ -146,21 +146,18 @@
                     <tr>
                         <th class="text-center">#</th>
                         <th class="text-center">LR No. / Date</th>
-                        <th class="text-center">GB / GD No.</th>
-                        <th class="text-center">HCC No.</th>
                         <th class="text-center">Org / Dest</th>
                         <th class="text-center">From / To City</th>
-                        <th class="text-center" style="white-space: normal; line-height: 1.2; width: 110px;">Pickup /<br>Delivery Type</th>
                         <th class="text-center">EDD /ADD</th>
-                        <th class="text-center" style="width: 190px; min-width: 170px; max-width: 210px;">Billing Party</th>
-                        <th class="text-center" style="white-space: normal; line-height: 1.2; width: 110px;">Pay Base /<br>Mode / Service</th>
+                        <th class="text-center">Billing Party</th>
+                        <th class="text-center">Pay Base /Mode /Service</th>
                         <th class="text-center">Status</th>
-                        <th class="text-center" style="min-width: 250px;">Actions</th>
+                        <th class="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody *ngIf="isLoading">
                     <tr>
-                        <td colspan="12" class="text-center py-5">
+                        <td colspan="9" class="text-center py-5">
                             <div class="spinner-border text-primary" role="status">
                                 <span class="visually-hidden">Loading...</span>
                             </div>
@@ -170,7 +167,7 @@
                 </tbody>
                 <tbody *ngIf="!isLoading && LRData.length === 0">
                     <tr>
-                        <td colspan="12" class="text-center py-4 text-muted fs-5">
+                        <td colspan="9" class="text-center py-4 text-muted fs-5">
                             No records found.
                         </td>
                     </tr>
@@ -188,34 +185,6 @@
                             </div>
                         </td>
                         <td>
-                            <div class="d-flex flex-column gap-1">
-                                <span class="fw-bold cursor-pointer" style="color: #1a237e; font-size: 12px;"
-                                    *ngIf="lr.gbNo"
-                                    (click)="onGBNo(lr)">
-                                    <span style="font-size: 9px; color: #64748b;" class="me-1">GB:</span>{{ lr.gbNo }}
-                                </span>
-                                <span class="fw-bold cursor-pointer" style="color: #b45309; font-size: 12px;"
-                                    *ngIf="lr.gdNo"
-                                    (click)="onGDNo(lr)">
-                                    <span style="font-size: 9px; color: #64748b;" class="me-1">GD:</span>{{ lr.gdNo }}
-                                </span>
-                                <span *ngIf="!lr.gbNo && !lr.gdNo">--</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="d-flex flex-column gap-1">
-                                <span class="fw-bold cursor-pointer" style="color: #1a237e; font-size: 12px;"
-                                    (click)="lr.hcNumber ? onViewHCC(lr.gbNo, lr.hcNumber) : null">
-                                    <span *ngIf="lr.hcNumber" style="font-size: 9px; color: #64748b;" class="me-1">GHB:</span>{{ lr.hcNumber || '--' }}
-                                </span>
-                                <span class="fw-bold cursor-pointer" style="color: #b45309; font-size: 12px;"
-                                    *ngIf="lr.lhcNumber"
-                                    (click)="lr.lhcNumber ? onViewHCC(lr.gdNo, lr.lhcNumber) : null">
-                                    <span style="font-size: 9px; color: #64748b;" class="me-1">GHD:</span>{{ lr.lhcNumber }}
-                                </span>
-                            </div>
-                        </td>
-                        <td>
                             <div class="route route-wrapper">
                                 <span class="org">{{ lr.orgncd }}</span>
                                 <span class="dest">{{ lr.destcd }}</span>
@@ -228,12 +197,6 @@
                             </div>
                         </td>
                         <td>
-                            <span
-                                [ngClass]="lr.pickdly && lr.pickdly !== '—' ? 'badge ' + getDeliveryTypeClass(lr.pickup_Dely) : 'text-muted'">
-                                {{ lr.pickdly==='DOOR PICKUP TO DOOR DELIVERY'?'Door To Door':lr.pickdly || '—' }}
-                            </span>
-                        </td>
-                        <td>
                             <div class="edd-add-cell">
                                 <div class="text-nowrap"><span class="text-muted me-1"
                                         style="font-size:9px;font-weight:700;">EDD:</span><span class="edd-ok">{{
@@ -244,20 +207,22 @@
                                         }}</span></div>
                             </div>
                         </td>
-                        <td style="width: 190px; min-width: 170px; max-width: 210px;">
+                        <td>
                             <div class="billing-party">
-                                <span class="party-code" *ngIf="lr.partY_CODE">{{ lr.partY_CODE }}</span>
-                                <span class="party-name" *ngIf="lr.party_name">{{ lr.party_name }}</span>
-                                <span *ngIf="!lr.partY_CODE && !lr.party_name" class="text-muted">—</span>
+                                <span class="fw-bold" style="color: #1d4ed8;">{{ lr.partY_CODE }}</span><span
+                                    class="text-muted mx-1">-</span><span>{{ lr.party_name }}</span>
                             </div>
                         </td>
                         <td>
-                            <div class="pay-mode text-center d-flex flex-column align-items-center gap-1">
-                                <span class="badge" [ngClass]="lr.paybas === 'Paid' ? 'badge-pp' : 'badge-tpay'" style="display: inline-block;">
+                            <div class="pay-mode">
+                                <span class="badge mb-1" [ngClass]="lr.paybas === 'Paid' ? 'badge-pp' : 'badge-tpay'">
                                     {{ lr.paybas }}
                                 </span>
-                                <span class="pm-mode text-nowrap" style="font-weight: 700; color: #1a237e; font-size: 11px;">{{ lr.trN_MOD }}</span>
-                                <span class="pm-svc text-nowrap" style="font-weight: 700; color: #4338ca; font-size: 10px;">{{ lr.service_Type }}</span>
+                                <div class="d-flex align-items-center gap-1">
+                                <span class="pm-mode">{{ lr.trN_MOD }}</span>
+                                    <span class="text-muted" style="font-size:10px;">|</span>
+                                    <span class="pm-svc">{{ lr.service_Type }}</span>
+                                </div>
                             </div>
                         </td>
                         <td>
@@ -270,12 +235,17 @@
                                 <button *ngIf="menuAccessService.hasPermission('View')" class="ab ab-view"
                                     (click)="onView(lr.dockno)">👁 View</button>
                                 <button *ngIf="!isHQTR && menuAccessService.hasPermission('Edit')" class="ab ab-edit"
-                                    (click)="openQuick(lr.dockno)" [disabled]="lr.isQuickMode!=='Q'">Quick LR Edit</button>
+                                    (click)="openQuick(lr.dockno)" [disabled]="lr.isQuickMode!=='Q'"> Quick LR
+                                    Edit</button>
                                 <div class="track-wrap">
                                     <button class="ab ab-track" (click)="openTrack(lr.dockno)">📍 Track</button>
                                 </div>
                                 <!-- <button class="ab ab-finedit" (click)="openEdit(lr.dockno)"
                                     [disabled]="lr.isQuickMode==='Q'||lr.status ==='Cancelled'">💰 Fin Edit</button> -->
+
+                                <button *ngIf="isHQTR && menuAccessService.hasPermission('Cancel')" class="ab ab-cancel"
+                                    (click)="onCancel(lr.dockno)" [disabled]="lr.isDocketCancel==='Y'">🚫
+                                    Cancel</button>
                                 <div class="print-wrap">
                                     <button class="ab ab-print" (click)="openPrint(lr.dockno)">🖨 Print</button>
                                     <div class="print-dropdown">
@@ -284,16 +254,19 @@
                                         <a><span class="pi">🔖</span> UBI Sticker Print</a>
                                     </div>
                                 </div>
+                                <!-- <button class="ab ab-hcc" (click)="openHCCModal(lr)">🏢 HCC</button> -->
                                 <!-- <button class="ab ab-hcc" (click)="openHCCModal(lr)"
-                                    [disabled]="lr.ishccAllow === 'N' ? true : false">🏢 GHB HCC</button>
-                                <button class="ab ab-gdhcc" (click)="openGDHCCModal(lr)"
-                                    [disabled]="lr.ishccAllowGD === 'N' ? true : false">📦 GHD HCC</button> -->
+                                    [disabled]="lr.ishccAllow === 'N' ? true : false">🏢 HCC</button> -->
                                 <button class="ab ab-lrprint" (click)="openLrPrintModal(lr)">📄 LR Print</button>
-                                <button class="ab ab-sticker" (click)="openStickerPrintModal(lr)">🏷️ Sticker Print</button>
-                                <button class="ab ab-eway" [style.grid-column]="(isHQTR && menuAccessService.hasPermission('Cancel')) ? 'span 2' : '1 / -1'"
-                                    (click)="getEwaybillData(lr)">🧾 E-Way No. / Invoice</button>
-                                <button *ngIf="isHQTR && menuAccessService.hasPermission('Cancel')" class="ab ab-cancel"
-                                    (click)="onCancel(lr.dockno)" [disabled]="lr.isDocketCancel==='Y'">🚫 Cancel</button>
+                                <div
+                                    style="grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 4px;">
+                                    <button class="ab ab-eway m-0"
+                                        style="width: 100%; white-space: nowrap; padding: 4px 2px;"
+                                        (click)="getEwaybillData(lr)">🧾 E-Way No. / Invoice</button>
+                                    <button class="ab ab-view m-0"
+                                        style="width: 100%; white-space: nowrap; padding: 4px 2px;" (click)="openStickerPrintModal(lr)">🏷️ Sticker
+                                        Print</button>
+                                </div>
                             </div>
                         </td>
                     </tr>
@@ -313,8 +286,5 @@
 
 <app-ewaybill-invoice-modal #EwaybillInvoiceModalComponent></app-ewaybill-invoice-modal>
 
-<!-- <app-hcc-details #HCCDetailsComponent (dataEmitter)="fetchLRList()"></app-hcc-details> -->
-<app-gb-view #GbViewComponent></app-gb-view>
-<app-gd-view #GdViewComponent></app-gd-view>
 <app-sticker-print #StickerPrintComponent></app-sticker-print>
 <app-lr-print #LrPrintComponent></app-lr-print>
