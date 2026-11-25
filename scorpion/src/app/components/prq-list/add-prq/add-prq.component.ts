@@ -143,7 +143,9 @@ export class AddPrqComponent {
       if (term?.trim() && term.length >= 2) {
         this.getPincodeData(term, 'consignor');
       } else {
-        this.consignorPincodeData = [];
+        const currentVal = this.prqForm.get('consignorPin')?.value;
+        const currentItem = this.consignorPincodeData.find((d: any) => d.Value === currentVal);
+        this.consignorPincodeData = currentItem ? [currentItem] : [];
         this.consignorPincodeNotFoundText = 'Please enter 3 more characters';
       }
     });
@@ -153,7 +155,9 @@ export class AddPrqComponent {
       if (term?.trim() && term.length >= 2) {
         this.getPincodeData(term, 'consignee');
       } else {
-        this.consigneePincodeData = [];
+        const currentVal = this.prqForm.get('consigneePin')?.value;
+        const currentItem = this.consigneePincodeData.find((d: any) => d.Value === currentVal);
+        this.consigneePincodeData = currentItem ? [currentItem] : [];
         this.consigneePincodeNotFoundText = 'Please enter 3 more characters';
       }
     });
@@ -193,11 +197,21 @@ export class AddPrqComponent {
           this.isDestPincodeLoading = false;
           if (data.length === 0) this.destPincodeNotFoundText = 'No pincode found';
         } else if (type === 'consignor') {
+          const currentVal = this.prqForm.get('consignorPin')?.value;
+          const currentItem = this.consignorPincodeData.find((d: any) => d.Value === currentVal);
           this.consignorPincodeData = data;
+          if (currentItem && !this.consignorPincodeData.some((d: any) => d.Value === currentVal)) {
+            this.consignorPincodeData = [currentItem, ...this.consignorPincodeData];
+          }
           this.isConsignorPincodeLoading = false;
           if (data.length === 0) this.consignorPincodeNotFoundText = 'No pincode found';
         } else if (type === 'consignee') {
+          const currentVal = this.prqForm.get('consigneePin')?.value;
+          const currentItem = this.consigneePincodeData.find((d: any) => d.Value === currentVal);
           this.consigneePincodeData = data;
+          if (currentItem && !this.consigneePincodeData.some((d: any) => d.Value === currentVal)) {
+            this.consigneePincodeData = [currentItem, ...this.consigneePincodeData];
+          }
           this.isConsigneePincodeLoading = false;
           if (data.length === 0) this.consigneePincodeNotFoundText = 'No pincode found';
         }
@@ -372,8 +386,12 @@ export class AddPrqComponent {
     this.emailNotFoundText = 'Please enter 3 more characters';
     this.pincodeData = [];
     this.destPincodeData = [];
+    this.consignorPincodeData = [];
+    this.consigneePincodeData = [];
     this.pincodeNotFoundText = 'Please enter 3 more characters';
     this.destPincodeNotFoundText = 'Please enter 3 more characters';
+    this.consignorPincodeNotFoundText = 'Please enter 3 more characters';
+    this.consigneePincodeNotFoundText = 'Please enter 3 more characters';
     this.allowedPaybasList = null;
     this.contractErrorMsg = '';
     this.paybaseData = [...this.allPaybaseData];
@@ -382,7 +400,30 @@ export class AddPrqComponent {
   onChangePincode(event: any) {
     this.pincodeData = [];
     this.pincodeNotFoundText = 'Please enter 3 more characters';
-    this.prqService.getBranchCityFromPincode(event?.Value).subscribe((res: any) => {
+    if (!event) {
+      this.prqForm.patchValue({
+        branchCode: '',
+        fromCity: '',
+        fromCityCode: '',
+        PickupBranch: null,
+        consignorPin: null
+      });
+      return;
+    }
+
+    const pinVal = event?.Value || event;
+    const pinText = event?.Text || event?.Value || event;
+    const pinObj = { Text: pinText, Value: pinVal };
+
+    const exists = this.consignorPincodeData.some((item: any) => item.Value === pinVal);
+    if (!exists) {
+      this.consignorPincodeData = [pinObj, ...this.consignorPincodeData];
+    }
+    this.prqForm.patchValue({
+      consignorPin: pinVal
+    });
+
+    this.prqService.getBranchCityFromPincode(pinVal).subscribe((res: any) => {
       if (res.success && res.data && res.data.length > 0) {
         const loc = res.data[0];
          if (loc.locCode) {
@@ -401,7 +442,27 @@ export class AddPrqComponent {
   onChangeDestPincode(event: any) {
     this.destPincodeData = [];
     this.destPincodeNotFoundText = 'Please enter 3 more characters';
-    this.prqService.getBranchCityFromPincode(event?.Value).subscribe((res: any) => {
+    if (!event) {
+      this.prqForm.patchValue({
+        desBranchCode: '',
+        consigneePin: null
+      });
+      return;
+    }
+
+    const pinVal = event?.Value || event;
+    const pinText = event?.Text || event?.Value || event;
+    const pinObj = { Text: pinText, Value: pinVal };
+
+    const exists = this.consigneePincodeData.some((item: any) => item.Value === pinVal);
+    if (!exists) {
+      this.consigneePincodeData = [pinObj, ...this.consigneePincodeData];
+    }
+    this.prqForm.patchValue({
+      consigneePin: pinVal
+    });
+
+    this.prqService.getBranchCityFromPincode(pinVal).subscribe((res: any) => {
       if (res.success && res.data && res.data.length > 0) {
         const loc = res.data[0];
         this.prqForm.patchValue({
@@ -419,7 +480,9 @@ export class AddPrqComponent {
         payBase: null,
         transportMode: null,
         service_Type: null,
-        ftlType: null
+        ftlType: null,
+        coldChainCategory: null,
+        tempRange: ''
       });
     } else {
       this.prqForm.patchValue({
@@ -427,7 +490,9 @@ export class AddPrqComponent {
         payBase: null,
         transportMode: null,
         service_Type: null,
-        ftlType: null
+        ftlType: null,
+        coldChainCategory: null,
+        tempRange: ''
       });
       this.allowedPaybasList = null;
       this.paybaseData = [...this.allPaybaseData];
@@ -478,6 +543,17 @@ export class AddPrqComponent {
     if (current && !this.paybaseData.some(p => p.codeId === current)) {
       this.prqForm.patchValue({ payBase: null });
     }
+
+    if (this.paybaseData.length === 1) {
+      const singlePay = this.paybaseData[0].codeId;
+      if (current !== singlePay) {
+        this.prqForm.patchValue({ payBase: singlePay });
+        const customerId = this.prqForm.get('customerCode')?.value;
+        if (customerId) {
+          this.getContract(customerId, singlePay);
+        }
+      }
+    }
   }
 
   onPayBasChange(event: any) {
@@ -485,7 +561,9 @@ export class AddPrqComponent {
     this.prqForm.patchValue({
       transportMode: null,
       service_Type: null,
-      ftlType: null
+      ftlType: null,
+      coldChainCategory: null,
+      tempRange: ''
     });
     const paybas = event ? (event.codeId || (typeof event === 'string' ? event : '')) : '';
     if (!paybas) {
@@ -515,6 +593,9 @@ export class AddPrqComponent {
       next: (response: any) => {
         if (response) {
           this.transportModes = response.data.filter((item: any) => mode.includes(item.codeDesc));
+          if (this.transportModes.length === 1) {
+            this.prqForm.patchValue({ transportMode: this.transportModes[0].codeId });
+          }
         }
       },
       error: (response: any) => {
@@ -580,7 +661,9 @@ export class AddPrqComponent {
               payBase: null,
               transportMode: null,
               service_Type: null,
-              ftlType: null
+              ftlType: null,
+              coldChainCategory: null,
+              tempRange: ''
             });
             this.serviceData = [];
             this.transportModes = [];
@@ -596,7 +679,9 @@ export class AddPrqComponent {
               payBase: null,
               transportMode: null,
               service_Type: null,
-              ftlType: null
+              ftlType: null,
+              coldChainCategory: null,
+              tempRange: ''
             });
             this.serviceData = [];
             this.transportModes = [];
@@ -639,7 +724,9 @@ export class AddPrqComponent {
               payBase: null,
               transportMode: null,
               service_Type: null,
-              ftlType: null
+              ftlType: null,
+              coldChainCategory: null,
+              tempRange: ''
             });
             this.serviceData = [];
             this.transportModes = [];
@@ -680,6 +767,9 @@ export class AddPrqComponent {
 
           if (serviceTypesStr) {
             this.serviceData = serviceTypesStr.split(',').map((s: string) => ({ name: s.trim(), value: s.trim() })).filter((s: any) => s.value !== '');
+            if (this.serviceData.length === 1) {
+              this.prqForm.patchValue({ service_Type: this.serviceData[0].value });
+            }
           } else {
             this.serviceData = [];
           }
@@ -696,7 +786,9 @@ export class AddPrqComponent {
               payBase: null,
               transportMode: null,
               service_Type: null,
-              ftlType: null
+              ftlType: null,
+              coldChainCategory: null,
+              tempRange: ''
             });
           } else if (isPaybasBlank) {
             this.paybaseData = [];
