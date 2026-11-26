@@ -56,6 +56,35 @@ export class ThcDepartureConfirmPopupComponent {
   public apiSealNoByThc: { [thcno: string]: string } = {};
   public apiSealListByThc: { [thcno: string]: string[] } = {};
   public expectedSealCountByThc: { [thcno: string]: number } = {};
+  public isStockUpdatedByThc: { [thcno: string]: boolean } = {};
+
+  isStockUpdatedForThc(thcno?: string): boolean {
+    if (!thcno && this.currentThc) thcno = this.currentThc.thcno;
+    if (!thcno) return false;
+
+    if (this.isStockUpdatedByThc[thcno] !== undefined) {
+      return this.isStockUpdatedByThc[thcno];
+    }
+    const model = this.modelsByThc[thcno];
+    const thc = this.thcList.find(t => t.thcno === thcno);
+    return Boolean(model?.isStockUpdated ?? thc?.isStockUpdated);
+  }
+
+  get isCurrentThcStockUpdated(): boolean {
+    return this.isStockUpdatedForThc(this.currentThc?.thcno);
+  }
+
+  get shouldShowIncomingSeal(): boolean {
+    if (this.isFromArrival) {
+      return false;
+    }
+    // If stock is updated (isStockUpdated: true), dynamically do NOT show incoming seal
+    if (this.isCurrentThcStockUpdated) {
+      return false;
+    }
+    // If stock is NOT updated (isStockUpdated: false), incoming seal is required and must show
+    return true;
+  }
 
   // Departure Outgoing Inputs
   public outgoingRemarks: string = '';
@@ -112,9 +141,28 @@ export class ThcDepartureConfirmPopupComponent {
   }
 
   setupSealFormControls() {
-    const isnCtrl = this.sealForm?.get('ISN');
-    const isn2Ctrl = this.sealForm?.get('ISN2');
-    const isn3Ctrl = this.sealForm?.get('ISN3');
+    if (!this.sealForm) return;
+
+    const isnCtrl = this.sealForm.get('ISN');
+    const isn2Ctrl = this.sealForm.get('ISN2');
+    const isn3Ctrl = this.sealForm.get('ISN3');
+    const statusCtrl = this.sealForm.get('s2id_Status');
+
+    if (!this.shouldShowIncomingSeal) {
+      isnCtrl?.clearValidators();
+      isn2Ctrl?.clearValidators();
+      isn3Ctrl?.clearValidators();
+      statusCtrl?.clearValidators();
+      isnCtrl?.setErrors(null);
+      isn2Ctrl?.setErrors(null);
+      isn3Ctrl?.setErrors(null);
+      statusCtrl?.setErrors(null);
+      isnCtrl?.updateValueAndValidity({ emitEvent: false });
+      isn2Ctrl?.updateValueAndValidity({ emitEvent: false });
+      isn3Ctrl?.updateValueAndValidity({ emitEvent: false });
+      statusCtrl?.updateValueAndValidity({ emitEvent: false });
+      return;
+    }
 
     isnCtrl?.setValidators([Validators.required, Validators.maxLength(6)]);
     isnCtrl?.updateValueAndValidity({ emitEvent: false });
@@ -134,6 +182,9 @@ export class ThcDepartureConfirmPopupComponent {
       isn3Ctrl?.setValue('', { emitEvent: false });
     }
     isn3Ctrl?.updateValueAndValidity({ emitEvent: false });
+
+    statusCtrl?.setValidators([Validators.required]);
+    statusCtrl?.updateValueAndValidity({ emitEvent: false });
   }
 
   parseApiSeals(rawSeal: string) {
@@ -152,6 +203,18 @@ export class ThcDepartureConfirmPopupComponent {
 
   validateAllSeals() {
     if (!this.sealForm) return;
+
+    if (!this.shouldShowIncomingSeal) {
+      const isnCtrl = this.sealForm.get('ISN');
+      const isn2Ctrl = this.sealForm.get('ISN2');
+      const isn3Ctrl = this.sealForm.get('ISN3');
+      const statusControl = this.sealForm.get('s2id_Status');
+      isnCtrl?.setErrors(null);
+      isn2Ctrl?.setErrors(null);
+      isn3Ctrl?.setErrors(null);
+      statusControl?.setErrors(null);
+      return;
+    }
 
     const s1 = (this.sealForm.get('ISN')?.value || '').toString().trim();
     const s2 = (this.sealForm.get('ISN2')?.value || '').toString().trim();
@@ -300,6 +363,16 @@ export class ThcDepartureConfirmPopupComponent {
     this.parseApiSeals(rawSeal);
     this.setupSealFormControls();
 
+    if (!this.shouldShowIncomingSeal) {
+      this.sealForm?.patchValue({
+        ISN: '',
+        ISN2: '',
+        ISN3: '',
+        s2id_Status: ''
+      }, { emitEvent: false });
+      return;
+    }
+
     const saved = this.incomingSealDataByThc[this.currentThc.thcno];
     if (saved) {
       this.sealForm.patchValue({
@@ -366,6 +439,7 @@ export class ThcDepartureConfirmPopupComponent {
     this.apiSealNoByThc = {};
     this.apiSealListByThc = {};
     this.expectedSealCountByThc = {};
+    this.isStockUpdatedByThc = {};
     this.apiSealNo = '';
     this.apiSealList = [];
     this.expectedSealCount = 1;
@@ -410,6 +484,7 @@ export class ThcDepartureConfirmPopupComponent {
     this.apiSealNoByThc = {};
     this.apiSealListByThc = {};
     this.expectedSealCountByThc = {};
+    this.isStockUpdatedByThc = {};
     this.apiSealNo = '';
     this.apiSealList = [];
     this.expectedSealCount = 1;
@@ -557,7 +632,7 @@ export class ThcDepartureConfirmPopupComponent {
       return true;
     }
     if (!this.isFromArrival) {
-      if (this.sealForm && this.sealForm.invalid) {
+      if (this.shouldShowIncomingSeal && this.sealForm && this.sealForm.invalid) {
         return true;
       }
       if (!this.sealNo || !this.isValidSealNo(this.sealNo)) {
@@ -607,6 +682,7 @@ export class ThcDepartureConfirmPopupComponent {
 
           this.manifestsByThc[thc.thcno] = mappedList;
           this.modelsByThc[thc.thcno] = res?.thcDepModel || {};
+          this.isStockUpdatedByThc[thc.thcno] = Boolean(res?.thcDepModel?.isStockUpdated ?? thc?.isStockUpdated);
 
           // Incoming Seal from thcDepModel (sealno_in or sealno)
           const modelSeal = (res?.thcDepModel?.sealno_in || res?.thcDepModel?.sealno || res?.thcDepModel?.sealNo || thc?.sealNo || thc?.sealno || '').toString().trim();
@@ -794,7 +870,7 @@ export class ThcDepartureConfirmPopupComponent {
     }
 
     if (!this.isFromArrival) {
-      if (this.sealForm && this.sealForm.invalid) {
+      if (this.shouldShowIncomingSeal && this.sealForm && this.sealForm.invalid) {
         this.sealForm.markAllAsTouched();
         this.errorMessage = 'Please verify Incoming Seal details.';
         return;
@@ -855,8 +931,8 @@ export class ThcDepartureConfirmPopupComponent {
         isDirectDeparted: this.isFromArrival ? 'Y' : 'N',
         outRemarks: this.outgoingRemarks.trim(),
         tcList: manifests,
-        incomingSeal: incData?.isn || '',
-        incomingSealStatus: incData?.status || ''
+        incomingSeal: (!this.isFromArrival && !this.isStockUpdatedForThc(thc.thcno)) ? (incData?.isn || '') : '',
+        incomingSealStatus: (!this.isFromArrival && !this.isStockUpdatedForThc(thc.thcno)) ? (incData?.status || '') : ''
       });
     }
 

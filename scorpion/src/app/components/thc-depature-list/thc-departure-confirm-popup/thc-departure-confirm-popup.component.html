@@ -71,7 +71,7 @@
         </div>
 
         <!-- Seal Form Group (Single / Multiple Seals Matching THC Arrival / Stock Update) -->
-        <div [formGroup]="sealForm" *ngIf="sealForm && !isFromArrival">
+        <div [formGroup]="sealForm" *ngIf="sealForm && !isFromArrival && shouldShowIncomingSeal">
           <!-- Dynamic Multiple Seals Row (Visible when 2 or 3 Seals from Dynamic API) -->
           <div class="row g-3 mt-1 mb-3" *ngIf="expectedSealCount > 1">
             <div [ngClass]="expectedSealCount === 2 ? 'col-md-4' : 'col-md-3'">
