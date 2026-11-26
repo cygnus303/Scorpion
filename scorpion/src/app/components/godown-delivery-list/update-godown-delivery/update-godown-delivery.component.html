@@ -140,7 +140,7 @@
                                 <div *ngIf="row.ReassignedLocation" class="text-primary fw-bold" style="font-size: 9.5px;">{{ row.ReassignedLocation }}</div>
                             </td>
                             <td class="col-total">
-                                <div class="fw-bold text-dark" style="font-size: 11px;">{{ row.Pkgs }} / {{ row.ActualWt }} Kg</div>
+                                <div class="fw-bold text-dark" style="font-size: 11px;">{{ (row.DelPkgs !== undefined ? row.DelPkgs : row.Pkgs) }} / {{ (row.DelWts !== undefined ? row.DelWts : row.ActualWt) }} Kg</div>
                                 <div class="text-muted" *ngIf="row.DRSDate" style="font-size: 10px;">DRS {{ row.DRSDate }}</div>
                             </td>
                             <td class="col-pkgs">
@@ -150,16 +150,23 @@
                                     (ngModelChange)="onDeliveredPkgsChange(row)"
                                     [class.is-invalid]="getPkgsError(row) !== ''"
                                     min="1"
-                                    [max]="row.Pkgs">
+                                    [max]="row.DelPkgs || row.maxPkgs || row.Pkgs">
                                 <div class="text-danger err-sub" *ngIf="getPkgsError(row)">
                                     {{ getPkgsError(row) }}
                                 </div>
                             </td>
                             <td class="col-wt">
                                 <input type="number"
-                                    class="form-control form-control-sm text-center bg-light cell-input"
+                                    class="form-control form-control-sm text-center cell-input"
                                     [(ngModel)]="row.deliveredWt"
-                                    readonly>
+                                    (ngModelChange)="onDeliveredWtChange(row)"
+                                    [class.is-invalid]="getWtError(row) !== ''"
+                                    min="0.01"
+                                    [max]="row.DelWts || row.maxWt || row.ActualWt"
+                                    step="0.01">
+                                <div class="text-danger err-sub" *ngIf="getWtError(row)">
+                                    {{ getWtError(row) }}
+                                </div>
                             </td>
                             <td class="col-reason">
                                 <ng-select
@@ -170,7 +177,7 @@
                                     bindValue="codeId"
                                     [items]="generalMasterService.partDeliveredReasonData"
                                     placeholder="Select"
-                                    [readonly]="row.deliveredPkgs >= row.Pkgs"
+                                    [readonly]="row.deliveredPkgs >= (row.DelPkgs || row.maxPkgs || row.Pkgs)"
                                     [dropdownPosition]="'auto'"
                                     panelClass="godown-select-panel"
                                     appendTo="body">

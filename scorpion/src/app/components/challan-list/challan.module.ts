@@ -30,4 +30,3 @@ import { DateRangePickerComponent } from 'app/shared/components/date-range-picke
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ChallanModule { }
-``

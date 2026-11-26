@@ -3,6 +3,7 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/cor
 import { FormsModule } from '@angular/forms';
 import { DocketService } from 'app/shared/services/docket.service';
 import { SweetAlertService } from 'app/shared/services/sweet-alert.service';
+import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 
 @Component({
   selector: 'app-update-godown-booking',
@@ -21,7 +22,8 @@ export class UpdateGodownBookingComponent implements OnInit, OnDestroy {
 
   constructor(
     public docketService: DocketService,
-    public sweetAlertService: SweetAlertService
+    public sweetAlertService: SweetAlertService,
+    public dynamicDataService: DynamicDataService
   ) {}
 
   ngOnInit(): void {}
@@ -104,47 +106,37 @@ export class UpdateGodownBookingComponent implements OnInit, OnDestroy {
 
   submitGodownBooking() {
     if (this.selectedDockets.length === 0) return;
-
-    this.isSubmitting = true;
-    const gbSeq = String(Math.floor(100000 + Math.random() * 900000));
-    const generatedGBNo = `GHB/${this.bookingBranch}/${this.finYear}/${gbSeq}`;
+    const docNoList = this.selectedDockets
+      .map(row => (row.LRNumber || row.dockno || '').toString().trim())
+      .filter(Boolean)
+      .join(',');
 
     const payload = {
-      GBNo: generatedGBNo,
-      BookingDate: new Date().toISOString(),
-      BookingBranch: this.bookingBranch,
-      Remarks: this.remarks || '',
-      Dockets: this.selectedDockets.map(row => ({
-        dockno: row.LRNumber || row.dockno,
-        pkgs: row.Pkgs || row.pkgsno || 0,
-        weight: row.ActualWt || row.actuwt || row.weight || 0,
-        org: row.OrgCode || row.orgncd,
-        dest: row.DestCode || row.destcd,
-        reassignedLocation: row.ReassignedLocation || row.DestCode || ''
-      }))
+      FilterJson: {
+        ReportId: '397',
+        DocNo: docNoList,
+        BRCD: this.docketService.loginUserList?.LocationCode,
+        REMARKS: this.remarks || '',
+        CompanyCode:this.docketService.loginUserList.Companycode,
+        UserID:this.docketService.loginUserList?.UserId
+      }
     };
 
-    // Update local dockets with the new GBNo so parent grid reflects instantly
-    this.selectedDockets.forEach(d => {
-      d.GBNo = generatedGBNo;
-      d.gbNo = generatedGBNo;
+    this.isSubmitting = true;
+
+    this.dynamicDataService.getDynamicData(payload).subscribe({
+      next: (response: any) => {
+        this.isSubmitting = false;
+        this.closeModal();
+        this.sweetAlertService.success(`${response.Table1[0].GBNo}:${response.Table1[0].Msg}`);
+
+      },
+      error: (err: any) => {
+        this.isSubmitting = false;
+        console.error('Error submitting Godown Booking:', err);
+        const errMsg = err?.error?.message || err?.error?.Message || err?.message || 'Error occurred while updating Godown Booking.';
+        this.sweetAlertService.error(errMsg);
+      }
     });
-
-    this.sweetAlertService.success(`
-      <div style="text-align:center;">
-        <div class="fw-bold fs-3 mb-2" style="color: #2e7d32;">Godown Booking Updated</div>
-        <p class="fs-5 mb-1"><strong>GB No:</strong> ${generatedGBNo}</p>
-        <p class="text-muted" style="font-size: 12px; margin-top: 6px;">GB HCC (Unloading) is now enabled for ${this.selectedDockets.length} docket(s).</p>
-      </div>
-    `);
-
-    this.bookingUpdated.emit({
-      gbNo: generatedGBNo,
-      payload,
-      selectedDockets: this.selectedDockets
-    });
-
-    this.isSubmitting = false;
-    this.closeModal();
   }
 }

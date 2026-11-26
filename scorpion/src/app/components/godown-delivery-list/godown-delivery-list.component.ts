@@ -236,6 +236,7 @@ export class GodownDeliveryListComponent {
     const loginLoc = (this.docketService.loginUserList?.LocationCode || this.docketService.Location || '').toString().trim().toUpperCase();
     const reassignedLoc = (item.ReassignedLocation || '').toString().trim().toUpperCase();
     const isLocationMatch = !loginLoc || (reassignedLoc === loginLoc);
+    const isallowDrs= (item.IsAllowDelivery===true)
 
     // 3. PkpDelTypeCode must NOT be "2" (and PkpDelType is not Godown-Door)
     const pkpCode = (item.PkpDelTypeCode !== undefined ? item.PkpDelTypeCode : '').toString().trim();
@@ -255,7 +256,7 @@ export class GodownDeliveryListComponent {
       canUpdateGB: isGBType && !hasGB && isOrgMatch,
 
       // Update Godown Delivery: No GD No, Status is 'P', ReassignedLocation == Login Location, PkpDelTypeCode != '2'
-      canUpdate: !hasGD && isPending && isLocationMatch && isNotCode2,
+      canUpdate: !hasGD && isPending && isLocationMatch && isNotCode2 && isallowDrs,
 
       // Rule: GB HCC (GB No exists, GB HCC No is not yet generated, and OrgCode === Login LocationCode)
       canGBHCC: hasGB && !hasGBHCC && isOrgMatch,
@@ -553,6 +554,15 @@ openHCCModal(lr: any) {
     if (status === 'D') return 'chip-delivery';
     if ( status === 'T') return 'chip-transit';
     return 'chip-pending';
+  }
+
+  getHccStatusClass(status: string): string {
+    if (!status) return 'hcc-status-pending';
+    const s = status.toLowerCase();
+    if (s.includes('pending')) return 'hcc-status-pending';
+    if (s.includes('approved') || s.includes('approve') || s.includes('generated')) return 'hcc-status-approved';
+    if (s.includes('reject')) return 'hcc-status-rejected';
+    return 'hcc-status-pending';
   }
 
    onExcelDownload() {
