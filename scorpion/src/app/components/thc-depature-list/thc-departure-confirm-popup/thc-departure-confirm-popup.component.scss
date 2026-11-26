@@ -190,3 +190,58 @@
   border-left: 2px solid #b94a48 !important;
 }
 
+/* Fix ng-select: eliminate detached red border & align with form-control-sm */
+ng-select {
+  border: none !important;
+  border-left: none !important;
+  outline: none !important;
+  background: transparent !important;
+
+  &.border-danger {
+    border: none !important;
+    border-left: none !important;
+  }
+
+  &.required2 {
+    border: none !important;
+    border-left: none !important;
+  }
+
+  ::ng-deep .ng-select-container {
+    min-height: 31px !important;
+    height: 31px !important;
+    font-size: 13px !important;
+    border-radius: 4px !important;
+    border: 1px solid #cbd5e1 !important;
+    background-color: #ffffff !important;
+    box-shadow: none !important;
+  }
+
+  &.required2 ::ng-deep .ng-select-container {
+    border-left: 2px solid #b94a48 !important;
+  }
+
+  &.border-danger ::ng-deep .ng-select-container {
+    border-color: #dc3545 !important;
+    border-left: 2px solid #dc3545 !important;
+  }
+}
+
+.form-label-custom {
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.freeze-dropdown {
+  pointer-events: none !important;
+  opacity: 0.85;
+  cursor: not-allowed;
+  ::ng-deep .ng-select-container {
+    background-color: #f1f5f9 !important;
+    cursor: not-allowed !important;
+  }
+}
+

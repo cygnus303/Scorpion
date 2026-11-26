@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule, formatDate } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { THCMasterService } from 'app/shared/services/thc-master.service';
 import { DocketService } from 'app/shared/services/docket.service';
@@ -12,7 +13,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-thc-departure-confirm-popup',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgSelectModule],
   providers: [BsModalService],
   templateUrl: './thc-departure-confirm-popup.component.html',
   styleUrl: './thc-departure-confirm-popup.component.scss'
@@ -30,6 +31,33 @@ export class ThcDepartureConfirmPopupComponent {
   public manifestsByThc: { [thcno: string]: any[] } = {};
   public modelsByThc: { [thcno: string]: any } = {};
 
+  // Incoming Seal Form & Check logic (Matching THC Arrival / Stock Update)
+  public sealForm!: FormGroup;
+  public apiSealNo: string = '';
+  public apiSealList: string[] = [];
+  public expectedSealCount: number = 1;
+  public isStatusFrozen: boolean = false;
+
+  public Seallist = [
+    { text: 'Ok', value: 'Ok' },
+    { text: 'Broken', value: 'Broken' },
+    { text: 'Unsealed', value: 'Unsealed' }
+  ];
+  public matchSeallist = [
+    { text: 'Ok', value: 'Ok' }
+  ];
+  public mismatchSeallist = [
+    { text: 'Broken', value: 'Broken' },
+    { text: 'Unsealed', value: 'Unsealed' }
+  ];
+  public activeSeallist: any[] = [...this.Seallist];
+
+  public incomingSealDataByThc: { [thcno: string]: { isn: string, isn2: string, isn3: string, status: string } } = {};
+  public apiSealNoByThc: { [thcno: string]: string } = {};
+  public apiSealListByThc: { [thcno: string]: string[] } = {};
+  public expectedSealCountByThc: { [thcno: string]: number } = {};
+
+  // Departure Outgoing Inputs
   public outgoingRemarks: string = '';
   public remarksTouched: boolean = false;
 
@@ -53,8 +81,243 @@ export class ThcDepartureConfirmPopupComponent {
   constructor(
     private modalService: BsModalService,
     private thcService: THCMasterService,
-    public docketService: DocketService
-  ) { }
+    public docketService: DocketService,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.buildSealForm();
+  }
+
+  buildSealForm() {
+    this.isStatusFrozen = true;
+    this.activeSeallist = [...this.mismatchSeallist];
+    this.sealForm = new FormGroup({
+      ISN: new FormControl(''),
+      ISN2: new FormControl('', [Validators.maxLength(6)]),
+      ISN3: new FormControl('', [Validators.maxLength(6)]),
+      s2id_Status: new FormControl('')
+    });
+
+    this.sealForm.get('ISN')?.valueChanges.subscribe(() => {
+      this.validateAllSeals();
+    });
+    this.sealForm.get('ISN2')?.valueChanges.subscribe(() => {
+      this.validateAllSeals();
+    });
+    this.sealForm.get('ISN3')?.valueChanges.subscribe(() => {
+      this.validateAllSeals();
+    });
+    this.sealForm.get('s2id_Status')?.valueChanges.subscribe(status => {
+      this.onStatusChange(status);
+    });
+  }
+
+  setupSealFormControls() {
+    const isnCtrl = this.sealForm?.get('ISN');
+    const isn2Ctrl = this.sealForm?.get('ISN2');
+    const isn3Ctrl = this.sealForm?.get('ISN3');
+
+    isnCtrl?.setValidators([Validators.required, Validators.maxLength(6)]);
+    isnCtrl?.updateValueAndValidity({ emitEvent: false });
+
+    if (this.expectedSealCount >= 2) {
+      isn2Ctrl?.setValidators([Validators.required, Validators.maxLength(6)]);
+    } else {
+      isn2Ctrl?.clearValidators();
+      isn2Ctrl?.setValue('', { emitEvent: false });
+    }
+    isn2Ctrl?.updateValueAndValidity({ emitEvent: false });
+
+    if (this.expectedSealCount >= 3) {
+      isn3Ctrl?.setValidators([Validators.required, Validators.maxLength(6)]);
+    } else {
+      isn3Ctrl?.clearValidators();
+      isn3Ctrl?.setValue('', { emitEvent: false });
+    }
+    isn3Ctrl?.updateValueAndValidity({ emitEvent: false });
+  }
+
+  parseApiSeals(rawSeal: string) {
+    if (!rawSeal) {
+      this.apiSealList = [];
+      this.expectedSealCount = 1;
+      return;
+    }
+    const seals = rawSeal
+      .split(',')
+      .map(s => s.trim())
+      .filter(s => s && s.toLowerCase() !== 'null' && s.toLowerCase() !== 'undefined');
+    this.apiSealList = seals;
+    this.expectedSealCount = seals.length > 0 ? Math.min(seals.length, 3) : 1;
+  }
+
+  validateAllSeals() {
+    if (!this.sealForm) return;
+
+    const s1 = (this.sealForm.get('ISN')?.value || '').toString().trim();
+    const s2 = (this.sealForm.get('ISN2')?.value || '').toString().trim();
+    const s3 = (this.sealForm.get('ISN3')?.value || '').toString().trim();
+
+    const isnCtrl = this.sealForm.get('ISN');
+    const isn2Ctrl = this.sealForm.get('ISN2');
+    const isn3Ctrl = this.sealForm.get('ISN3');
+    const statusControl = this.sealForm.get('s2id_Status');
+
+    // Case 1: No seal in API
+    if (this.apiSealList.length === 0) {
+      this.activeSeallist = [...this.Seallist];
+      this.isStatusFrozen = false;
+      if (!s1) {
+        isnCtrl?.setErrors({ required: true });
+      } else if (s1.length > 6) {
+        isnCtrl?.setErrors({ maxlength: true });
+      } else {
+        isnCtrl?.setErrors(null);
+      }
+      this.saveCurrentThcIncomingSealData();
+      this.cdr.detectChanges();
+      return;
+    }
+
+    // Case 2: API has seals
+    const activeControls = [isnCtrl];
+    const enteredValues = [s1];
+    if (this.expectedSealCount >= 2) {
+      activeControls.push(isn2Ctrl);
+      enteredValues.push(s2);
+    }
+    if (this.expectedSealCount >= 3) {
+      activeControls.push(isn3Ctrl);
+      enteredValues.push(s3);
+    }
+
+    let anyEmpty = false;
+    activeControls.forEach((ctrl, idx) => {
+      const val = enteredValues[idx];
+      if (!val) {
+        ctrl?.setErrors({ required: true });
+        anyEmpty = true;
+      } else if (val.length > 6) {
+        ctrl?.setErrors({ maxlength: true });
+      }
+    });
+
+    if (anyEmpty) {
+      this.isStatusFrozen = true;
+      this.activeSeallist = [...this.mismatchSeallist];
+      if (statusControl?.value === 'Ok') {
+        statusControl?.setValue(null, { emitEvent: false });
+      }
+      this.saveCurrentThcIncomingSealData();
+      this.cdr.detectChanges();
+      return;
+    }
+
+    // Check if ALL entered seals match the API seals (sorted comparison)
+    const expectedSorted = [...this.apiSealList.slice(0, this.expectedSealCount)].map(s => s.toLowerCase()).sort();
+    const enteredSorted = [...enteredValues].map(s => s.toLowerCase()).sort();
+    const allMatched = JSON.stringify(expectedSorted) === JSON.stringify(enteredSorted);
+
+    if (allMatched) {
+      this.activeSeallist = [...this.matchSeallist];
+      statusControl?.setValue('Ok', { emitEvent: false });
+      this.isStatusFrozen = true;
+      activeControls.forEach(ctrl => ctrl?.setErrors(null));
+      statusControl?.setErrors(null);
+    } else {
+      // Ok is strictly EXCLUDED when mismatch occurs; only Broken & Unsealed are shown
+      this.activeSeallist = [...this.mismatchSeallist];
+      this.isStatusFrozen = false;
+      if (statusControl?.value === 'Ok') {
+        statusControl?.setValue(null, { emitEvent: false });
+      }
+
+      const currentStatus = statusControl?.value;
+      if (currentStatus === 'Broken' || currentStatus === 'Unsealed') {
+        activeControls.forEach(ctrl => {
+          if (!ctrl?.errors?.['required'] && !ctrl?.errors?.['maxlength']) {
+            ctrl?.setErrors(null);
+          }
+        });
+      } else {
+        activeControls.forEach((ctrl, idx) => {
+          const val = enteredValues[idx];
+          const matchesAnyExpected = this.apiSealList.some(exp => exp.toLowerCase() === val.toLowerCase());
+          const countInEntered = enteredValues.filter(v => v.toLowerCase() === val.toLowerCase()).length;
+          if (!matchesAnyExpected || countInEntered > 1) {
+            ctrl?.setErrors({ sealMismatch: true });
+          } else {
+            ctrl?.setErrors(null);
+          }
+        });
+      }
+    }
+    this.saveCurrentThcIncomingSealData();
+    this.cdr.detectChanges();
+  }
+
+  onStatusDropdownOpen() {
+    this.validateAllSeals();
+    this.cdr.detectChanges();
+  }
+
+  onStatusChange(status: any) {
+    this.validateAllSeals();
+  }
+
+  onSealInput(event: any, controlName: string = 'ISN'): void {
+    const input = event.target as HTMLInputElement;
+    if (!input) return;
+    const cleanValue = (input.value || '').replace(/\D/g, '').slice(0, 6);
+    if (input.value !== cleanValue) {
+      input.value = cleanValue;
+      this.sealForm?.get(controlName)?.setValue(cleanValue, { emitEvent: true });
+    }
+  }
+
+  onlyNumberKey(event: KeyboardEvent): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode >= 48 && charCode <= 57) {
+      return true;
+    }
+    event.preventDefault();
+    return false;
+  }
+
+  saveCurrentThcIncomingSealData() {
+    if (!this.currentThc || !this.sealForm) return;
+    this.incomingSealDataByThc[this.currentThc.thcno] = {
+      isn: this.sealForm.get('ISN')?.value || '',
+      isn2: this.sealForm.get('ISN2')?.value || '',
+      isn3: this.sealForm.get('ISN3')?.value || '',
+      status: this.sealForm.get('s2id_Status')?.value || ''
+    };
+  }
+
+  loadIncomingSealDataForCurrentThc() {
+    if (!this.currentThc) return;
+    const rawSeal = this.apiSealNoByThc[this.currentThc.thcno] || '';
+    this.apiSealNo = rawSeal;
+    this.parseApiSeals(rawSeal);
+    this.setupSealFormControls();
+
+    const saved = this.incomingSealDataByThc[this.currentThc.thcno];
+    if (saved) {
+      this.sealForm.patchValue({
+        ISN: saved.isn,
+        ISN2: saved.isn2,
+        ISN3: saved.isn3,
+        s2id_Status: saved.status
+      }, { emitEvent: false });
+    } else {
+      this.sealForm.patchValue({
+        ISN: '',
+        ISN2: '',
+        ISN3: '',
+        s2id_Status: ''
+      }, { emitEvent: false });
+    }
+    this.validateAllSeals();
+  }
 
   get currentThc(): any {
     return this.thcList[this.selectedThcIndex] || null;
@@ -98,6 +361,26 @@ export class ThcDepartureConfirmPopupComponent {
     this.arrivalSealNumber = '';
     this.arrivalSealNoByThc = {};
 
+    // Reset Incoming Seal Form & Data completely
+    this.incomingSealDataByThc = {};
+    this.apiSealNoByThc = {};
+    this.apiSealListByThc = {};
+    this.expectedSealCountByThc = {};
+    this.apiSealNo = '';
+    this.apiSealList = [];
+    this.expectedSealCount = 1;
+    this.isStatusFrozen = true;
+    if (this.sealForm) {
+      this.sealForm.reset({
+        ISN: '',
+        ISN2: '',
+        ISN3: '',
+        s2id_Status: ''
+      }, { emitEvent: false });
+      this.sealForm.markAsPristine();
+      this.sealForm.markAsUntouched();
+    }
+
     if (this.thcList.length === 0) {
       return;
     }
@@ -113,6 +396,30 @@ export class ThcDepartureConfirmPopupComponent {
 
   closePopup() {
     this.modalRef?.hide();
+    if (this.sealForm) {
+      this.sealForm.reset({
+        ISN: '',
+        ISN2: '',
+        ISN3: '',
+        s2id_Status: ''
+      }, { emitEvent: false });
+      this.sealForm.markAsPristine();
+      this.sealForm.markAsUntouched();
+    }
+    this.incomingSealDataByThc = {};
+    this.apiSealNoByThc = {};
+    this.apiSealListByThc = {};
+    this.expectedSealCountByThc = {};
+    this.apiSealNo = '';
+    this.apiSealList = [];
+    this.expectedSealCount = 1;
+    this.isStatusFrozen = true;
+    this.sealNo = '';
+    this.sealNo2 = '';
+    this.sealNo3 = '';
+    this.sealCount = 1;
+    this.outgoingRemarks = '';
+    this.errorMessage = '';
   }
 
   addSeal() {
@@ -218,6 +525,7 @@ export class ThcDepartureConfirmPopupComponent {
   selectThcTab(index: number) {
     if (this.currentThc) {
       this.saveCurrentThcSealData();
+      this.saveCurrentThcIncomingSealData();
     }
     this.selectedThcIndex = index;
     if (this.currentThc) {
@@ -231,6 +539,7 @@ export class ThcDepartureConfirmPopupComponent {
         const raw = this.sealNoByThc[this.currentThc.thcno] || '';
         this.parseIncomingSeal(raw);
       }
+      this.loadIncomingSealDataForCurrentThc();
     }
     this.errorMessage = '';
   }
@@ -247,17 +556,22 @@ export class ThcDepartureConfirmPopupComponent {
     if (!this.outgoingRemarks || !this.outgoingRemarks.trim()) {
       return true;
     }
-    if (!this.isFromArrival && (!this.sealNo || !this.isValidSealNo(this.sealNo))) {
-      return true;
-    }
-    if (!this.isFromArrival && this.sealCount >= 2 && this.sealNo2 && this.sealNo2.trim() && !this.isValidSealNo(this.sealNo2)) {
-      return true;
-    }
-    if (!this.isFromArrival && this.sealCount >= 3 && this.sealNo3 && this.sealNo3.trim() && !this.isValidSealNo(this.sealNo3)) {
-      return true;
-    }
-    if (!this.isFromArrival && this.hasDuplicateSeals()) {
-      return true;
+    if (!this.isFromArrival) {
+      if (this.sealForm && this.sealForm.invalid) {
+        return true;
+      }
+      if (!this.sealNo || !this.isValidSealNo(this.sealNo)) {
+        return true;
+      }
+      if (this.sealCount >= 2 && this.sealNo2 && this.sealNo2.trim() && !this.isValidSealNo(this.sealNo2)) {
+        return true;
+      }
+      if (this.sealCount >= 3 && this.sealNo3 && this.sealNo3.trim() && !this.isValidSealNo(this.sealNo3)) {
+        return true;
+      }
+      if (this.hasDuplicateSeals()) {
+        return true;
+      }
     }
     return false;
   }
@@ -294,17 +608,12 @@ export class ThcDepartureConfirmPopupComponent {
           this.manifestsByThc[thc.thcno] = mappedList;
           this.modelsByThc[thc.thcno] = res?.thcDepModel || {};
 
-          const modelSeal = res?.thcDepModel?.sealno_in || res?.thcDepModel?.sealno || res?.thcDepModel?.sealNo || thc?.sealNo || thc?.sealno || '';
-          if (modelSeal && !this.sealNoByThc[thc.thcno]) {
-            this.sealNoByThc[thc.thcno] = modelSeal;
-            const parts = modelSeal.split(',').map((s: string) => s.trim()).filter(Boolean);
-            this.sealDataByThc[thc.thcno] = {
-              count: parts.length > 0 ? Math.min(parts.length, 3) : 1,
-              s1: parts[0] || '',
-              s2: parts[1] || '',
-              s3: parts[2] || ''
-            };
-          }
+          // Incoming Seal from thcDepModel (sealno_in or sealno)
+          const modelSeal = (res?.thcDepModel?.sealno_in || res?.thcDepModel?.sealno || res?.thcDepModel?.sealNo || thc?.sealNo || thc?.sealno || '').toString().trim();
+          this.apiSealNoByThc[thc.thcno] = modelSeal;
+          const parts = modelSeal ? modelSeal.split(',').map((s: string) => s.trim()).filter((s: string) => s && s.toLowerCase() !== 'null' && s.toLowerCase() !== 'undefined') : [];
+          this.apiSealListByThc[thc.thcno] = parts;
+          this.expectedSealCountByThc[thc.thcno] = parts.length > 0 ? Math.min(parts.length, 3) : 1;
         });
 
         if (this.currentThc) {
@@ -315,9 +624,12 @@ export class ThcDepartureConfirmPopupComponent {
             this.sealNo2 = data.s2;
             this.sealNo3 = data.s3;
           } else {
-            const raw = this.sealNoByThc[this.currentThc.thcno] || '';
-            this.parseIncomingSeal(raw);
+            this.sealCount = 1;
+            this.sealNo = '';
+            this.sealNo2 = '';
+            this.sealNo3 = '';
           }
+          this.loadIncomingSealDataForCurrentThc();
         }
       },
       error: () => {
@@ -478,31 +790,40 @@ export class ThcDepartureConfirmPopupComponent {
 
     if (this.currentThc) {
       this.saveCurrentThcSealData();
+      this.saveCurrentThcIncomingSealData();
     }
 
-    if (!this.isFromArrival && (!this.sealNo || !this.sealNo.trim())) {
-      this.errorMessage = 'Please enter Seal No. 1';
-      return;
-    }
+    if (!this.isFromArrival) {
+      if (this.sealForm && this.sealForm.invalid) {
+        this.sealForm.markAllAsTouched();
+        this.errorMessage = 'Please verify Incoming Seal details.';
+        return;
+      }
 
-    if (!this.isFromArrival && !this.isValidSealNo(this.sealNo)) {
-      this.errorMessage = 'Seal No. 1 should be 6 digits.';
-      return;
-    }
+      if (!this.sealNo || !this.sealNo.trim()) {
+        this.errorMessage = 'Please enter Seal No. 1';
+        return;
+      }
 
-    if (!this.isFromArrival && this.sealCount >= 2 && this.sealNo2 && this.sealNo2.trim() && !this.isValidSealNo(this.sealNo2)) {
-      this.errorMessage = 'Seal No. 2 should be 6 digits.';
-      return;
-    }
+      if (!this.isValidSealNo(this.sealNo)) {
+        this.errorMessage = 'Seal No. 1 should be 6 digits.';
+        return;
+      }
 
-    if (!this.isFromArrival && this.sealCount >= 3 && this.sealNo3 && this.sealNo3.trim() && !this.isValidSealNo(this.sealNo3)) {
-      this.errorMessage = 'Seal No. 3 should be 6 digits.';
-      return;
-    }
+      if (this.sealCount >= 2 && this.sealNo2 && this.sealNo2.trim() && !this.isValidSealNo(this.sealNo2)) {
+        this.errorMessage = 'Seal No. 2 should be 6 digits.';
+        return;
+      }
 
-    if (!this.isFromArrival && this.hasDuplicateSeals()) {
-      this.errorMessage = 'Duplicate seal numbers are not allowed. Please enter unique seal numbers.';
-      return;
+      if (this.sealCount >= 3 && this.sealNo3 && this.sealNo3.trim() && !this.isValidSealNo(this.sealNo3)) {
+        this.errorMessage = 'Seal No. 3 should be 6 digits.';
+        return;
+      }
+
+      if (this.hasDuplicateSeals()) {
+        this.errorMessage = 'Duplicate seal numbers are not allowed. Please enter unique seal numbers.';
+        return;
+      }
     }
 
     if (!this.outgoingRemarks || !this.outgoingRemarks.trim()) {
@@ -524,15 +845,18 @@ export class ThcDepartureConfirmPopupComponent {
         }));
 
       const sealVal = (this.sealNoByThc[thc.thcno] || this.getFormattedSealNumbers() || '').trim();
+      const incData = this.incomingSealDataByThc[thc.thcno];
 
       thcListPayload.push({
         thcno: thc.thcno,
         atd: nowISO,
         deptime_flight: nowTime,
-        sealno_in:this.isFromArrival?'': sealVal,
-        isDirectDeparted: this.isFromArrival?'Y': 'N',
+        sealno_in: this.isFromArrival ? '' : sealVal,
+        isDirectDeparted: this.isFromArrival ? 'Y' : 'N',
         outRemarks: this.outgoingRemarks.trim(),
-        tcList: manifests
+        tcList: manifests,
+        incomingSeal: incData?.isn || '',
+        incomingSealStatus: incData?.status || ''
       });
     }
 
