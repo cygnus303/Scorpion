@@ -103,90 +103,100 @@
                     <div class="row g-3 mt-1" *ngIf="expectedSealCount > 1">
                         <div [ngClass]="expectedSealCount === 2 ? 'col-md-4' : 'col-md-3'">
                             <label class="form-label-custom">
-                                Incoming Seal 1 <span class="text-danger">*</span>
+                                Incoming Seal 1 <span class="text-danger" *ngIf="!isIncomingSealDisabled">*</span>
                             </label>
-                            <input type="text" class="form-control form-control-sm required2"
+                            <input type="text" class="form-control form-control-sm"
+                                [class.required2]="!isIncomingSealDisabled"
+                                [class.disabled-input]="isIncomingSealDisabled"
+                                [readonly]="isIncomingSealDisabled"
                                 placeholder="Incoming Seal 1" formControlName="ISN" appFocusNext
                                 maxlength="6"
                                 (keypress)="onlyNumberKey($event)"
                                 (input)="onSealInput($event, 'ISN')"
-                                [ngClass]="{'border-danger': sealForm.get('ISN')?.invalid && (sealForm.get('ISN')?.touched || sealForm.get('ISN')?.dirty)}">
+                                [ngClass]="{'border-danger': !isIncomingSealDisabled && sealForm.get('ISN')?.invalid && (sealForm.get('ISN')?.touched || sealForm.get('ISN')?.dirty)}">
                             <div class="text-danger small mt-1 text-start"
-                                *ngIf="sealForm.get('ISN')?.errors?.['required'] && (sealForm.get('ISN')?.touched || sealForm.get('ISN')?.dirty)">
+                                *ngIf="!isIncomingSealDisabled && sealForm.get('ISN')?.errors?.['required'] && (sealForm.get('ISN')?.touched || sealForm.get('ISN')?.dirty)">
                                 This field is required.
                             </div>
                             <div class="text-danger small mt-1 text-start"
-                                *ngIf="sealForm.get('ISN')?.errors?.['maxlength'] && (sealForm.get('ISN')?.touched || sealForm.get('ISN')?.dirty)">
+                                *ngIf="!isIncomingSealDisabled && sealForm.get('ISN')?.errors?.['maxlength'] && (sealForm.get('ISN')?.touched || sealForm.get('ISN')?.dirty)">
                                 Maximum 6 digits allowed.
                             </div>
                             <div class="text-danger small mt-1 text-start"
-                                *ngIf="sealForm.get('ISN')?.errors?.['sealMismatch'] && (sealForm.get('ISN')?.touched || sealForm.get('ISN')?.dirty)">
+                                *ngIf="!isIncomingSealDisabled && sealForm.get('ISN')?.errors?.['sealMismatch'] && (sealForm.get('ISN')?.touched || sealForm.get('ISN')?.dirty)">
                                 Seal number does not match.
                             </div>
                         </div>
 
                         <div [ngClass]="expectedSealCount === 2 ? 'col-md-4' : 'col-md-3'">
                             <label class="form-label-custom">
-                                Incoming Seal 2 <span class="text-danger">*</span>
+                                Incoming Seal 2 <span class="text-danger" *ngIf="!isIncomingSealDisabled">*</span>
                             </label>
-                            <input type="text" class="form-control form-control-sm required2"
+                            <input type="text" class="form-control form-control-sm"
+                                [class.required2]="!isIncomingSealDisabled"
+                                [class.disabled-input]="isIncomingSealDisabled"
+                                [readonly]="isIncomingSealDisabled"
                                 placeholder="Incoming Seal 2" formControlName="ISN2" appFocusNext
                                 maxlength="6"
                                 (keypress)="onlyNumberKey($event)"
                                 (input)="onSealInput($event, 'ISN2')"
-                                [ngClass]="{'border-danger': sealForm.get('ISN2')?.invalid && (sealForm.get('ISN2')?.touched || sealForm.get('ISN2')?.dirty)}">
+                                [ngClass]="{'border-danger': !isIncomingSealDisabled && sealForm.get('ISN2')?.invalid && (sealForm.get('ISN2')?.touched || sealForm.get('ISN2')?.dirty)}">
                             <div class="text-danger small mt-1 text-start"
-                                *ngIf="sealForm.get('ISN2')?.errors?.['required'] && (sealForm.get('ISN2')?.touched || sealForm.get('ISN2')?.dirty)">
+                                *ngIf="!isIncomingSealDisabled && sealForm.get('ISN2')?.errors?.['required'] && (sealForm.get('ISN2')?.touched || sealForm.get('ISN2')?.dirty)">
                                 This field is required.
                             </div>
                             <div class="text-danger small mt-1 text-start"
-                                *ngIf="sealForm.get('ISN2')?.errors?.['maxlength'] && (sealForm.get('ISN2')?.touched || sealForm.get('ISN2')?.dirty)">
+                                *ngIf="!isIncomingSealDisabled && sealForm.get('ISN2')?.errors?.['maxlength'] && (sealForm.get('ISN2')?.touched || sealForm.get('ISN2')?.dirty)">
                                 Maximum 6 digits allowed.
                             </div>
                             <div class="text-danger small mt-1 text-start"
-                                *ngIf="sealForm.get('ISN2')?.errors?.['sealMismatch'] && (sealForm.get('ISN2')?.touched || sealForm.get('ISN2')?.dirty)">
+                                *ngIf="!isIncomingSealDisabled && sealForm.get('ISN2')?.errors?.['sealMismatch'] && (sealForm.get('ISN2')?.touched || sealForm.get('ISN2')?.dirty)">
                                 Seal number does not match.
                             </div>
                         </div>
 
                         <div class="col-md-3" *ngIf="expectedSealCount >= 3">
                             <label class="form-label-custom">
-                                Incoming Seal 3 <span class="text-danger">*</span>
+                                Incoming Seal 3 <span class="text-danger" *ngIf="!isIncomingSealDisabled">*</span>
                             </label>
-                            <input type="text" class="form-control form-control-sm required2"
+                            <input type="text" class="form-control form-control-sm"
+                                [class.required2]="!isIncomingSealDisabled"
+                                [class.disabled-input]="isIncomingSealDisabled"
+                                [readonly]="isIncomingSealDisabled"
                                 placeholder="Incoming Seal 3" formControlName="ISN3" appFocusNext
                                 maxlength="6"
                                 (keypress)="onlyNumberKey($event)"
                                 (input)="onSealInput($event, 'ISN3')"
-                                [ngClass]="{'border-danger': sealForm.get('ISN3')?.invalid && (sealForm.get('ISN3')?.touched || sealForm.get('ISN3')?.dirty)}">
+                                [ngClass]="{'border-danger': !isIncomingSealDisabled && sealForm.get('ISN3')?.invalid && (sealForm.get('ISN3')?.touched || sealForm.get('ISN3')?.dirty)}">
                             <div class="text-danger small mt-1 text-start"
-                                *ngIf="sealForm.get('ISN3')?.errors?.['required'] && (sealForm.get('ISN3')?.touched || sealForm.get('ISN3')?.dirty)">
+                                *ngIf="!isIncomingSealDisabled && sealForm.get('ISN3')?.errors?.['required'] && (sealForm.get('ISN3')?.touched || sealForm.get('ISN3')?.dirty)">
                                 This field is required.
                             </div>
                             <div class="text-danger small mt-1 text-start"
-                                *ngIf="sealForm.get('ISN3')?.errors?.['maxlength'] && (sealForm.get('ISN3')?.touched || sealForm.get('ISN3')?.dirty)">
+                                *ngIf="!isIncomingSealDisabled && sealForm.get('ISN3')?.errors?.['maxlength'] && (sealForm.get('ISN3')?.touched || sealForm.get('ISN3')?.dirty)">
                                 Maximum 6 digits allowed.
                             </div>
                             <div class="text-danger small mt-1 text-start"
-                                *ngIf="sealForm.get('ISN3')?.errors?.['sealMismatch'] && (sealForm.get('ISN3')?.touched || sealForm.get('ISN3')?.dirty)">
+                                *ngIf="!isIncomingSealDisabled && sealForm.get('ISN3')?.errors?.['sealMismatch'] && (sealForm.get('ISN3')?.touched || sealForm.get('ISN3')?.dirty)">
                                 Seal number does not match.
                             </div>
                         </div>
 
                         <div [ngClass]="expectedSealCount === 2 ? 'col-md-4' : 'col-md-3'">
                             <label class="form-label-custom">
-                                Seal Status <span class="text-danger">*</span>
+                                Seal Status <span class="text-danger" *ngIf="!isIncomingSealDisabled">*</span>
                             </label>
-                            <ng-select class="noFoundTextColor required2 clear-icon"
+                            <ng-select class="noFoundTextColor clear-icon"
+                                [class.required2]="!isIncomingSealDisabled"
                                 [items]="activeSeallist" bindLabel="text" bindValue="value" appFocusNext
-                                appendTo="body" [readonly]="isStatusFrozen"
-                                [class.freeze-dropdown]="isStatusFrozen"
+                                appendTo="body" [readonly]="isStatusFrozen || isIncomingSealDisabled"
+                                [class.freeze-dropdown]="isStatusFrozen || isIncomingSealDisabled"
                                 (open)="onStatusDropdownOpen()"
                                 placeholder="Select Status" formControlName="s2id_Status"
                                 [dropdownPosition]="'bottom'" style="font-size: 13px;"
-                                [ngClass]="{ 'border-danger': sealForm.get('s2id_Status')?.invalid && sealForm.get('s2id_Status')?.touched}"></ng-select>
+                                [ngClass]="{ 'border-danger': !isIncomingSealDisabled && sealForm.get('s2id_Status')?.invalid && sealForm.get('s2id_Status')?.touched}"></ng-select>
                             <div class="text-danger small mt-1 text-start"
-                                *ngIf="sealForm.get('s2id_Status')?.invalid && sealForm.get('s2id_Status')?.touched">
+                                *ngIf="!isIncomingSealDisabled && sealForm.get('s2id_Status')?.invalid && sealForm.get('s2id_Status')?.touched">
                                 This field is required.
                             </div>
                         </div>
@@ -196,40 +206,44 @@
                     <div class="row g-3 mt-1" *ngIf="expectedSealCount <= 1">
                         <div class="col-md-4">
                             <label class="form-label-custom">
-                                Incoming Seal # &amp; Status <span class="text-danger">*</span>
+                                Incoming Seal # &amp; Status <span class="text-danger" *ngIf="!isIncomingSealDisabled">*</span>
                             </label>
                             <div class="d-flex align-items-start gap-2">
                                 <div class="flex-grow-1">
-                                    <input type="text" class="form-control form-control-sm required2"
+                                    <input type="text" class="form-control form-control-sm"
+                                        [class.required2]="!isIncomingSealDisabled"
+                                        [class.disabled-input]="isIncomingSealDisabled"
+                                        [readonly]="isIncomingSealDisabled"
                                         placeholder="Incoming Seal" formControlName="ISN" appFocusNext
                                         maxlength="6"
                                         (keypress)="onlyNumberKey($event)"
                                         (input)="onSealInput($event, 'ISN')"
-                                        [ngClass]="{'border-danger': sealForm.get('ISN')?.invalid && (sealForm.get('ISN')?.touched || sealForm.get('ISN')?.dirty)}">
+                                        [ngClass]="{'border-danger': !isIncomingSealDisabled && sealForm.get('ISN')?.invalid && (sealForm.get('ISN')?.touched || sealForm.get('ISN')?.dirty)}">
                                     <div class="text-danger small mt-1 text-start"
-                                        *ngIf="sealForm.get('ISN')?.errors?.['required'] && (sealForm.get('ISN')?.touched || sealForm.get('ISN')?.dirty)">
+                                        *ngIf="!isIncomingSealDisabled && sealForm.get('ISN')?.errors?.['required'] && (sealForm.get('ISN')?.touched || sealForm.get('ISN')?.dirty)">
                                         This field is required.
                                     </div>
                                     <div class="text-danger small mt-1 text-start"
-                                        *ngIf="sealForm.get('ISN')?.errors?.['maxlength'] && (sealForm.get('ISN')?.touched || sealForm.get('ISN')?.dirty)">
+                                        *ngIf="!isIncomingSealDisabled && sealForm.get('ISN')?.errors?.['maxlength'] && (sealForm.get('ISN')?.touched || sealForm.get('ISN')?.dirty)">
                                         Maximum 6 digits allowed.
                                     </div>
                                     <div class="text-danger small mt-1 text-start"
-                                        *ngIf="sealForm.get('ISN')?.errors?.['sealMismatch'] && (sealForm.get('ISN')?.touched || sealForm.get('ISN')?.dirty)">
+                                        *ngIf="!isIncomingSealDisabled && sealForm.get('ISN')?.errors?.['sealMismatch'] && (sealForm.get('ISN')?.touched || sealForm.get('ISN')?.dirty)">
                                         Seal number does not match.
                                     </div>
                                 </div>
                                 <div style="width: 140px; flex-shrink: 0;">
-                                    <ng-select class="noFoundTextColor required2 clear-icon"
+                                    <ng-select class="noFoundTextColor clear-icon"
+                                        [class.required2]="!isIncomingSealDisabled"
                                         [items]="activeSeallist" bindLabel="text" bindValue="value" appFocusNext
-                                        appendTo="body" [readonly]="isStatusFrozen"
-                                        [class.freeze-dropdown]="isStatusFrozen"
+                                        appendTo="body" [readonly]="isStatusFrozen || isIncomingSealDisabled"
+                                        [class.freeze-dropdown]="isStatusFrozen || isIncomingSealDisabled"
                                         (open)="onStatusDropdownOpen()"
                                         placeholder="Select Status" formControlName="s2id_Status"
                                         [dropdownPosition]="'bottom'" style="font-size: 13px;"
-                                        [ngClass]="{ 'border-danger': sealForm.get('s2id_Status')?.invalid && sealForm.get('s2id_Status')?.touched}"></ng-select>
+                                        [ngClass]="{ 'border-danger': !isIncomingSealDisabled && sealForm.get('s2id_Status')?.invalid && sealForm.get('s2id_Status')?.touched}"></ng-select>
                                     <div class="text-danger small mt-1 text-start"
-                                        *ngIf="sealForm.get('s2id_Status')?.invalid && sealForm.get('s2id_Status')?.touched">
+                                        *ngIf="!isIncomingSealDisabled && sealForm.get('s2id_Status')?.invalid && sealForm.get('s2id_Status')?.touched">
                                         This field is required.
                                     </div>
                                 </div>

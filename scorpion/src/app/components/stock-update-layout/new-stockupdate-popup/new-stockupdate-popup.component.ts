@@ -58,6 +58,7 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
   public apiSealList: string[] = [];
   public expectedSealCount: number = 1;
   public sealForm!: FormGroup;
+  public isIncomingSealDisabled: boolean = false;
 
   public Seallist = [
     { text: 'Ok', value: 'Ok' },
@@ -208,6 +209,7 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
     this.apiSealNo = '';
     this.apiSealList = [];
     this.expectedSealCount = 1;
+    this.isIncomingSealDisabled = false;
     this.buildSealForm();
     this.listVSFUM = [];
     this.selectedDeliveryProcessAll = null;
@@ -252,12 +254,14 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
             vehno: vsfum.vehno || '',
             updateDate: this.getCurrentFormattedDate()
           };
+          this.applySealNoInIfExists();
           const sealNoVal = (this.stockData?.isn || this.stockData?.sealno || this.stockData?.sealNo || this.stockData?.sealno_in || '').toString().trim();
           if (!this.apiSealNo && sealNoVal && sealNoVal.toLowerCase() !== 'null' && sealNoVal.toLowerCase() !== 'undefined') {
             this.apiSealNo = sealNoVal;
             this.parseApiSeals(sealNoVal);
             this.setupSealFormControls();
             this.validateAllSeals();
+            this.applySealNoInIfExists();
             this.cdr.detectChanges();
           }
 
@@ -1328,6 +1332,7 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
         this.parseApiSeals(seal);
         this.setupSealFormControls();
         this.validateAllSeals();
+        this.applySealNoInIfExists();
         this.cdr.detectChanges();
       },
       error: (err: any) => {
@@ -1337,12 +1342,16 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
         this.parseApiSeals(fallbackSeal);
         this.setupSealFormControls();
         this.validateAllSeals();
+        this.applySealNoInIfExists();
         this.cdr.detectChanges();
       }
     });
   }
 
   parseApiSeals(rawSeal: string) {
+    if (this.isIncomingSealDisabled) {
+      return;
+    }
     if (!rawSeal) {
       this.apiSealList = [];
       this.expectedSealCount = 1;
@@ -1356,6 +1365,65 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
     this.expectedSealCount = seals.length > 0 ? Math.min(seals.length, 3) : 1;
   }
 
+  applySealNoInIfExists() {
+    const sealNoIn = (this.stockData?.sealno_in ?? '').toString().trim();
+    if (sealNoIn && sealNoIn.toLowerCase() !== 'null' && sealNoIn.toLowerCase() !== 'undefined') {
+      const inSeals = sealNoIn
+        .split(',')
+        .map((s: string) => s.trim())
+        .filter((s: string) => s && s.toLowerCase() !== 'null' && s.toLowerCase() !== 'undefined');
+
+      if (inSeals.length > 0) {
+        this.isIncomingSealDisabled = true;
+        this.expectedSealCount = inSeals.length;
+
+        const isnCtrl = this.sealForm?.get('ISN');
+        const isn2Ctrl = this.sealForm?.get('ISN2');
+        const isn3Ctrl = this.sealForm?.get('ISN3');
+
+        isnCtrl?.setValue(inSeals[0] || '', { emitEvent: false });
+        isnCtrl?.clearValidators();
+        isnCtrl?.setErrors(null);
+        isnCtrl?.disable({ emitEvent: false });
+
+        if (inSeals.length >= 2) {
+          isn2Ctrl?.setValue(inSeals[1] || '', { emitEvent: false });
+          isn2Ctrl?.clearValidators();
+          isn2Ctrl?.setErrors(null);
+          isn2Ctrl?.disable({ emitEvent: false });
+        } else {
+          isn2Ctrl?.setValue('', { emitEvent: false });
+          isn2Ctrl?.clearValidators();
+          isn2Ctrl?.setErrors(null);
+        }
+
+        if (inSeals.length >= 3) {
+          isn3Ctrl?.setValue(inSeals[2] || '', { emitEvent: false });
+          isn3Ctrl?.clearValidators();
+          isn3Ctrl?.setErrors(null);
+          isn3Ctrl?.disable({ emitEvent: false });
+        } else {
+          isn3Ctrl?.setValue('', { emitEvent: false });
+          isn3Ctrl?.clearValidators();
+          isn3Ctrl?.setErrors(null);
+        }
+
+        const statusVal = (this.stockData?.sealStatus || 'Ok').toString().trim() || 'Ok';
+        this.activeSeallist = [...this.Seallist];
+        const statusCtrl = this.sealForm?.get('s2id_Status');
+        statusCtrl?.setValue(statusVal, { emitEvent: false });
+        statusCtrl?.clearValidators();
+        statusCtrl?.setErrors(null);
+        this.isStatusFrozen = true;
+      }
+    } else {
+      this.isIncomingSealDisabled = false;
+      this.sealForm?.get('ISN')?.enable({ emitEvent: false });
+      this.sealForm?.get('ISN2')?.enable({ emitEvent: false });
+      this.sealForm?.get('ISN3')?.enable({ emitEvent: false });
+    }
+  }
+
   get hasSelectedDockets(): boolean {
     return !!this.listVSFUM && this.listVSFUM.some(row => row.isSelected === true);
   }
@@ -1365,34 +1433,19 @@ export class NewStockupdatePopupComponent implements OnInit, OnDestroy {
   }
 
   setupSealFormControls() {
-    /*
-    const isnCtrl = this.sealForm?.get('ISN');
-    const isn2Ctrl = this.sealForm?.get('ISN2');
-    const isn3Ctrl = this.sealForm?.get('ISN3');
-
-    isnCtrl?.setValidators([Validators.required, Validators.maxLength(6)]);
-    isnCtrl?.updateValueAndValidity({ emitEvent: false });
-
-    if (this.expectedSealCount >= 2) {
-      isn2Ctrl?.setValidators([Validators.required, Validators.maxLength(6)]);
-    } else {
-      isn2Ctrl?.clearValidators();
-      isn2Ctrl?.setValue('', { emitEvent: false });
-    }
-    isn2Ctrl?.updateValueAndValidity({ emitEvent: false });
-
-    if (this.expectedSealCount >= 3) {
-      isn3Ctrl?.setValidators([Validators.required, Validators.maxLength(6)]);
-    } else {
-      isn3Ctrl?.clearValidators();
-      isn3Ctrl?.setValue('', { emitEvent: false });
-    }
-    isn3Ctrl?.updateValueAndValidity({ emitEvent: false });
-    */
   }
 
   validateAllSeals() {
     if (!this.sealForm) return;
+
+    if (this.isIncomingSealDisabled) {
+      this.sealForm.get('ISN')?.setErrors(null);
+      this.sealForm.get('ISN2')?.setErrors(null);
+      this.sealForm.get('ISN3')?.setErrors(null);
+      this.sealForm.get('s2id_Status')?.setErrors(null);
+      this.cdr.detectChanges();
+      return;
+    }
 
     const s1 = (this.sealForm.get('ISN')?.value || '').toString().trim();
     const s2 = (this.sealForm.get('ISN2')?.value || '').toString().trim();

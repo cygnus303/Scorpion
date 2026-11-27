@@ -74,16 +74,133 @@ export class ThcDepartureConfirmPopupComponent {
     return this.isStockUpdatedForThc(this.currentThc?.thcno);
   }
 
-  get shouldShowIncomingSeal(): boolean {
+  shouldShowIncomingSealForThc(thcno?: string): boolean {
     if (this.isFromArrival) {
       return false;
     }
+    if (!thcno && this.currentThc) thcno = this.currentThc.thcno;
+    if (!thcno) return false;
+
     // If stock is updated (isStockUpdated: true), dynamically do NOT show incoming seal
-    if (this.isCurrentThcStockUpdated) {
+    if (this.isStockUpdatedForThc(thcno)) {
       return false;
     }
-    // If stock is NOT updated (isStockUpdated: false), incoming seal is required and must show
-    return true;
+
+    // If stock is NOT updated (isStockUpdated: false):
+    // Show and require ONLY if at least one MF is selected for this THC
+    const selectedMfCount = this.getSelectedCountForThc(thcno);
+    return selectedMfCount > 0;
+  }
+
+  get shouldShowIncomingSeal(): boolean {
+    return this.shouldShowIncomingSealForThc(this.currentThc?.thcno);
+  }
+
+  shouldShowOutgoingSealForThc(thcno?: string): boolean {
+    if (this.isFromArrival) {
+      return false;
+    }
+    if (!thcno && this.currentThc) thcno = this.currentThc.thcno;
+    if (!thcno) return false;
+
+    // Rule 1: If stock is updated for this THC, Seal No is always required and must show
+    if (this.isStockUpdatedForThc(thcno)) {
+      return true;
+    }
+
+    // Rule 2 & 3: If stock is NOT updated:
+    // Show and require ONLY if at least one MF is selected for this THC
+    const selectedMfCount = this.getSelectedCountForThc(thcno);
+    return selectedMfCount > 0;
+  }
+
+  get shouldShowOutgoingSeal(): boolean {
+    return this.shouldShowOutgoingSealForThc(this.currentThc?.thcno);
+  }
+
+  getIncomingSealForSubmit(thcno: string): string {
+    if (this.isFromArrival) {
+      return '';
+    }
+    const thc = this.thcList.find(t => t.thcno === thcno) || this.currentThc;
+    const existingSeal = (
+      this.apiSealNoByThc[thcno] ||
+      thc?.sealno_in ||
+      thc?.sealno ||
+      thc?.sealNo ||
+      this.modelsByThc[thcno]?.sealno_in ||
+      this.modelsByThc[thcno]?.sealno ||
+      this.modelsByThc[thcno]?.sealNo ||
+      ''
+    ).toString().trim();
+
+    const isStockUp = this.isStockUpdatedForThc(thcno);
+    const selectedMfCount = this.getSelectedCountForThc(thcno);
+
+    // Rule 1 & 2: StockUpdated thai gyu chhe -> UI ma show nathi thatu tema pn submit ma incoming seal (sealno_in) javo j jove
+    if (isStockUp) {
+      return existingSeal;
+    }
+
+    // Rule 3: StockUpdated nathi thayu AND MF select karyu chhe -> user je enter kare e submit ma javo jove
+    if (!isStockUp && selectedMfCount > 0) {
+      const incData = this.incomingSealDataByThc[thcno];
+      let enteredSeal = '';
+      if (incData) {
+        const seals = [incData.isn, incData.isn2, incData.isn3].filter(s => s && s.trim());
+        enteredSeal = seals.join(',');
+      } else if (this.currentThc?.thcno === thcno && this.sealForm) {
+        const s1 = (this.sealForm.get('ISN')?.value || '').toString().trim();
+        const s2 = (this.sealForm.get('ISN2')?.value || '').toString().trim();
+        const s3 = (this.sealForm.get('ISN3')?.value || '').toString().trim();
+        enteredSeal = [s1, s2, s3].filter(s => s).join(',');
+      }
+      return enteredSeal || existingSeal;
+    }
+
+    // Rule 4: StockUpdated nathi thayu AND MF select nathi karyu
+    return existingSeal;
+  }
+
+  getIncomingSealStatusForSubmit(thcno: string): string {
+    if (this.isFromArrival) {
+      return '';
+    }
+    const isStockUp = this.isStockUpdatedForThc(thcno);
+    const selectedMfCount = this.getSelectedCountForThc(thcno);
+
+    // Rule 1 & 2: StockUpdated thai gyu chhe -> 'Ok'
+    if (isStockUp) {
+      return 'Ok';
+    }
+
+    // Rule 3: StockUpdated nathi thayu AND MF select karyu chhe -> user status
+    if (!isStockUp && selectedMfCount > 0) {
+      const incData = this.incomingSealDataByThc[thcno];
+      const status = (incData?.status || this.sealForm?.get('s2id_Status')?.value || '').trim();
+      return status || 'Ok';
+    }
+
+    // Rule 4:
+    const incomingSeal = this.getIncomingSealForSubmit(thcno);
+    return incomingSeal ? 'Ok' : '';
+  }
+
+  getOutgoingSealForSubmit(thcno: string): string {
+    if (this.isFromArrival) {
+      return '';
+    }
+    const isStockUp = this.isStockUpdatedForThc(thcno);
+    const selectedMfCount = this.getSelectedCountForThc(thcno);
+
+    // Rule 1, 2, 3: Outgoing seal is required & entered by user
+    if (isStockUp || selectedMfCount > 0) {
+      const sealVal = (this.sealNoByThc[thcno] || this.getFormattedSealNumbers() || '').trim();
+      return sealVal;
+    }
+
+    // Rule 4: StockUpdated nathi thayu AND MF select nathi karyu -> empty
+    return '';
   }
 
   // Departure Outgoing Inputs
@@ -635,17 +752,19 @@ export class ThcDepartureConfirmPopupComponent {
       if (this.shouldShowIncomingSeal && this.sealForm && this.sealForm.invalid) {
         return true;
       }
-      if (!this.sealNo || !this.isValidSealNo(this.sealNo)) {
-        return true;
-      }
-      if (this.sealCount >= 2 && this.sealNo2 && this.sealNo2.trim() && !this.isValidSealNo(this.sealNo2)) {
-        return true;
-      }
-      if (this.sealCount >= 3 && this.sealNo3 && this.sealNo3.trim() && !this.isValidSealNo(this.sealNo3)) {
-        return true;
-      }
-      if (this.hasDuplicateSeals()) {
-        return true;
+      if (this.shouldShowOutgoingSeal) {
+        if (!this.sealNo || !this.isValidSealNo(this.sealNo)) {
+          return true;
+        }
+        if (this.sealCount >= 2 && this.sealNo2 && this.sealNo2.trim() && !this.isValidSealNo(this.sealNo2)) {
+          return true;
+        }
+        if (this.sealCount >= 3 && this.sealNo3 && this.sealNo3.trim() && !this.isValidSealNo(this.sealNo3)) {
+          return true;
+        }
+        if (this.hasDuplicateSeals()) {
+          return true;
+        }
       }
     }
     return false;
@@ -684,8 +803,8 @@ export class ThcDepartureConfirmPopupComponent {
           this.modelsByThc[thc.thcno] = res?.thcDepModel || {};
           this.isStockUpdatedByThc[thc.thcno] = Boolean(res?.thcDepModel?.isStockUpdated ?? thc?.isStockUpdated);
 
-          // Incoming Seal from thcDepModel (sealno_in or sealno)
-          const modelSeal = (res?.thcDepModel?.sealno_in || res?.thcDepModel?.sealno || res?.thcDepModel?.sealNo || thc?.sealNo || thc?.sealno || '').toString().trim();
+          // Incoming Seal from thcDepModel or THC (sealno_in or sealno)
+          const modelSeal = (res?.thcDepModel?.sealno_in || res?.thcDepModel?.sealno || res?.thcDepModel?.sealNo || thc?.sealno_in || thc?.sealNo || thc?.sealno || '').toString().trim();
           this.apiSealNoByThc[thc.thcno] = modelSeal;
           const parts = modelSeal ? modelSeal.split(',').map((s: string) => s.trim()).filter((s: string) => s && s.toLowerCase() !== 'null' && s.toLowerCase() !== 'undefined') : [];
           this.apiSealListByThc[thc.thcno] = parts;
@@ -735,10 +854,16 @@ export class ThcDepartureConfirmPopupComponent {
       item.isChecked = checked;
     });
     this.errorMessage = '';
+    this.setupSealFormControls();
+    this.validateAllSeals();
+    this.cdr.detectChanges();
   }
 
   onManifestCheckChange() {
     this.errorMessage = '';
+    this.setupSealFormControls();
+    this.validateAllSeals();
+    this.cdr.detectChanges();
   }
 
   getSelectedCountForThc(thcno?: string): number {
@@ -876,29 +1001,31 @@ export class ThcDepartureConfirmPopupComponent {
         return;
       }
 
-      if (!this.sealNo || !this.sealNo.trim()) {
-        this.errorMessage = 'Please enter Seal No. 1';
-        return;
-      }
+      if (this.shouldShowOutgoingSeal) {
+        if (!this.sealNo || !this.sealNo.trim()) {
+          this.errorMessage = 'Please enter Seal No. 1';
+          return;
+        }
 
-      if (!this.isValidSealNo(this.sealNo)) {
-        this.errorMessage = 'Seal No. 1 should be 6 digits.';
-        return;
-      }
+        if (!this.isValidSealNo(this.sealNo)) {
+          this.errorMessage = 'Seal No. 1 should be 6 digits.';
+          return;
+        }
 
-      if (this.sealCount >= 2 && this.sealNo2 && this.sealNo2.trim() && !this.isValidSealNo(this.sealNo2)) {
-        this.errorMessage = 'Seal No. 2 should be 6 digits.';
-        return;
-      }
+        if (this.sealCount >= 2 && this.sealNo2 && this.sealNo2.trim() && !this.isValidSealNo(this.sealNo2)) {
+          this.errorMessage = 'Seal No. 2 should be 6 digits.';
+          return;
+        }
 
-      if (this.sealCount >= 3 && this.sealNo3 && this.sealNo3.trim() && !this.isValidSealNo(this.sealNo3)) {
-        this.errorMessage = 'Seal No. 3 should be 6 digits.';
-        return;
-      }
+        if (this.sealCount >= 3 && this.sealNo3 && this.sealNo3.trim() && !this.isValidSealNo(this.sealNo3)) {
+          this.errorMessage = 'Seal No. 3 should be 6 digits.';
+          return;
+        }
 
-      if (this.hasDuplicateSeals()) {
-        this.errorMessage = 'Duplicate seal numbers are not allowed. Please enter unique seal numbers.';
-        return;
+        if (this.hasDuplicateSeals()) {
+          this.errorMessage = 'Duplicate seal numbers are not allowed. Please enter unique seal numbers.';
+          return;
+        }
       }
     }
 
@@ -920,19 +1047,16 @@ export class ThcDepartureConfirmPopupComponent {
           isChecked: true
         }));
 
-      const sealVal = (this.sealNoByThc[thc.thcno] || this.getFormattedSealNumbers() || '').trim();
-      const incData = this.incomingSealDataByThc[thc.thcno];
-
       thcListPayload.push({
         thcno: thc.thcno,
         atd: nowISO,
         deptime_flight: nowTime,
-        sealno_in: this.isFromArrival ? '' : sealVal,
+        sealno_in: this.getOutgoingSealForSubmit(thc.thcno),
         isDirectDeparted: this.isFromArrival ? 'Y' : 'N',
         outRemarks: this.outgoingRemarks.trim(),
         tcList: manifests,
-        incomingSeal: (!this.isFromArrival && !this.isStockUpdatedForThc(thc.thcno)) ? (incData?.isn || '') : '',
-        incomingSealStatus: (!this.isFromArrival && !this.isStockUpdatedForThc(thc.thcno)) ? (incData?.status || '') : ''
+        incomingSeal: this.getIncomingSealForSubmit(thc.thcno),
+        incomingSealStatus: this.getIncomingSealStatusForSubmit(thc.thcno)
       });
     }
 

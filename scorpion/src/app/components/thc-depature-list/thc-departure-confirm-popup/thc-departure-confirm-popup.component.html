@@ -214,7 +214,7 @@
         <!-- Departure Inputs: Seal No(s) & Outgoing Remarks -->
         <div class="row g-3 mb-2">
           <!-- Seal No 1 -->
-          <div *ngIf="!isFromArrival" [ngClass]="sealCount === 1 ? 'col-md-6' : (sealCount === 2 ? 'col-md-6' : 'col-md-4')">
+          <div *ngIf="shouldShowOutgoingSeal" [ngClass]="sealCount === 1 ? 'col-md-6' : (sealCount === 2 ? 'col-md-6' : 'col-md-4')">
             <div class="form-group">
               <div class="d-flex align-items-center justify-content-between mb-1">
                 <label class="form-label mb-0" style="font-size: 13px; font-weight: 600; color: #334155;">
@@ -240,7 +240,7 @@
           </div>
 
           <!-- Seal No 2 (Visible when 2 or 3 selected, Optional) -->
-          <div [ngClass]="sealCount === 2 ? 'col-md-6' : 'col-md-4'" *ngIf="!isFromArrival && sealCount >= 2">
+          <div [ngClass]="sealCount === 2 ? 'col-md-6' : 'col-md-4'" *ngIf="shouldShowOutgoingSeal && sealCount >= 2">
             <div class="form-group">
               <div class="d-flex align-items-center justify-content-between mb-1">
                 <label class="form-label mb-0" style="font-size: 13px; font-weight: 600; color: #334155;">
@@ -270,7 +270,7 @@
           </div>
 
           <!-- Seal No 3 (Visible when 3 selected, Optional) -->
-          <div class="col-md-4" *ngIf="!isFromArrival && sealCount >= 3">
+          <div class="col-md-4" *ngIf="shouldShowOutgoingSeal && sealCount >= 3">
             <div class="form-group">
               <div class="d-flex align-items-center justify-content-between mb-1">
                 <label class="form-label mb-0" style="font-size: 13px; font-weight: 600; color: #334155;">
@@ -293,7 +293,7 @@
           </div>
 
           <!-- Outgoing Remarks -->
-          <div [ngClass]="isFromArrival ? 'col-12' : (sealCount === 1 ? 'col-md-6' : 'col-12')">
+          <div [ngClass]="(!shouldShowOutgoingSeal || isFromArrival) ? 'col-12' : (sealCount === 1 ? 'col-md-6' : 'col-12')">
             <div class="form-group">
               <label class="form-label mb-1" style="font-size: 13px; font-weight: 600; color: #334155;">
                 Outgoing Remarks <span class="text-danger">*</span>
