@@ -11,7 +11,7 @@ import { environment } from 'environments/environment';
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, NgSelectModule],
   templateUrl: './godown-update-deps.component.html',
-  styleUrls: ['./godown-update-deps.component.scss']
+  styleUrl: './godown-update-deps.component.scss'
 })
 export class GodownUpdateDepsComponent implements OnInit, OnDestroy {
   @Output() depsSaved = new EventEmitter<{ docket: any; depsData: any[] }>();

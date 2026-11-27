@@ -173,6 +173,43 @@
     font-size: 11.5px;
 }
 
+/* ── HCC Status Badge (Exact match to Image 1 Pill UI) ── */
+.hcc-status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.25;
+    white-space: nowrap;
+    margin-top: 2px;
+    border: 1px solid transparent;
+
+    &.hcc-status-pending {
+        background: #fef3c7;
+        color: #d97706;
+        border-color: #fde68a;
+    }
+
+    &.hcc-status-approved {
+        background: #dcfce7;
+        color: #15803d;
+        border-color: #bbf7d0;
+    }
+
+    &.hcc-status-rejected {
+        background: #fee2e2;
+        color: #b91c1c;
+        border-color: #fecaca;
+    }
+
+    &.hcc-status-default {
+        background: #f1f5f9;
+        color: #475569;
+        border-color: #e2e8f0;
+    }
+}
+
 /* ── Status Chip (Exact Match to Image 2) ── */
 .status-chip {
     display: inline-flex;
@@ -287,8 +324,8 @@
     }
 
     .btn-action-gbhcc {
-        background: #9f7aea;
-        border: 1px solid #9f7aea;
+        background: #622ccf;
+        border: 1px solid #805ad5;
         color: #ffffff;
         font-size: 12.5px;
         font-weight: 600;
@@ -310,8 +347,8 @@
     }
 
     .btn-action-updategd {
-        background: #718096;
-        border: 1px solid #718096;
+        background: #4a5568;
+        border: 1px solid #4a5568;
         color: #ffffff;
         font-size: 12.5px;
         font-weight: 600;
@@ -333,7 +370,7 @@
     }
 
     .btn-action-gdhcc {
-        background: #68d391;
+        background: #48bb78;
         border: 1px solid #68d391;
         color: #ffffff;
         font-size: 12.5px;
@@ -344,8 +381,8 @@
         white-space: nowrap;
 
         &:hover:not(:disabled) {
-            background: #48bb78;
-            border-color: #48bb78;
+            background: #68d391;
+            border-color: #68d391;
         }
 
         &:disabled {

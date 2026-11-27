@@ -3,7 +3,7 @@
         <div>
             <div class="page-title">
                 <span class="icon">📦</span>
-                Godown Delivery
+                Godown Booking - Delivery
             </div>
             <div class="text-muted" style="font-size: 12px; margin-top: 2px;">
                 Operations &gt; Delivery &gt; Godown Delivery <span class="mx-1 text-secondary">|</span> 
@@ -178,7 +178,9 @@
                             <ng-container *ngIf="item.IsGBApplicable === false"><span class="text-muted">—</span></ng-container>
                             <ng-container *ngIf="item.IsGBApplicable !== false && item.GBHCCNo">
                                 <div><a class="gb-link" (click)="onViewHCC(item.GBNo, item.GBHCCNo)">{{ item.GBHCCNo }}</a></div>
-                                <div *ngIf="item.GBHCCStatus" style="color: #ea580c; font-size: 10px; font-weight: 600;">{{ item.GBHCCStatus }}</div>
+                                <div *ngIf="item.GBHCCStatus">
+                                    <span class="hcc-status-badge" [ngClass]="getHccStatusClass(item.GBHCCStatus)">{{ item.GBHCCStatus }}</span>
+                                </div>
                             </ng-container>
                             <ng-container *ngIf="item.IsGBApplicable !== false && !item.GBHCCNo">
                                 <span class="gb-none">—</span>
@@ -188,7 +190,9 @@
                             <ng-container *ngIf="item.IsGDApplicable === false"><span class="text-muted">—</span></ng-container>
                             <ng-container *ngIf="item.IsGDApplicable !== false && item.GDHCCNo">
                                 <div><a class="gd-link" (click)="onViewHCC(item.GDNo, item.GDHCCNo)">{{ item.GDHCCNo }}</a></div>
-                                <div *ngIf="item.GDHCCStatus" style="color: #ea580c; font-size: 10px; font-weight: 600;">{{ item.GDHCCStatus }}</div>
+                                <div *ngIf="item.GDHCCStatus">
+                                    <span class="hcc-status-badge" [ngClass]="getHccStatusClass(item.GDHCCStatus)">{{ item.GDHCCStatus }}</span>
+                                </div>
                             </ng-container>
                             <ng-container *ngIf="item.IsGDApplicable !== false && !item.GDHCCNo">
                                 <span class="gb-none">—</span>

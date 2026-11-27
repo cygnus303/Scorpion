@@ -293,10 +293,21 @@ svg {
     }
 
     .col-wt input {
-        background: #f8fafc !important;
-        border-color: #e2e8f0 !important;
-        color: #475569 !important;
-        font-weight: 600 !important;
+        background: #eff6ff !important;
+        border-color: #bfdbfe !important;
+        color: #1e40af !important;
+        font-weight: 700 !important;
+
+        &:focus {
+            background: #ffffff !important;
+            border-color: #2563eb !important;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2) !important;
+        }
+
+        &.is-invalid {
+            border-color: #dc2626 !important;
+            box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.15) !important;
+        }
     }
 
     .form-control,
@@ -688,4 +699,13 @@ bs-datepicker-container,
     font-weight: 600;
     margin-top: 1px;
     line-height: 1;
+}
+
+.err-sub {
+    color: #dc2626 !important;
+    font-size: 9px;
+    font-weight: 600;
+    margin-top: 2px;
+    line-height: 1.1;
+    text-align: center;
 }

@@ -92,16 +92,18 @@ export class UpdateGodownDeliveryComponent implements OnInit {
 
     const today = new Date();
     this.selectedDockets.forEach(row => {
-      const totalPkgs = Number(row.Pkgs !== undefined ? row.Pkgs : (row.pkgsno || 0));
-      const totalWt = Number(row.ActualWt !== undefined ? row.ActualWt : (row.weight || 0));
+      const maxPkgs = Number(row.DelPkgs !== undefined ? row.DelPkgs : (row.Pkgs !== undefined ? row.Pkgs : (row.pkgsno || 0)));
+      const maxWt = Number(row.DelWts !== undefined ? row.DelWts : (row.ActualWt !== undefined ? row.ActualWt : (row.weight || 0)));
 
-      row.totalPkgs = totalPkgs;
-      row.totalWt = totalWt;
+      row.maxPkgs = maxPkgs;
+      row.maxWt = maxWt;
+      row.totalPkgs = maxPkgs;
+      row.totalWt = maxWt;
 
-      // Default deliveredPkgs to total docket packages if not set or <= 0
-      row.deliveredPkgs = (Number(row.deliveredPkgs) > 0) ? Number(row.deliveredPkgs) : totalPkgs;
-      row.deliveredWt = (Number(row.deliveredWt) > 0) ? Number(row.deliveredWt) : totalWt;
-      row.partDeliveredReason = (row.deliveredPkgs < totalPkgs && row.partDeliveredReason && row.partDeliveredReason !== 'N/A') ? row.partDeliveredReason : null;
+      // Default deliveredPkgs to DelPkgs (or total docket packages) if not set or <= 0
+      row.deliveredPkgs = (row.deliveredPkgs !== undefined && Number(row.deliveredPkgs) > 0) ? Number(row.deliveredPkgs) : maxPkgs;
+      row.deliveredWt = (row.deliveredWt !== undefined && Number(row.deliveredWt) > 0) ? Number(row.deliveredWt) : maxWt;
+      row.partDeliveredReason = (row.deliveredPkgs < maxPkgs && row.partDeliveredReason && row.partDeliveredReason !== 'N/A') ? row.partDeliveredReason : null;
       row.deliveredTo = row.deliveredTo || null;
       row.personName = row.personName || '';
       row.contactNo = (row.contactNo || '').toString().replace(/[^0-9]/g, '').slice(0, 10);
@@ -167,19 +169,18 @@ export class UpdateGodownDeliveryComponent implements OnInit {
   }
 
   onDeliveredPkgsChange(row: any) {
-    const totalPkgs = Number(row.totalPkgs || row.Pkgs) || 0;
-    const totalWt = Number(row.totalWt || row.ActualWt) || 0;
+    const maxPkgs = Number(row.maxPkgs !== undefined ? row.maxPkgs : (row.DelPkgs !== undefined ? row.DelPkgs : (row.totalPkgs || row.Pkgs || 0)));
+    const maxWt = Number(row.maxWt !== undefined ? row.maxWt : (row.DelWts !== undefined ? row.DelWts : (row.totalWt || row.ActualWt || 0)));
     const pkgs = Number(row.deliveredPkgs);
 
     if (isNaN(pkgs) || pkgs <= 0) {
       row.deliveredWt = 0;
       row.partDeliveredReason = null;
-    } else if (pkgs >= totalPkgs) {
-      row.deliveredPkgs = totalPkgs;
-      row.deliveredWt = totalWt;
+    } else if (pkgs >= maxPkgs) {
+      row.deliveredWt = maxWt;
       row.partDeliveredReason = null;
     } else {
-      row.deliveredWt = totalPkgs > 0 ? parseFloat(((totalWt * pkgs) / totalPkgs).toFixed(2)) : 0;
+      row.deliveredWt = maxPkgs > 0 ? parseFloat(((maxWt * pkgs) / maxPkgs).toFixed(2)) : 0;
       if (row.partDeliveredReason === 'N/A') {
         row.partDeliveredReason = null;
       }
@@ -190,14 +191,20 @@ export class UpdateGodownDeliveryComponent implements OnInit {
     }
   }
 
+  onDeliveredWtChange(row: any) {
+    if (this.isSubmitted) {
+      this.validateDockets();
+    }
+  }
+
   getPkgsError(row: any): string {
-    const totalPkgs = Number(row.totalPkgs || row.Pkgs) || 0;
+    const maxPkgs = Number(row.maxPkgs !== undefined ? row.maxPkgs : (row.DelPkgs !== undefined ? row.DelPkgs : (row.totalPkgs || row.Pkgs || 0)));
     const val = row.deliveredPkgs;
     if (val === '' || val === null || val === undefined || Number(val) <= 0 || isNaN(Number(val))) {
       return 'Cannot be 0';
     }
-    if (totalPkgs > 0 && Number(val) > totalPkgs) {
-      return `Max ${totalPkgs}`;
+    if (maxPkgs > 0 && Number(val) > maxPkgs) {
+      return `Max ${maxPkgs}`;
     }
     return '';
   }
@@ -206,10 +213,26 @@ export class UpdateGodownDeliveryComponent implements OnInit {
     return this.getPkgsError(row) !== '';
   }
 
+  getWtError(row: any): string {
+    const maxWt = Number(row.maxWt !== undefined ? row.maxWt : (row.DelWts !== undefined ? row.DelWts : (row.totalWt || row.ActualWt || 0)));
+    const val = row.deliveredWt;
+    if (val === '' || val === null || val === undefined || Number(val) <= 0 || isNaN(Number(val))) {
+      return 'Cannot be 0';
+    }
+    if (maxWt > 0 && Number(val) > maxWt) {
+      return `Max ${maxWt}`;
+    }
+    return '';
+  }
+
+  isDeliveredWtInvalid(row: any): boolean {
+    return this.getWtError(row) !== '';
+  }
+
   isReasonInvalid(row: any): boolean {
-    const totalPkgs = Number(row.totalPkgs || row.Pkgs) || 0;
+    const maxPkgs = Number(row.maxPkgs !== undefined ? row.maxPkgs : (row.DelPkgs !== undefined ? row.DelPkgs : (row.totalPkgs || row.Pkgs || 0)));
     const pkgs = Number(row.deliveredPkgs);
-    return !isNaN(pkgs) && pkgs > 0 && pkgs < totalPkgs && (!row.partDeliveredReason || row.partDeliveredReason === 'N/A');
+    return !isNaN(pkgs) && pkgs > 0 && pkgs < maxPkgs && (!row.partDeliveredReason || row.partDeliveredReason === 'N/A');
   }
 
   isDeliveredToInvalid(row: any): boolean {
@@ -238,8 +261,10 @@ export class UpdateGodownDeliveryComponent implements OnInit {
     this.selectedDockets.forEach(row => {
       const lrNo = row.LRNumber || row.dockno || 'Docket';
       const messages: string[] = [];
-      const totalPkgs = Number(row.totalPkgs || row.Pkgs) || 0;
+      const maxPkgs = Number(row.maxPkgs !== undefined ? row.maxPkgs : (row.DelPkgs !== undefined ? row.DelPkgs : (row.totalPkgs || row.Pkgs || 0)));
+      const maxWt = Number(row.maxWt !== undefined ? row.maxWt : (row.DelWts !== undefined ? row.DelWts : (row.totalWt || row.ActualWt || 0)));
       const deliveredPkgs = Number(row.deliveredPkgs);
+      const deliveredWt = Number(row.deliveredWt);
 
       // 1. Delivered Pkgs
       const pkgsErr = this.getPkgsError(row);
@@ -247,8 +272,14 @@ export class UpdateGodownDeliveryComponent implements OnInit {
         messages.push(`"Delivered Pkgs" ${pkgsErr.toLowerCase()}`);
       }
 
+      // 1b. Delivered Wt
+      const wtErr = this.getWtError(row);
+      if (wtErr) {
+        messages.push(`"Delivered Wt" ${wtErr.toLowerCase()}`);
+      }
+
       // 2. Part Delivered Reason
-      if (!isNaN(deliveredPkgs) && deliveredPkgs > 0 && deliveredPkgs < totalPkgs) {
+      if (!isNaN(deliveredPkgs) && deliveredPkgs > 0 && deliveredPkgs < maxPkgs) {
         if (!row.partDeliveredReason || row.partDeliveredReason === 'N/A') {
           messages.push(`"Part Delivered Reason" is mandatory when delivered pkgs is less than total pkgs`);
         }
@@ -447,30 +478,40 @@ export class UpdateGodownDeliveryComponent implements OnInit {
       return;
     }
 
-    const DocketsUpdateList = this.selectedDockets.map((row: any) => ({
-      remark: row.remarks || '',
-      contactNo: row.contactNo || '',
-      delyperson: row.personName || '',
-      origin: row.OrgCode || row.Origin || '',
-      podReceived: row.podReceived || '',
-      dlyPerson: row.personName || '',
-      partY_CODE: row.BillingPartyCode || row.PARTY_CODE || '',
-      docksf: row.docksf || '.',
-      delWts: Number(row.deliveredWt) || 0,
-      isEnabledBadPodoption: row.podQuality === 'Bad',
-      pen_DelPkgs: Number(row.Pkgs || row.totalPkgs || 0) - Number(row.deliveredPkgs || 0),
-      destination: row.DestCode || row.Destination || '',
-      dlyContactNo: row.contactNo || '',
-      autoNo: Number(row.AutoNo || row.autoNo) || null,
-      pen_DelWts: Number(row.ActualWt || row.totalWt || 0) - Number(row.deliveredWt || 0),
-      delPkgs: Number(row.deliveredPkgs) || 0,
-      dockno: row.LRNumber || row.dockno || '',
-      isEnabled: true,
-      receivedBy: row.personName || '',
-      delydate: this.formatDeliveryDate(row.deliveryDate),
-      pkgs_Pending: Number(row.Pkgs || row.totalPkgs || 0) - Number(row.deliveredPkgs || 0),
-      deliveredTo: row.deliveredTo || ''
-    }));
+    const DocketsUpdateList = this.selectedDockets.map((row: any) => {
+      const penDelPkgs = row.Pen_DelPkgs !== undefined ? Number(row.Pen_DelPkgs) :
+                        (row.pen_DelPkgs !== undefined ? Number(row.pen_DelPkgs) :
+                        (Number(row.maxPkgs || row.Pkgs || 0) - Number(row.deliveredPkgs || 0)));
+      const penDelWts = row.Pen_DelWts !== undefined ? Number(row.Pen_DelWts) :
+                       (row.pen_DelWts !== undefined ? Number(row.pen_DelWts) :
+                       (Number(row.maxWt || row.ActualWt || 0) - Number(row.deliveredWt || 0)));
+
+      return {
+        remark: row.remarks || '',
+        contactNo: row.contactNo || '',
+        delyperson: row.personName || '',
+        origin: row.OrgCode || row.Origin || '',
+        podReceived: row.podReceived || '',
+        dlyPerson: row.personName || '',
+        partY_CODE: row.BillingPartyCode || row.PARTY_CODE || '',
+        docksf: row.docksf || '.',
+        delWts: Number(row.deliveredWt) || 0,
+        isEnabledBadPodoption: row.podQuality === 'Bad',
+        pen_DelPkgs: penDelPkgs,
+        Pen_DelPkgs: penDelPkgs,
+        destination: row.DestCode || row.Destination || '',
+        dlyContactNo: row.contactNo || '',
+        autoNo: Number(row.AutoNo || row.autoNo) || null,
+        pen_DelWts: penDelWts,
+        delPkgs: Number(row.deliveredPkgs) || 0,
+        dockno: row.LRNumber || row.dockno || '',
+        isEnabled: true,
+        receivedBy: row.personName || '',
+        delydate: this.formatDeliveryDate(row.deliveryDate),
+        pkgs_Pending: penDelPkgs,
+        deliveredTo: row.deliveredTo || ''
+      };
+    });
 
     const DepsList: any[] = [];
     this.selectedDockets.forEach((row: any) => {
@@ -520,14 +561,8 @@ export class UpdateGodownDeliveryComponent implements OnInit {
     this.deliveryUpdateService.counterDelivery(formData).subscribe({
       next: (response: any) => {
         this.isSubmit = false;
-        if (response && response.data && !response.data.isError) {
-          const docNo = this.selectedDockets[0]?.GDNo || this.selectedDockets[0]?.GBNo || '';
-          this.sweetAlertService.success(`
-            <div style="text-align:center;">
-              <div class="fw-bold fs-3 mb-2">Counter Delivery Success</div>
-              <p class="fs-5 mb-1"><strong>Document No:</strong> ${docNo || 'Success'}</p>
-            </div>
-          `);
+        if (response  && !response.isError) {
+          this.sweetAlertService.success(`Update delivery ${response.gdNo} Generated successfully!!!`)
           this.deliveryUpdated.emit({
             response,
             formData,

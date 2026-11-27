@@ -294,15 +294,15 @@
 <app-prq-track #PrqTrackComponent></app-prq-track>
 
 <ng-template #TemplateBulkUpload>
-    <div class="modal-content" style="border: none !important; outline: none !important; overflow: hidden !important; box-shadow: 0 10px 25px rgba(0,0,0,0.2) !important; padding: 0 !important; background-color: #fff !important;">
-        <div class="modal-header d-flex justify-content-between align-items-center" style="background-color: #8b5cf6 !important; color: white !important; border: none !important; padding: 14px 20px !important; margin: 0 !important; border-radius: 8px 8px 0 0 !important; width: 100% !important;">
+    <div class="modal-content" style="border: none !important; outline: none !important; box-shadow: 0 10px 25px rgba(0,0,0,0.2) !important; padding: 0 !important; background-color: #fff !important; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden !important;">
+        <div class="modal-header d-flex justify-content-between align-items-center" style="flex-shrink: 0; background-color: #8b5cf6 !important; color: white !important; border: none !important; padding: 14px 20px !important; margin: 0 !important; border-radius: 8px 8px 0 0 !important; width: 100% !important;">
             <h5 class="modal-title mb-0" style="font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 8px; color: white !important;">
                 <span>☁️</span> Bulk Upload Pickup Requests (PRQ)
             </h5>
             <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="closeBulkUploadModal()" style="font-size: 12px; filter: invert(1) grayscale(100%) brightness(200%);"></button>
         </div>
-        <div class="modal-body" style="padding: 24px;">
-            <div class="upload-area" style="border: 2px dashed #cbd5e1; border-radius: 8px; padding: 40px 20px; text-align: center; background-color: #ffffff;">
+        <div class="modal-body" style="padding: 20px 24px; overflow-y: auto; flex: 1 1 auto; max-height: calc(90vh - 135px);">
+            <div class="upload-area" [style.padding]="isValidationComplete ? '18px 20px' : '36px 20px'" style="border: 2px dashed #cbd5e1; border-radius: 8px; text-align: center; background-color: #ffffff; transition: all 0.2s;">
                 <div class="excel-icon mb-3">
                     <span style="font-size: 34px; color: #94a3b8; display: inline-block; background: white; border: 2.5px solid #cbd5e1; border-radius: 6px; padding: 8px 14px; font-weight: 900; line-height: 1; position: relative;">
                         X
@@ -412,7 +412,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal-footer d-flex justify-content-center gap-3" style="border-top: none; padding: 0 24px 24px;">
+        <div class="modal-footer d-flex justify-content-center gap-3" style="border-top: 1px solid #e2e8f0 !important; padding: 14px 24px; background: #ffffff; flex-shrink: 0; position: sticky; bottom: 0; z-index: 10;">
             <button type="button" class="btn btn-outline-secondary bg-white text-dark fw-bold px-4" (click)="closeBulkUploadModal()" style="border-color: #cbd5e1; font-size: 14px;">Cancel</button>
             
             <ng-container *ngIf="isValidationComplete && invalidRows === 0 && validRows > 0; else defaultBtn">
