@@ -8,12 +8,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { LrViewComponent } from '../lr-list/lr-view/lr-view.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { HCCDetailsComponent } from '../prs-generation-list/hcc-details/hcc-details.component';
-import { GbViewComponent } from '../lr-list/gb-view/gb-view.component';
-import { StickerPrintComponent } from '../lr-list/sticker-print/sticker-print.component';
-import { LrPrintComponent } from '../lr-list/lr-print/lr-print.component';
 import { DateRangePickerComponent } from 'app/shared/components/date-range-picker/date-range-picker.component';
-import { GdViewComponent } from '../lr-list/gd-view/gd-view.component';
-import { EwaybillInvoiceModalComponent } from 'app/shared/components/ewaybill-invoice-modal/ewaybill-invoice-modal.component';
 import { debounceTime, Subject, Subscription } from 'rxjs';
 import { DynamicDataService } from 'app/shared/services/dynamic-data.service';
 import { ExportService } from 'app/shared/services/export.service';
@@ -26,24 +21,8 @@ import { GodownDeliveryViewComponent } from './godown-delivery-view/godown-deliv
 @Component({
   selector: 'app-godown-delivery-list',
   standalone: true,
-  imports: [
-    CommonModule,
-    NgSelectModule,
-    BsDatepickerModule,
-    FormsModule,
-    PaginationComponent,
-    LrViewComponent,
-    HCCDetailsComponent,
-    GbViewComponent,
-    StickerPrintComponent,
-    LrPrintComponent,
-    EwaybillInvoiceModalComponent,
-    DateRangePickerComponent,
-    GdViewComponent,
-    DepsDetailsComponent,
-    UpdateGodownDeliveryComponent,
-    UpdateGodownBookingComponent,
-    GodownDeliveryViewComponent
+  imports: [CommonModule,NgSelectModule, BsDatepickerModule, FormsModule,PaginationComponent, LrViewComponent,HCCDetailsComponent,
+    DateRangePickerComponent,DepsDetailsComponent,UpdateGodownDeliveryComponent, UpdateGodownBookingComponent,GodownDeliveryViewComponent
   ],
   templateUrl: './godown-delivery-list.component.html',
   styleUrl: './godown-delivery-list.component.scss',
@@ -51,10 +30,8 @@ import { GodownDeliveryViewComponent } from './godown-delivery-view/godown-deliv
 })
 export class GodownDeliveryListComponent {
   @ViewChild('LrViewComponent') lrViewComponent!: LrViewComponent;
-  @ViewChild('GbViewComponent') gbViewComponent!: GbViewComponent;
-  @ViewChild('GdViewComponent') gdViewComponent!: GdViewComponent;
   @ViewChild('HCCDetailsComponent') HCCDetailsComponent!: HCCDetailsComponent;
-    @ViewChild('DepsDetailsComponent') depsDetailsComponent!: DepsDetailsComponent;
+  @ViewChild('DepsDetailsComponent') depsDetailsComponent!: DepsDetailsComponent;
   @ViewChild('UpdateGodownDeliveryComponent') updateGodownDeliveryComponent!: UpdateGodownDeliveryComponent;
   @ViewChild('UpdateGodownBookingComponent') updateGodownBookingComponent!: UpdateGodownBookingComponent;
   @ViewChild('GodownDeliveryViewComponent') godownDeliveryViewComponent!: GodownDeliveryViewComponent;
@@ -62,7 +39,6 @@ export class GodownDeliveryListComponent {
   public env = environment;
   public isLoading: boolean = false;
   public isCSVLoading: boolean = false;
-  openTrackIndex: number | null = null;
   public listSubscription?: Subscription;
   private fetchSubject = new Subject<void>();
 
@@ -82,7 +58,7 @@ export class GodownDeliveryListComponent {
     toDateStr: new Date(),
     statusFilter: 'A',
     page: 1,
-    pageSize: 15,
+    pageSize: 10,
     totalRecords: 0,
     totalPages: 1,
     searchText: ''
@@ -399,6 +375,7 @@ export class GodownDeliveryListComponent {
 
   onBookingUpdated(event: any) {
     console.log('Godown Booking updated:', event);
+    this.clearSelection();
     this.fetchData();
   }
 
@@ -497,14 +474,14 @@ export class GodownDeliveryListComponent {
     }
   }
 
-  onGBNo(item: any) {
-    const gb = item.GBNo || item.gbNo;
-    if (this.gbViewComponent && gb) {
-      this.gbViewComponent.openModal(gb);
-    }
-  }
+  // onGBNo(item: any) {
+  //   const gb = item.GBNo || item.gbNo;
+  //   if (this.gbViewComponent && gb) {
+  //     this.gbViewComponent.openModal(gb);
+  //   }
+  // }
 
-  onGDNo(item: any) {
+  onGBGDNoView(item: any) {
     if (this.godownDeliveryViewComponent) {
       this.godownDeliveryViewComponent.openModal(item);
     }

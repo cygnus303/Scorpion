@@ -25,13 +25,13 @@ svg {
 
 .godown-modal-dialog {
     background: #ffffff;
-    width: 99%;
-    max-width: 1450px;
+    width: 98vw;
+    max-width: 1780px;
     border-radius: 8px;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     display: flex;
     flex-direction: column;
-    max-height: 94vh;
+    max-height: 96vh;
     overflow: hidden;
     animation: modalFadeIn 0.2s ease-out;
 }
@@ -217,7 +217,8 @@ svg {
     border: 1px solid #e2e8f0;
     border-radius: 6px;
     overflow-x: auto;
-    max-height: 420px;
+    max-height: calc(90vh - 270px);
+    min-height: 200px;
 }
 
 .modal-data-table {
@@ -227,35 +228,35 @@ svg {
     font-size: 11px;
 
     /* Column Widths */
-    .col-sr        { width: 28px; }
-    .col-lr        { width: 95px; }
-    .col-org       { width: 75px; }
-    .col-total     { width: 85px; }
-    .col-pkgs      { width: 75px; }
-    .col-wt        { width: 68px; }
-    .col-reason    { width: 92px; }
-    .col-delto     { width: 140px; }
-    .col-person    { width: 100px; }
-    .col-contact   { width: 95px; }
-    .col-date      { width: 110px; }
-    .col-podrec    { width: 75px; }
-    .col-podupload { width: 105px; }
-    .col-podquality{ width: 82px; }
-    .col-deps      { width: 80px; }
+    .col-sr        { width: 32px; }
+    .col-lr        { width: 115px; }
+    .col-org       { width: 95px; }
+    .col-total     { width: 110px; }
+    .col-pkgs      { width: 115px; }
+    .col-wt        { width: 95px; }
+    .col-reason    { width: 100px; }
+    .col-delto     { width: 180px; }
+    .col-person    { width: 135px; }
+    .col-contact   { width: 130px; }
+    .col-date      { width: 135px; }
+    .col-podrec    { width: 95px; }
+    .col-podupload { width: 120px; }
+    .col-podquality{ width: 100px; }
+    .col-deps      { width: 75px; }
 
     thead th {
-        background: #f8fafc;
-        color: #475569;
-        font-size: 9.5px;
+        background: #f1f5f9;
+        color: #334155;
+        font-size: 10.5px;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.2px;
-        padding: 6px 3px;
+        letter-spacing: 0.3px;
+        padding: 9px 5px;
         border-bottom: 2px solid #cbd5e1;
-        white-space: normal;
+        white-space: nowrap;
         text-align: center;
         vertical-align: middle;
-        line-height: 1.15;
+        line-height: 1.2;
         position: sticky;
         top: 0;
         z-index: 5;

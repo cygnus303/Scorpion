@@ -159,7 +159,7 @@
                         <td>
                             <ng-container *ngIf="item.IsGBApplicable === false"><span class="text-muted">—</span></ng-container>
                             <ng-container *ngIf="item.IsGBApplicable !== false && item.GBNo">
-                                <strong class="text-dark">{{ item.GBNo }}</strong>
+                                 <a class="gd-link"  (click)="onGBGDNoView(item.GBNo)">{{ item.GBNo }}</a>
                             </ng-container>
                             <ng-container *ngIf="item.IsGBApplicable !== false && !item.GBNo">
                                 <span class="gb-none">—</span>
@@ -168,7 +168,7 @@
                         <td>
                             <ng-container *ngIf="item.IsGDApplicable === false"><span class="text-muted">—</span></ng-container>
                             <ng-container *ngIf="item.IsGDApplicable !== false && item.GDNo">
-                                <a class="gd-link" (click)="onGDNo(item)">{{ item.GDNo }}</a>
+                                <a class="gd-link" (click)="onGBGDNoView(item.GDNo)">{{ item.GDNo }}</a>
                             </ng-container>
                             <ng-container *ngIf="item.IsGDApplicable !== false && !item.GDNo">
                                 <span class="gb-none">—</span>
@@ -257,10 +257,5 @@
 <app-godown-delivery-view #GodownDeliveryViewComponent (docketClick)="onView($event)"></app-godown-delivery-view>
 
 <app-lr-view #LrViewComponent></app-lr-view>
-<app-ewaybill-invoice-modal #EwaybillInvoiceModalComponent></app-ewaybill-invoice-modal>
 <app-hcc-details #HCCDetailsComponent (dataEmitter)="fetchData()"></app-hcc-details>
-<app-gb-view #GbViewComponent></app-gb-view>
-<app-gd-view #GdViewComponent></app-gd-view>
-<app-sticker-print #StickerPrintComponent></app-sticker-print>
-<app-lr-print #LrPrintComponent></app-lr-print>
 <app-deps-details #DepsDetailsComponent></app-deps-details>

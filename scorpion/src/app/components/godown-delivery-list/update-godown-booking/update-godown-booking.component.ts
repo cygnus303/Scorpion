@@ -129,7 +129,7 @@ export class UpdateGodownBookingComponent implements OnInit, OnDestroy {
         this.isSubmitting = false;
         this.closeModal();
         this.sweetAlertService.success(`${response.Table1[0].GBNo}:${response.Table1[0].Msg}`);
-
+        this.bookingUpdated.emit(response);
       },
       error: (err: any) => {
         this.isSubmitting = false;
