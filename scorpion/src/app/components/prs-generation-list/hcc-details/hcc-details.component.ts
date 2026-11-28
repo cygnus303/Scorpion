@@ -457,7 +457,7 @@ export class HCCDetailsComponent {
       totalWeight: parseFloat(formValue.totalWeight) || 0,
       chargeRate: parseFloat(formValue.chargeRate) || 0,
       chargedBy: formValue.chargedBy || '',
-      documentType: this.documentType,
+      documentType: this.isType === 'GD' ? 'GD' : (this.isType === 'GB' ? 'GB' : this.documentType),
       rateType: formValue.rateType || '',
       vendorCode: formValue.vendorCode || '',
       vendorName: formValue.vendorName || '',

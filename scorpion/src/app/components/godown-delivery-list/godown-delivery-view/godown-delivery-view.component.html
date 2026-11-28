@@ -1,147 +1,251 @@
 <ng-template #gdViewTemplate>
     <div class="gd-view-dialog">
-        <!-- Modal Header -->
-        <div class="godown-view-header d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center gap-3">
+        <!-- Single Compact Modal Header -->
+        <div class="godown-view-header">
+            <div class="header-left-col">
                 <div class="header-icon-box">
                     <span>🚚</span>
                 </div>
-                <div>
-                    <h5 class="modal-title-text mb-0">Godown Delivery Details</h5>
-                    <div class="modal-subtitle-text">
-                        {{ GDData?.GDNo || '—' }} <span class="mx-1">|</span> {{ GDData?.DeliveryGodown || 'PIM : PIMPRI' }}
+                <div class="header-title-wrap">
+                    <div class="header-title-row">
+                        <h5 class="modal-title-text mb-0">Godown Delivery Details</h5>
+                        <span class="header-doc-badge" *ngIf="headerDetails?.DocumentNo">
+                            {{ headerDetails.DocumentNo }}
+                        </span>
+                    </div>
+                    <div class="modal-subtitle-text" *ngIf="headerDetails?.DeliveryGodown">
+                        {{ headerDetails.DeliveryGodown }}
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn-close-custom" (click)="closeModal()">&times;</button>
+            <div class="header-actions no-print">
+                <button type="button" class="btn-header-print d-flex align-items-center gap-1" (click)="print()">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                        <rect x="6" y="14" width="12" height="8"></rect>
+                    </svg>
+                    <span>Print</span>
+                </button>
+                <button type="button" class="btn-header-close" (click)="closeModal()">
+                    ✕ Close
+                </button>
+            </div>
         </div>
 
         <!-- Modal Body -->
         <div class="godown-view-body">
-            <!-- Top Details Card -->
-            <div class="view-card">
-                <div class="fields-grid-3">
-                    <!-- Row 1 -->
-                    <div class="field-item">
-                        <div class="field-label">GODOWN DELIVERY NO</div>
-                        <div class="field-value">{{ GDData?.GDNo || '—' }}</div>
-                    </div>
-                    <div class="field-item">
-                        <div class="field-label">GODOWN DELIVERY DATE</div>
-                        <div class="field-value">{{ GDData?.GDDate || '24-Sep-2026' }}</div>
-                    </div>
-                    <div class="field-item">
-                        <div class="field-label">DELIVERY GODOWN</div>
-                        <div class="field-value">{{ GDData?.DeliveryGodown || 'PIM : PIMPRI' }}</div>
-                    </div>
-
-                    <!-- Row 2 -->
-                    <div class="field-item">
-                        <div class="field-label">ORG / DEST</div>
-                        <div class="field-value">{{ GDData?.OrgDest || 'CHENNAI → PIMPRI' }}</div>
-                    </div>
-                    <div class="field-item">
-                        <div class="field-label">REASSIGNED LOCATION</div>
-                        <div class="field-value">{{ GDData?.ReassignedLocation || 'PIM' }}</div>
-                    </div>
-                    <div class="field-item">
-                        <div class="field-label">DELIVERY TYPE</div>
-                        <div class="field-value">{{ GDData?.DeliveryType || 'Godown to Godown' }}</div>
-                    </div>
-
-                    <!-- Row 3 -->
-                    <div class="field-item">
-                        <div class="field-label">GB NO</div>
-                        <div class="field-value">{{ GDData?.GBNo || 'GHB/MAA/2627/000009' }}</div>
-                    </div>
-                    <div class="field-item">
-                        <div class="field-label">CUSTOMER</div>
-                        <div class="field-value text-truncate" [title]="GDData?.Customer">{{ GDData?.Customer || 'C00412 : LUPIN LTD' }}</div>
-                    </div>
-                    <div class="field-item">
-                        <div class="field-label">DOCKET NO</div>
-                        <div class="field-value">
-                            <a class="docket-link" (click)="onDocketClick(GDData?.DocketNo)">
-                                {{ GDData?.DocketNo || 'PIM10024566' }}
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Row 4 -->
-                    <div class="field-item">
-                        <div class="field-label">DOCKET DATE</div>
-                        <div class="field-value">{{ GDData?.DocketDate || '18-Sep-2026' }}</div>
-                    </div>
-                    <div class="field-item">
-                        <div class="field-label">PKGS / WEIGHT</div>
-                        <div class="field-value">{{ GDData?.Package || 48 }} pkgs, {{ GDData?.Weight || 1120 }} kg</div>
-                    </div>
-                    <div class="field-item">
-                        <div class="field-label">GD HCC TYPE</div>
-                        <div class="field-value">{{ GDData?.GDHCCType || 'Loading HCC' }}</div>
-                    </div>
-
-                    <!-- Row 5 -->
-                    <div class="field-item">
-                        <div class="field-label">GD HCC STATUS</div>
-                        <div class="field-value">
-                            <div class="text-success-custom">Generated ({{ GDData?.GDHCCNo || 'HC/PIM/2627/0000461' }})</div>
-                            <span class="hcc-status-pill pending mt-1">{{ GDData?.GDHCCStatus || 'Pending for Approval' }}</span>
-                        </div>
-                    </div>
-                    <div class="field-item">
-                        <div class="field-label">GENERATED BY</div>
-                        <div class="field-value">{{ GDData?.GeneratedBy || '2810 : Rahul Pawar' }}</div>
-                    </div>
-                    <div class="field-item"></div>
+            <!-- Loading Spinner -->
+            <div *ngIf="isLoading" class="d-flex flex-column align-items-center justify-content-center py-5 my-4">
+                <div class="spinner-border text-primary" style="width: 2.5rem; height: 2.5rem;" role="status">
+                    <span class="visually-hidden">Loading...</span>
                 </div>
+                <div class="mt-3 text-muted fw-bold" style="font-size: 13px;">Loading Delivery Details...</div>
             </div>
 
-            <!-- Section Title -->
-            <div class="section-title">
-                DELIVERY DETAILS
-            </div>
+            <ng-container *ngIf="!isLoading">
+                <!-- Top Details Card -->
+                <div class="view-card">
+                    <div class="fields-grid-3">
+                        <!-- Row 1: GD No, GB No, Godown Delivery Date -->
+                        <div class="field-item">
+                            <div class="field-label">GODOWN DELIVERY NO</div>
+                            <div class="field-value">{{ headerDetails?.GDNo || '—' }}</div>
+                        </div>
+                        <div class="field-item">
+                            <div class="field-label">GB NO</div>
+                            <div class="field-value">{{ headerDetails?.GBNo || '—' }}</div>
+                        </div>
+                        <div class="field-item">
+                            <div class="field-label">GODOWN DELIVERY DATE</div>
+                            <div class="field-value">{{ headerDetails?.DocumentDate ? (headerDetails.DocumentDate |
+                                date:'dd-MMM-yyyy') : '—' }}</div>
+                        </div>
 
-            <!-- Bottom Delivery Details Card -->
-            <div class="view-card">
-                <div class="fields-grid-3">
-                    <!-- Row 1 -->
-                    <div class="field-item">
-                        <div class="field-label">DELIVERED PKGS / WT</div>
-                        <div class="field-value">{{ GDData?.DeliveredPkgs || 48 }} pkgs, {{ GDData?.DeliveredWt || 1120 }} kg</div>
-                    </div>
-                    <div class="field-item">
-                        <div class="field-label">DELIVERY DATE</div>
-                        <div class="field-value">{{ GDData?.DeliveryDate || '23-Sep-2026' }}</div>
-                    </div>
-                    <div class="field-item">
-                        <div class="field-label">DELIVERED TO</div>
-                        <div class="field-value">{{ GDData?.DeliveredTo || 'SELF' }}</div>
-                    </div>
+                        <!-- Row 2: Delivery Godown, Org / Dest, Reassigned Location -->
+                        <div class="field-item">
+                            <div class="field-label">DELIVERY GODOWN</div>
+                            <div class="field-value">{{ headerDetails?.DeliveryGodown || '—' }}</div>
+                        </div>
+                        <div class="field-item">
+                            <div class="field-label">ORG / DEST</div>
+                            <div class="field-value">{{ headerDetails?.OrgDest || '—' }}</div>
+                        </div>
+                        <div class="field-item">
+                            <div class="field-label">REASSIGNED LOCATION</div>
+                            <div class="field-value">{{ headerDetails?.ReassignedLocation || '—' }}</div>
+                        </div>
 
-                    <!-- Row 2 -->
-                    <div class="field-item">
-                        <div class="field-label">PERSON NAME</div>
-                        <div class="field-value">{{ GDData?.PersonName || 'Vijay Patil' }}</div>
-                    </div>
-                    <div class="field-item">
-                        <div class="field-label">CONTACT NO</div>
-                        <div class="field-value">{{ GDData?.ContactNo || '9890055501' }}</div>
-                    </div>
-                    <div class="field-item">
-                        <div class="field-label">POD RECEIVED / QUALITY</div>
-                        <div class="field-value">{{ GDData?.PodReceived || 'No' }}</div>
-                    </div>
+                        <!-- Row 3: Delivery Type, Customer, Docket No -->
+                        <div class="field-item">
+                            <div class="field-label">DELIVERY TYPE</div>
+                            <div class="field-value">{{ headerDetails?.DeliveryType || '—' }}</div>
+                        </div>
+                        <div class="field-item">
+                            <div class="field-label">CUSTOMER</div>
+                            <div class="field-value text-truncate" [title]="headerDetails?.Customer || ''">{{
+                                headerDetails?.Customer || '—' }}</div>
+                        </div>
+                        <div class="field-item">
+                            <div class="field-label">DOCKET NO</div>
+                            <div class="field-value">
+                                <a class="docket-link" (click)="onDocketClick(headerDetails?.DocketNo)">
+                                    {{ headerDetails?.DocketNo || '—' }}
+                                </a>
+                            </div>
+                        </div>
 
-                    <!-- Row 3 -->
-                    <div class="field-item">
-                        <div class="field-label">DEPS</div>
-                        <div class="field-value">{{ GDData?.DepsText || 'No DEPS' }}</div>
+                        <!-- Row 4: Docket Date, Pkgs / Weight, GD HCC Type -->
+                        <div class="field-item">
+                            <div class="field-label">DOCKET DATE</div>
+                            <div class="field-value">{{ headerDetails?.DocketDate ? (headerDetails.DocketDate |
+                                date:'dd-MMM-yyyy') : '—' }}</div>
+                        </div>
+                        <div class="field-item">
+                            <div class="field-label">PKGS / WEIGHT</div>
+                            <div class="field-value">{{ headerDetails?.TotalPkgs || 0 }} pkgs, {{
+                                headerDetails?.TotalWeight || 0 }} kg</div>
+                        </div>
+                        <div class="field-item">
+                            <div class="field-label">GD HCC TYPE</div>
+                            <div class="field-value">{{ headerDetails?.HCCType || '—' }}</div>
+                        </div>
+
+                        <!-- Row 5: GD HCC Status, Generated By -->
+                        <div class="field-item">
+                            <div class="field-label">GD HCC STATUS</div>
+                            <div class="field-value">
+                                <ng-container *ngIf="headerDetails?.HCNumber && headerDetails?.HCNumber !== 'N/A'">
+                                    <div class="text-success-custom">Generated ({{ headerDetails.HCNumber }})</div>
+                                    <span class="hcc-status-pill pending mt-1" *ngIf="headerDetails?.HCCStatus">{{
+                                        headerDetails.HCCStatus }}</span>
+                                </ng-container>
+                                <ng-container *ngIf="!headerDetails?.HCNumber || headerDetails?.HCNumber === 'N/A'">
+                                    <span class="text-warning-custom">{{ headerDetails?.HCCStatus || 'Not Generated'
+                                        }}</span>
+                                </ng-container>
+                            </div>
+                        </div>
+                        <div class="field-item">
+                            <div class="field-label">GENERATED BY</div>
+                            <div class="field-value">{{ headerDetails?.GeneratedBy || '—' }}</div>
+                        </div>
+                        <div class="field-item"></div>
                     </div>
-                    <div class="field-item"></div>
-                    <div class="field-item"></div>
                 </div>
-            </div>
+
+                <!-- Section: Dockets Under This GD -->
+                <div class="section-title">
+                    DOCKETS UNDER THIS GD ({{ headerDetails?.TotalDockets || docketList.length }})
+                </div>
+
+                <!-- Dockets Table -->
+                <div class="dockets-table-wrap mb-2" *ngIf="docketList.length > 0">
+                    <table class="table dockets-table mb-0 align-middle">
+                        <thead>
+                            <tr>
+                                <th class="text-center" style="width: 48px;">#</th>
+                                <th class="text-start" style="width: 140px;">DOCKET NO</th>
+                                <th class="text-center">ORG / DEST</th>
+                                <th class="text-center">DELIVERED PKGS / WT</th>
+                                <th class="text-center">DELIVERED TO</th>
+                                <th class="text-center">DELIVERY DATE</th>
+                                <th class="text-center">POD</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let doc of docketList; let i = index" (click)="selectDocket(doc)">
+                                <td class="text-center text-muted" style="width: 48px;">
+                                    {{ doc.SrNo || (i + 1) }}
+                                </td>
+                                <td class="text-start" style="width: 140px;">
+                                    <a class="docket-link"
+                                        (click)="onDocketClick(doc.DocketNo); $event.stopPropagation()">
+                                        {{ doc.DocketNo }}
+                                    </a>
+                                </td>
+                                <td class="text-center">{{ doc.OrgDest || '—' }}</td>
+                                <td class="text-center fw-bold" style="color: #0f172a;">
+                                    {{ (doc.DelPkgs !== undefined && doc.DelPkgs !== null ? doc.DelPkgs : doc.Pkgs) || 0
+                                    }} / {{ (doc.DelWeight !== undefined && doc.DelWeight !== null ? doc.DelWeight :
+                                    doc.Weight) || 0 }} Kg
+                                </td>
+                                <td class="text-center text-secondary">{{ doc.DeliveredTo || '—' }}</td>
+                                <td class="text-center">{{ doc.DeliveryDate ? (doc.DeliveryDate | date:'dd-MMM-yyyy') :
+                                    '—' }}</td>
+                                <td class="text-center">
+                                    <span *ngIf="doc.POD" class="badge-pod"
+                                        [ngClass]="doc.POD.toLowerCase().includes('good') || doc.POD.toLowerCase().includes('yes') ? 'badge-pod-good' : 'badge-pod-bad'">{{
+                                        doc.POD }}</span>
+                                    <span *ngIf="!doc.POD" class="text-muted">—</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Section: Delivery Details -->
+                <div class="section-title">
+                    DELIVERY DETAILS — {{ selectedDocket?.DocketNo || headerDetails?.DocketNo || '' }}
+                </div>
+
+                <!-- Bottom Delivery Details Card -->
+                <div class="view-card">
+                    <div class="fields-grid-3">
+                        <!-- Row 1 -->
+                        <div class="field-item">
+                            <div class="field-label">DELIVERED PKGS / WT</div>
+                            <div class="field-value">
+                                {{ (selectedDocket?.DelPkgs !== undefined ? selectedDocket.DelPkgs :
+                                (selectedDocket?.Pkgs !== undefined ? selectedDocket.Pkgs : headerDetails?.TotalPkgs))
+                                || 0 }} pkgs,
+                                {{ (selectedDocket?.DelWeight !== undefined ? selectedDocket.DelWeight :
+                                (selectedDocket?.Weight !== undefined ? selectedDocket.Weight :
+                                headerDetails?.TotalWeight)) || 0 }} kg
+                            </div>
+                        </div>
+                        <div class="field-item">
+                            <div class="field-label">DELIVERY DATE</div>
+                            <div class="field-value">
+                                {{ (selectedDocket?.DeliveryDate || headerDetails?.DocumentDate) ?
+                                ((selectedDocket?.DeliveryDate || headerDetails?.DocumentDate) | date:'dd-MMM-yyyy') :
+                                '—' }}
+                            </div>
+                        </div>
+                        <div class="field-item">
+                            <div class="field-label">DELIVERED TO</div>
+                            <div class="field-value">{{ headerDetails?.Customer || '—' }}</div>
+                        </div>
+
+                        <!-- Row 2 -->
+                        <div class="field-item">
+                            <div class="field-label">PERSON NAME</div>
+                            <div class="field-value">{{ selectedDocket?.PersonName || selectedDocket?.ReceiverName ||
+                                '—' }}</div>
+                        </div>
+                        <div class="field-item">
+                            <div class="field-label">CONTACT NO</div>
+                            <div class="field-value">{{ selectedDocket?.ContactNo || selectedDocket?.MobileNo || '—' }}
+                            </div>
+                        </div>
+                        <div class="field-item">
+                            <div class="field-label">POD RECEIVED / QUALITY</div>
+                            <div class="field-value">{{ selectedDocket?.POD || selectedDocket?.PodReceived || '—' }}
+                            </div>
+                        </div>
+
+                        <!-- Row 3 -->
+                        <div class="field-item">
+                            <div class="field-label">DEPS</div>
+                            <div class="field-value">{{ selectedDocket?.DepsText || selectedDocket?.Deps || 'No DEPS' }}
+                            </div>
+                        </div>
+                        <div class="field-item"></div>
+                        <div class="field-item"></div>
+                    </div>
+                </div>
+            </ng-container>
         </div>
     </div>
 </ng-template>

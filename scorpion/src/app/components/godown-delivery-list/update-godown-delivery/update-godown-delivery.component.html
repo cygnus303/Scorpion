@@ -111,20 +111,20 @@
                     <thead>
                         <tr>
                             <th class="text-center col-sr">#</th>
-                            <th class="col-lr">LR NO / DATE</th>
-                            <th class="col-org">ORG / DEST</th>
-                            <th class="col-total">TOTAL<br>PKGS / WT</th>
-                            <th class="text-center col-pkgs">DELIVERED<br>PKGS&nbsp;*</th>
-                            <th class="text-center col-wt">DELIVERED<br>WT</th>
-                            <th class="col-reason">PART<br>REASON</th>
-                            <th class="col-delto">DELIVERED<br>TO&nbsp;*</th>
-                            <th class="col-person">PERSON<br>NAME&nbsp;*</th>
-                            <th class="col-contact">CONTACT<br>NO&nbsp;*</th>
-                            <th class="col-date">DELIVERY<br>DATE&nbsp;*</th>
-                            <th class="col-podrec">POD<br>REC.&nbsp;*</th>
-                            <th class="col-podupload">POD<br>UPLOAD</th>
-                            <th class="col-podquality">POD<br>QUALITY</th>
-                            <th class="col-deps">DEPS</th>
+                            <th class="text-center col-lr">LR NO / DATE</th>
+                            <th class="text-center col-org">ORG / DEST</th>
+                            <th class="text-center col-total">TOTAL PKGS / WT</th>
+                            <th class="text-center col-pkgs">DELIVERED PKGS <span class="text-danger">*</span></th>
+                            <th class="text-center col-wt">DELIVERED WT</th>
+                            <!-- <th class="col-reason">PART REASON</th> -->
+                            <th class="text-center col-delto">DELIVERED TO <span class="text-danger">*</span></th>
+                            <th class="text-center col-person">PERSON NAME <span class="text-danger">*</span></th>
+                            <th class="text-center col-contact">CONTACT NO <span class="text-danger">*</span></th>
+                            <th class="text-center col-date">DELIVERY DATE <span class="text-danger">*</span></th>
+                            <th class="text-center col-podrec">POD REC. <span class="text-danger">*</span></th>
+                            <th class="text-center col-podupload">POD UPLOAD</th>
+                            <th class="text-center col-podquality">POD QUALITY</th>
+                            <th class="text-center col-deps">DEPS</th>
                             <th *ngIf="selectedDockets.length > 1" style="width: 26px;"></th>
                         </tr>
                     </thead>
@@ -149,7 +149,7 @@
                                     [(ngModel)]="row.deliveredPkgs"
                                     (ngModelChange)="onDeliveredPkgsChange(row)"
                                     [class.is-invalid]="getPkgsError(row) !== ''"
-                                    min="1"
+                                    min="1" readonly
                                     [max]="row.DelPkgs || row.maxPkgs || row.Pkgs">
                                 <div class="text-danger err-sub" *ngIf="getPkgsError(row)">
                                     {{ getPkgsError(row) }}
@@ -161,14 +161,14 @@
                                     [(ngModel)]="row.deliveredWt"
                                     (ngModelChange)="onDeliveredWtChange(row)"
                                     [class.is-invalid]="getWtError(row) !== ''"
-                                    min="0.01"
+                                    min="0.01" readonly
                                     [max]="row.DelWts || row.maxWt || row.ActualWt"
                                     step="0.01">
                                 <div class="text-danger err-sub" *ngIf="getWtError(row)">
                                     {{ getWtError(row) }}
                                 </div>
                             </td>
-                            <td class="col-reason">
+                            <!-- <td class="col-reason">
                                 <ng-select
                                     class="noFoundTextColor clear-icon remove-white-space mselect cell-input"
                                     [class.is-invalid]="isSubmitted && isReasonInvalid(row)"
@@ -188,7 +188,7 @@
                                         <span class="godown-label-wrap" [title]="item.codeDesc">{{ item.codeDesc }}</span>
                                     </ng-template>
                                 </ng-select>
-                            </td>
+                            </td> -->
                             <td class="col-delto">
                                 <ng-select
                                     class="noFoundTextColor clear-icon remove-white-space mselect cell-input"
